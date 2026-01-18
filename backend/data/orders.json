@@ -1,0 +1,66 @@
+[
+  {
+    "id": "bd6c11bf-b2d7-4df0-8551-4740e22bf8f2",
+    "firstName": "Ануарбек",
+    "lastName": "Нургиса",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "77474721098",
+    "items": [
+      {
+        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+        "itemType": "painting",
+        "title": "фывфвфв",
+        "price": 320,
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 320,
+    "status": "pending",
+    "createdAt": "2026-01-18T11:25:47.416Z"
+  },
+  {
+    "id": "908b8cb7-4cbd-4f9a-ab77-723fa31d804e",
+    "firstName": "Нургиса",
+    "lastName": "Ануарбек",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "7747271273132",
+    "items": [
+      {
+        "itemId": 2,
+        "itemType": "shop",
+        "title": "Exhibition Catalogue - Contemporary Visions",
+        "price": 65,
+        "quantity": 1
+      },
+      {
+        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+        "itemType": "painting",
+        "title": "фывфвфв",
+        "price": 320,
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 385,
+    "status": "pending",
+    "createdAt": "2026-01-18T11:28:12.810Z"
+  },
+  {
+    "id": "aba740ee-132f-4b0d-9392-1e7cd6d8604b",
+    "firstName": "Нургиса",
+    "lastName": "Ануарбек",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "872131233123",
+    "items": [
+      {
+        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+        "itemType": "painting",
+        "title": "фывфвфв",
+        "price": 320,
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 320,
+    "status": "pending",
+    "createdAt": "2026-01-18T11:33:43.720Z"
+  }
+]
