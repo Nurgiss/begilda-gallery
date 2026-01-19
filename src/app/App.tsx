@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { HeaderDark } from './components/HeaderDark';
-import { AdminHeader } from './components/AdminHeader';
-import AdminLogin from './pages/admin/AdminLogin';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { Exhibitions } from './pages/Exhibitions';
@@ -15,14 +13,6 @@ import { PaintingDetail } from './pages/PaintingDetail';
 import { Checkout } from './pages/Checkout';
 import { NewsList } from './components/NewsList';
 import { NewsDetail } from './components/NewsDetail';
-import { PaintingsManager } from './pages/admin/PaintingsManager';
-import { OrdersManager } from './pages/admin/OrdersManager';
-import { NewsManager } from './pages/admin/NewsManager';
-import { ExhibitionsManager } from './pages/admin/ExhibitionsManager';
-import { ArtistsManager } from './pages/admin/ArtistsManager';
-import { ShopManager } from './pages/admin/ShopManager';
-import { CurrencySettings } from './pages/admin/CurrencySettings';
-import { PickupPointsManager } from './pages/admin/PickupPointsManager';
 import { getPaintings, getExhibitions, getNews, getShopItems } from '../api/client';
 import {
   Page,
@@ -39,9 +29,6 @@ import '../styles/index.css';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    try { return !!localStorage.getItem('adminToken'); } catch (e) { return false; }
-  });
   const [currency, setCurrency] = useState<Currency>('USD');
   const [rates, setRates] = useState<CurrencyRates>({ EUR: 0.92, KZT: 480 });
   const [selectedPaintingId, setSelectedPaintingId] = useState<string | number | null>(null);
@@ -167,8 +154,6 @@ export default function App() {
     setCart([]);
   };
 
-  const isAdminPage = currentPage.startsWith('admin-') && currentPage !== 'admin-login';
-
   // Загружаем актуальные курсы из сервиса currency.ts (USD -> EUR, USD -> KZT)
   useEffect(() => {
     let isMounted = true;
@@ -200,19 +185,6 @@ export default function App() {
   };
   
   const renderPage = () => {
-    // If user is trying to access an admin page but is not authenticated,
-    // show the simple client-side login first.
-    if (isAdminPage && !isAuthenticated) {
-      return (
-        <AdminLogin
-          onLogin={(token) => {
-            setIsAuthenticated(true);
-            handleNavigate('admin-paintings');
-          }}
-          onCancel={() => handleNavigate('home')}
-        />
-      );
-    }
     switch (currentPage) {
       case 'home':
       case 'contact':
@@ -353,22 +325,6 @@ export default function App() {
         return <NewsList news={news} onNavigate={handleNavigate} />;
       case 'news-detail':
         return <NewsDetail news={news.find(n => n.id === selectedNewsId)} onNavigate={handleNavigate} />;
-      case 'admin-paintings':
-        return <PaintingsManager />;
-      case 'admin-orders':
-        return <OrdersManager />;
-      case 'admin-news':
-        return <NewsManager />;
-      case 'admin-exhibitions':
-        return <ExhibitionsManager />;
-      case 'admin-artists':
-        return <ArtistsManager />;
-      case 'admin-shop':
-        return <ShopManager />;
-      case 'admin-currency':
-        return <CurrencySettings />;
-      case 'admin-pickup-points':
-        return <PickupPointsManager />;
       default:
         return <Home onNavigate={handleNavigate} news={news} exhibitions={exhibitions} currency={currency} convertPrice={convertPrice} />;
     }
@@ -376,9 +332,7 @@ export default function App() {
   
   return (
     <div className="app-wrapper">
-      {isAdminPage ? (
-        <AdminHeader currentPage={currentPage} onNavigate={handleNavigate} onLogout={() => { setIsAuthenticated(false); handleNavigate('home'); }} />
-      ) : currentPage === 'home' ? (
+      {currentPage === 'home' ? (
         <Header currentPage={currentPage} onNavigate={handleNavigate} cart={cart} currency={currency} onCurrencyChange={setCurrency} />
       ) : (
         <HeaderDark currentPage={currentPage} onNavigate={handleNavigate} cart={cart} currency={currency} onCurrencyChange={setCurrency} />
