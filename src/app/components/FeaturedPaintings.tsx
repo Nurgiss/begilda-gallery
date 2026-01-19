@@ -16,7 +16,7 @@ export function FeaturedPaintings({ onPaintingClick, currency = 'USD', convertPr
     getPaintings().then(data => setPaintings(data)).catch(console.error);
   }, []);
 
-  const featuredPaintings = paintings.filter(p => p.featured);
+  const featuredPaintings = paintings.filter(p => p.featured && !p.exhibitionOnly);
   
   return (
     <section className="home-paintings-section">

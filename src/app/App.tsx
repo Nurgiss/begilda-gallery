@@ -2182,7 +2182,7 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
         {renderPage()}
       </main>
       
-      {!isAdminPage && <Footer />}
+      {!isAdminPage && <Footer onNavigate={handleNavigate} />}
     </div>
   );
 }

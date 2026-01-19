@@ -1,12 +1,13 @@
 [
   {
     "id": "062758bb-52ac-4656-a753-c5ebfaf23d94",
-    "name": "sdadad",
-    "address": "dasdasdsad",
-    "city": "dasdadsad",
-    "phone": "ddsadadsadas",
-    "workingHours": "dsadsadadas",
+    "name": "Begilda Gallery",
+    "address": "Abay 130",
+    "city": "Almaty",
+    "phone": "+747 271 10 98",
+    "workingHours": "10:00-19:00",
     "isActive": true,
-    "createdAt": "2026-01-19T11:49:16.568Z"
+    "createdAt": "2026-01-19T11:49:16.568Z",
+    "updatedAt": "2026-01-19T12:43:13.150Z"
   }
 ]

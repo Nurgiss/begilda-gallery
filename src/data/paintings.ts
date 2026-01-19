@@ -81,9 +81,9 @@ export const paintings: Painting[] = [
 ];
 
 export const categoryLabels: Record<string, string> = {
-  all: 'Все работы',
-  abstract: 'Абстракция',
-  landscape: 'Пейзаж',
-  portrait: 'Портрет',
-  modern: 'Современное'
+  all: 'All works',
+  abstract: 'Abstract',
+  landscape: 'Landscape',
+  portrait: 'Portrait',
+  modern: 'Modern'
 };

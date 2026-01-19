@@ -34,15 +34,15 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
   
   if (loading) {
     return (
-      <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
-        <p>Загрузка...</p>
+      <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
+        <p>Loading...</p>
       </div>
     );
   }
   
   if (!painting) {
     return (
-      <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
+      <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
         <p>Painting not found</p>
         <button className="btn" onClick={() => onNavigate('catalog')} style={{ marginTop: 'var(--spacing-md)' }}>
           Back to Catalog
@@ -53,7 +53,7 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
   
   return (
     <div className="detail-page">
-      <div className="container">
+      <div className="container-wide">
         <div style={{ marginBottom: '2rem' }}>
           <button 
             className="btn btn-secondary" 
@@ -63,7 +63,7 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: 'translateY(1px)' }}>
               <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Назад к каталогу
+            Back to Catalog
           </button>
         </div>
         <div className="detail-grid" style={{ overflow: 'hidden' }}>
@@ -79,7 +79,7 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
           
           <div className="detail-content">
             <h1 className="detail-title">{painting.title}</h1>
-            {painting.artist && <p style={{ fontSize: '1.15rem', color: '#666', marginBottom: '1rem', fontStyle: 'italic' }}>Артист: {painting.artist}</p>}
+            {painting.artist && <p style={{ fontSize: '1.15rem', color: '#666', marginBottom: '1rem', fontStyle: 'italic' }}>Artist: {painting.artist}</p>}
             {(() => {
               const baseUSD = typeof painting.priceUSD === 'number' ? painting.priceUSD : (painting.price || 0);
               const value = convertPrice ? convertPrice(baseUSD) : baseUSD;

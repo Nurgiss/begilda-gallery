@@ -7,8 +7,7 @@ interface AdminHeaderProps {
 export function AdminHeader({ currentPage, onNavigate, onLogout }: AdminHeaderProps) {
   return (
     <header className="admin-header">
-      <div className="container">
-        <div className="header-content">
+      <div className="header-content">
           <a 
             className="logo" 
             onClick={() => onNavigate('admin-paintings')}
@@ -97,7 +96,6 @@ export function AdminHeader({ currentPage, onNavigate, onLogout }: AdminHeaderPr
             )}
           </nav>
         </div>
-      </div>
     </header>
   );
 }

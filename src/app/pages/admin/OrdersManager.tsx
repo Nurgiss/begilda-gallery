@@ -118,18 +118,71 @@ export function OrdersManager() {
       <div className="container">
         <div className="admin-header-section">
           <h1 className="admin-title">Управление заказами</h1>
-          <div className="admin-stats">
-            <div className="admin-stat-item">
-              <span className="admin-stat-number">{orders.filter(o => o.status === 'pending').length}</span>
-              <span className="admin-stat-label">Новых</span>
+        </div>
+        
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+          gap: '1.5rem',
+          marginBottom: '2rem'
+        }}>
+          <div style={{
+            background: '#ffffff',
+            padding: '2rem',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem', color: '#667eea' }}>
+              {orders.filter(o => o.status === 'pending').length}
             </div>
-            <div className="admin-stat-item">
-              <span className="admin-stat-number">{orders.filter(o => o.status === 'processing').length}</span>
-              <span className="admin-stat-label">В обработке</span>
+            <div style={{ fontSize: '0.95rem', color: '#666', fontWeight: '500' }}>
+              🆕 Новых заказов
             </div>
-            <div className="admin-stat-item">
-              <span className="admin-stat-number">{orders.filter(o => o.status === 'completed').length}</span>
-              <span className="admin-stat-label">Завершено</span>
+          </div>
+          
+          <div style={{
+            background: '#ffffff',
+            padding: '2rem',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem', color: '#f5576c' }}>
+              {orders.filter(o => o.status === 'processing').length}
+            </div>
+            <div style={{ fontSize: '0.95rem', color: '#666', fontWeight: '500' }}>
+              ⚙️ В обработке
+            </div>
+          </div>
+          
+          <div style={{
+            background: '#ffffff',
+            padding: '2rem',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem', color: '#4facfe' }}>
+              {orders.filter(o => o.status === 'completed').length}
+            </div>
+            <div style={{ fontSize: '0.95rem', color: '#666', fontWeight: '500' }}>
+              ✅ Завершено
+            </div>
+          </div>
+          
+          <div style={{
+            background: '#ffffff',
+            padding: '2rem',
+            borderRadius: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+          }}>
+            <div style={{ fontSize: '3rem', fontWeight: '700', marginBottom: '0.5rem', color: '#43e97b' }}>
+              {orders.length}
+            </div>
+            <div style={{ fontSize: '0.95rem', color: '#666', fontWeight: '500' }}>
+              📊 Всего заказов
             </div>
           </div>
         </div>
@@ -140,6 +193,7 @@ export function OrdersManager() {
               <thead>
                 <tr>
                   <th>№</th>
+                  <th>Order Number</th>
                   <th>Дата</th>
                   <th>Клиент</th>
                   <th>Товаров</th>
@@ -151,21 +205,28 @@ export function OrdersManager() {
               <tbody>
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                    <td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
                       Заказов пока нет
                     </td>
                   </tr>
                 ) : (
-                  orders.map(order => (
+                  orders.map((order, index) => (
                     <tr 
                       key={order.id}
                       className={selectedOrder?.id === order.id ? 'admin-table-row-selected' : ''}
                       onClick={() => setSelectedOrder(order)}
                       style={{ cursor: 'pointer' }}
                     >
-                      <td>#{order.id.slice(0, 8)}</td>
+                      <td>#{index + 1}</td>
+                      <td style={{ fontFamily: 'monospace', fontSize: '0.9rem', color: '#666' }}>{order.id}</td>
                       <td>{formatDate(order.createdAt)}</td>
-                      <td>{order.fullName || order.email}</td>
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                          {order.fullName && <div style={{ fontWeight: '600' }}>{order.fullName}</div>}
+                          <div style={{ fontSize: '0.875rem', color: '#666' }}>{order.email}</div>
+                          {order.phone && <div style={{ fontSize: '0.875rem', color: '#666' }}>{order.phone}</div>}
+                        </div>
+                      </td>
                       <td>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
                       <td>${order.totalAmount.toLocaleString('en-US')}</td>
                       <td>
@@ -209,7 +270,10 @@ export function OrdersManager() {
               border: '1px solid #dee2e6'
             }}>
               <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: '#333' }}>
-                Детали заказа #{selectedOrder.id.slice(0, 8)}
+                Детали заказа #{orders.findIndex(o => o.id === selectedOrder.id) + 1}
+                <div style={{ fontSize: '0.9rem', color: '#666', fontWeight: 'normal', marginTop: '0.5rem', fontFamily: 'monospace' }}>
+                  Order Number: {selectedOrder.id}
+                </div>
               </h2>
               
               <div style={{ marginBottom: '1.5rem' }}>

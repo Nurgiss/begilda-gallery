@@ -21,7 +21,8 @@ export function PaintingsManager() {
     image: '',
     medium: '',
     availability: true,
-    featured: false
+    featured: false,
+    exhibitionOnly: false
   });
   
   const [calculatedPrices, setCalculatedPrices] = useState({
@@ -97,7 +98,8 @@ export function PaintingsManager() {
       image: '',
       medium: '',
       availability: true,
-      featured: false
+      featured: false,
+      exhibitionOnly: false
     });
     setCalculatedPrices({ kzt: 0, eur: 0 });
   };
@@ -252,17 +254,17 @@ export function PaintingsManager() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Категория *</label>
+                    <label className="form-label">Category *</label>
                     <select
                       className="form-select"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       required
                     >
-                      <option value="abstract">Абстракция</option>
-                      <option value="landscape">Пейзаж</option>
-                      <option value="portrait">Портрет</option>
-                      <option value="modern">Современное</option>
+                      <option value="abstract">Abstract</option>
+                      <option value="landscape">Landscape</option>
+                      <option value="portrait">Portrait</option>
+                      <option value="modern">Modern</option>
                     </select>
                   </div>
                 </div>
@@ -508,6 +510,21 @@ export function PaintingsManager() {
                     </label>
                   </div>
                 </div>
+                
+                <div className="form-row">
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label className="form-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={formData.exhibitionOnly}
+                        onChange={(e) => setFormData({ ...formData, exhibitionOnly: e.target.checked })}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                      />
+                      <span style={{ fontSize: '0.95rem' }}>🎨 Только для выставки (скрыть из каталога)</span>
+                    </label>
+                  </div>
+                </div>
               </div>
               
               <div className="admin-form-actions">
@@ -533,6 +550,7 @@ export function PaintingsManager() {
                   <th>Категория</th>
                   <th>Статус</th>
                   <th>Избранное</th>
+                  <th>Только для выставки</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -551,10 +569,10 @@ export function PaintingsManager() {
                     <td>{painting.price?.toLocaleString('ru-RU')} ₸</td>
                     <td>{painting.dimensions || painting.size}</td>
                     <td>
-                      {painting.category === 'abstract' && 'Абстракция'}
-                      {painting.category === 'landscape' && 'Пейзаж'}
-                      {painting.category === 'portrait' && 'Портрет'}
-                      {painting.category === 'modern' && 'Современное'}
+                      {painting.category === 'abstract' && 'Abstract'}
+                      {painting.category === 'landscape' && 'Landscape'}
+                      {painting.category === 'portrait' && 'Portrait'}
+                      {painting.category === 'modern' && 'Modern'}
                     </td>
                     <td>
                       <span className={`admin-status ${painting.availability !== false ? 'admin-status-available' : 'admin-status-sold'}`}>
@@ -563,6 +581,9 @@ export function PaintingsManager() {
                     </td>
                     <td>
                       {painting.featured ? '✓' : '—'}
+                    </td>
+                    <td>
+                      {painting.exhibitionOnly ? '🎨 Да' : '—'}
                     </td>
                     <td>
                       <div className="admin-table-actions">

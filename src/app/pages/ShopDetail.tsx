@@ -24,7 +24,7 @@ export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart, curre
 
   if (!shopItem) {
     return (
-      <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
+      <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
         <p>Shop item not found</p>
         <button className="btn" onClick={() => onNavigate('shop')} style={{ marginTop: 'var(--spacing-md)' }}>
           Back to Shop
@@ -35,17 +35,20 @@ export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart, curre
 
   return (
     <div className="detail-page">
-      <div className="detail-container">
-        <button 
-          className="detail-back-link" 
-          onClick={() => onNavigate('shop')}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Назад в магазин
-        </button>
-        <div className="detail-grid" style={{ overflow: 'hidden', marginTop: '40px' }}>
+      <div className="container-wide">
+        <div style={{ marginBottom: '2rem' }}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => onNavigate('shop')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: 'translateY(1px)' }}>
+              <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Back to Shop
+          </button>
+        </div>
+        <div className="detail-grid" style={{ overflow: 'hidden' }}>
           <div className="detail-image-section">
             <div className="shop-detail-image-wrapper">
               <ImageWithFallback

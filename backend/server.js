@@ -545,8 +545,10 @@ app.get('/api/orders/:id', async (req, res) => {
 
 app.post('/api/orders', async (req, res) => {
   const orders = await readData(ORDERS_FILE);
+  // Генерируем короткий ID из 8 символов
+  const shortId = uuidv4().split('-')[0].toUpperCase();
   const newOrder = {
-    id: uuidv4(),
+    id: shortId,
     ...req.body,
     status: 'pending',
     createdAt: new Date().toISOString()

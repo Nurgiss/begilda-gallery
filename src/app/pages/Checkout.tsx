@@ -55,6 +55,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   useEffect(() => {
     loadPickupPoints();
   }, []);
@@ -68,9 +69,72 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
     }
   };
   
+  const formatPhoneNumber = (value: string) => {
+    // Удаляем все нецифровые символы
+    const numbers = value.replace(/\D/g, '');
+    // Ограничиваем 15 цифрами
+    const limited = numbers.slice(0, 15);
+    // Форматируем: +X (XXX) XXX-XX-XX
+    if (limited.length === 0) return '';
+    if (limited.length <= 1) return `+${limited}`;
+    if (limited.length <= 4) return `+${limited.slice(0, 1)} (${limited.slice(1)}`;
+    if (limited.length <= 7) return `+${limited.slice(0, 1)} (${limited.slice(1, 4)}) ${limited.slice(4)}`;
+    if (limited.length <= 9) return `+${limited.slice(0, 1)} (${limited.slice(1, 4)}) ${limited.slice(4, 7)}-${limited.slice(7)}`;
+    return `+${limited.slice(0, 1)} (${limited.slice(1, 4)}) ${limited.slice(4, 7)}-${limited.slice(7, 9)}-${limited.slice(9)}`;
+  };
+  
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
+  const validatePhone = (phone: string) => {
+    const numbers = phone.replace(/\D/g, '');
+    return numbers.length >= 10;
+  };
+  
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Пожалуйста, введите полное имя';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Пожалуйста, введите email';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Пожалуйста, введите корректный email';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Пожалуйста, введите номер телефона';
+    } else if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Номер телефона должен содержать минимум 10 цифр';
+    }
+    
+    if (formData.deliveryType === 'pickup' && !formData.pickupPoint) {
+      newErrors.pickupPoint = 'Пожалуйста, выберите пункт самовывоза';
+    }
+    
+    if (formData.deliveryType === 'delivery') {
+      if (!formData.country) newErrors.country = 'Выберите страну';
+      if (!formData.postalCode.trim()) newErrors.postalCode = 'Введите почтовый индекс';
+      if (!formData.city) newErrors.city = 'Выберите город';
+      if (!formData.address.trim()) newErrors.address = 'Введите адрес';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -260,8 +324,29 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
               }, 0).toLocaleString('en-US')}
             </span>
           </div>
-          <p style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
-            Amount shown excludes shipping cost. Shipping will be calculated individually after order placement.
+        </div>
+        
+        {/* Информация о доставке */}
+        <div style={{ 
+          backgroundColor: '#e3f2fd', 
+          padding: '20px 28px', 
+          marginBottom: 'var(--spacing-xl)',
+          borderRadius: '8px',
+          borderLeft: '4px solid #2196f3'
+        }}>
+          <h2 style={{ 
+            fontSize: '16px', 
+            marginBottom: '12px', 
+            color: '#1565c0', 
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span>🚚</span> Shipping Information
+          </h2>
+          <p style={{ margin: 0, fontSize: '14px', color: '#1976d2', lineHeight: '1.6' }}>
+            The amount shown above excludes shipping cost. Shipping will be calculated individually after order placement based on your location and delivery method.
           </p>
         </div>
         
@@ -310,9 +395,20 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
               type="text"
               className="form-input"
               value={formData.fullName}
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, fullName: e.target.value });
+                if (errors.fullName) {
+                  setErrors({ ...errors, fullName: '' });
+                }
+              }}
               required
+              style={{ borderColor: errors.fullName ? '#dc3545' : undefined }}
             />
+            {errors.fullName && (
+              <p style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                {errors.fullName}
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -322,9 +418,20 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
               type="email"
               className="form-input"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, email: e.target.value });
+                if (errors.email) {
+                  setErrors({ ...errors, email: '' });
+                }
+              }}
               required
+              style={{ borderColor: errors.email ? '#dc3545' : undefined }}
             />
+            {errors.email && (
+              <p style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <div className="form-group">
@@ -334,9 +441,22 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
               type="tel"
               className="form-input"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                setFormData({ ...formData, phone: formatted });
+                if (errors.phone) {
+                  setErrors({ ...errors, phone: '' });
+                }
+              }}
+              placeholder="+1 (234) 567-89-01"
               required
+              style={{ borderColor: errors.phone ? '#dc3545' : undefined }}
             />
+            {errors.phone && (
+              <p style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                {errors.phone}
+              </p>
+            )}
           </div>
 
           <h2 className="section-title" style={{ fontSize: '20px', margin: 'var(--spacing-lg) 0 var(--spacing-md)', textAlign: 'left' }}>

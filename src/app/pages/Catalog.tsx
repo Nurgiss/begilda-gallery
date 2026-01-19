@@ -31,13 +31,13 @@ export function Catalog({ onPaintingClick, currency, convertPrice }: CatalogProp
   };
   
   const filteredPaintings = activeFilter === 'all' 
-    ? paintings 
-    : paintings.filter(p => p.category === activeFilter);
+    ? paintings.filter(p => !p.exhibitionOnly)
+    : paintings.filter(p => p.category === activeFilter && !p.exhibitionOnly);
   
   return (
     <div className="paintings-section">
-      <div className="container">
-        <h1 className="section-title">Каталог картин</h1>
+      <div className="container-wide">
+        <h1 className="section-title">Catalog</h1>
         
         <div className="filter-section">
           {Object.entries(categoryLabels).map(([key, label]) => (
@@ -52,7 +52,7 @@ export function Catalog({ onPaintingClick, currency, convertPrice }: CatalogProp
         </div>
         
         {loading ? (
-          <p style={{ textAlign: 'center', padding: '40px' }}>Загрузка...</p>
+          <p style={{ textAlign: 'center', padding: '40px' }}>Loading...</p>
         ) : (
           <div className="paintings-grid">
             {filteredPaintings.length > 0 ? (
@@ -67,7 +67,7 @@ export function Catalog({ onPaintingClick, currency, convertPrice }: CatalogProp
               ))
             ) : (
               <p style={{ textAlign: 'center', gridColumn: '1/-1', color: 'var(--color-secondary)' }}>
-                Картины не найдены
+                No paintings found
               </p>
             )}
           </div>
