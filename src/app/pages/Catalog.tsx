@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { categoryLabels } from '../../data/paintings';
 import { PaintingCard } from '../components/PaintingCard';
 import { getPaintings } from '../../api/client';
+import { Currency } from '../../types';
 
 interface CatalogProps {
   onPaintingClick: (id: string | number) => void;
-  currency: 'USD'|'EUR'|'KZT';
+  currency: Currency;
   convertPrice?: (priceUSD: number) => number;
 }
 

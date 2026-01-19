@@ -1,36 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getPaintings, getExhibition } from '../../api/client';
-
-interface Exhibition {
-  id: string | number;
-  title: string;
-  artist: string;
-  location: string;
-  dates: string;
-  description: string;
-  image: string;
-  status: 'current' | 'upcoming' | 'past';
-  paintingIds?: string[];
-}
-
-interface Artwork {
-  id: number;
-  title: string;
-  year: string;
-  medium: string;
-  dimensions: string;
-  image: string;
-  price?: number;
-}
+import { Exhibition } from '../../types';
 
 interface ExhibitionDetailProps {
   exhibition: Exhibition | undefined;
-  artworks: Artwork[];
   onNavigate: (page: string, id?: string | number) => void;
 }
 
-export function ExhibitionDetail({ exhibition, artworks, onNavigate }: ExhibitionDetailProps) {
+export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [exhibitionPaintings, setExhibitionPaintings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,12 +33,11 @@ export function ExhibitionDetail({ exhibition, artworks, onNavigate }: Exhibitio
           );
           setExhibitionPaintings(filtered);
         } else {
-          // Если к выставке ещё не привязаны картины, используем переданный проп artworks (старые демо-данные)
-          setExhibitionPaintings(artworks || []);
+          setExhibitionPaintings([]);
         }
       } catch (err) {
         console.error('Error loading exhibition paintings:', err);
-        setExhibitionPaintings(artworks || []);
+        setExhibitionPaintings([]);
       } finally {
         setLoading(false);
       }
@@ -68,7 +45,7 @@ export function ExhibitionDetail({ exhibition, artworks, onNavigate }: Exhibitio
 
     setLoading(true);
     loadExhibitionPaintings();
-  }, [exhibition, artworks]);
+  }, [exhibition]);
 
   if (!exhibition) {
     return (
@@ -83,7 +60,7 @@ export function ExhibitionDetail({ exhibition, artworks, onNavigate }: Exhibitio
     );
   }
 
-  const displayArtworks = exhibitionPaintings.length > 0 ? exhibitionPaintings : artworks;
+  const displayArtworks = exhibitionPaintings;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % displayArtworks.length);

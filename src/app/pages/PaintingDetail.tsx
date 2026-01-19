@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { getPaintings } from '../../api/client';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { Currency } from '../../types';
 
 interface PaintingDetailProps {
   paintingId: string | number;
   onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
   addToCart: (item: any, type: 'painting') => void;
-   currency: 'USD'|'EUR'|'KZT';
-   convertPrice?: (priceUSD: number) => number;
+  currency: Currency;
+  convertPrice?: (priceUSD: number) => number;
 }
 
 export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, convertPrice }: PaintingDetailProps) {

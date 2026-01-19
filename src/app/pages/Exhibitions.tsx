@@ -1,16 +1,5 @@
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-
-interface Exhibition {
-  id: string | number;
-  title: string;
-  artist: string;
-  location: string;
-  dates: string;
-  description: string;
-  image: string;
-  status: 'current' | 'upcoming' | 'past';
-  paintingIds?: string[];
-}
+import { Exhibition } from '../../types';
 
 interface ExhibitionsProps {
   exhibitions: Exhibition[];

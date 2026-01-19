@@ -1,39 +1,7 @@
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { useState, useEffect } from 'react';
 import { getArtists, getPaintings } from '../../api/client';
-
-interface Artist {
-  id: string | number;
-  name: string;
-  bio: string;
-  image: string;
-  nationality: string;
-  born: string;
-  specialty: string;
-}
-
-interface Exhibition {
-  id: string | number;
-  title: string;
-  artist: string;
-  location: string;
-  dates: string;
-  description: string;
-  image: string;
-  status: 'current' | 'upcoming' | 'past';
-}
-
-interface Artwork {
-  id: number;
-  title: string;
-  year: string;
-  medium: string;
-  dimensions: string;
-  image: string;
-  price: number;
-  exhibitionId: number;
-  artist?: string;
-}
+import { Artist, Exhibition, Artwork } from '../../types';
 
 interface ArtistsProps {
   exhibitions: Exhibition[];

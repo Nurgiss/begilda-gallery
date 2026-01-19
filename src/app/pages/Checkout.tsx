@@ -1,18 +1,9 @@
 import { useState, useEffect } from 'react';
 import { createOrder, getPickupPoints } from '../../api/client';
-
-interface PickupPoint {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  phone: string;
-  workingHours: string;
-  isActive: boolean;
-}
+import { PickupPoint, CartItem } from '../../types';
 
 interface CheckoutProps {
-  cart: Array<{ item: any; type: 'painting' | 'shop'; quantity: number }>;
+  cart: CartItem[];
   onNavigate: (page: string) => void;
   clearCart: () => void;
 }

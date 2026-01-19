@@ -1,21 +1,12 @@
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-
-interface ShopItem {
-  id: string | number;
-  title: string;
-  price: number;
-  image: string;
-  category: string;
-  description: string;
-  artist?: string;
-}
+import { ShopItem, Currency } from '../../types';
 
 interface ShopDetailProps {
   shopItemId: string | number;
   shopItems: ShopItem[];
   onNavigate: (page: string, id?: string | number, type?: 'painting' | 'shop') => void;
   addToCart: (item: ShopItem, type: 'shop') => void;
-  currency: 'USD'|'EUR'|'KZT';
+  currency: Currency;
   convertPrice?: (priceUSD: number) => number;
 }
 
