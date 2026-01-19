@@ -90,12 +90,6 @@ export function HeaderDark({ currentPage, onNavigate, cart, currency = 'USD', on
               Shop
             </a>
             <a 
-              className="nav-link-dark admin-link"
-              onClick={() => onNavigate('admin-paintings')}
-            >
-              Admin
-            </a>
-            <a 
               className="nav-link-dark cart-link"
               onClick={() => onNavigate('cart')}
               style={{ cursor: 'pointer', position: 'relative' }}

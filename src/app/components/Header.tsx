@@ -90,12 +90,6 @@ export function Header({ currentPage, onNavigate, cart, currency = 'USD', onCurr
               Shop
             </a>
             <a 
-              className="nav-link admin-link"
-              onClick={() => onNavigate('admin-paintings')}
-            >
-              Admin
-            </a>
-            <a 
               className="nav-link cart-link"
               onClick={() => onNavigate('cart')}
               style={{ cursor: 'pointer', position: 'relative' }}
