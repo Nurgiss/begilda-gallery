@@ -5,12 +5,14 @@
     "location": "Begilda Gallery Almaty",
     "dates": "15 Марта - 20 Апреля",
     "description": "Выставка посящена крупной ",
-    "image": "http://localhost:3001/uploads/4b44c3b1-8e68-4693-9c26-fc1ea7cdbbf2.png",
+    "image": "http://localhost:3001/uploads/fbde498a-484a-4c15-9fcb-8b43e0d838b0.jpg",
     "status": "current",
     "createdAt": "2026-01-18T10:17:04.377Z",
-    "updatedAt": "2026-01-18T16:03:30.199Z",
+    "updatedAt": "2026-01-18T17:00:27.362Z",
     "paintingIds": [
-      "165b8f01-3425-41bd-87e0-12a5e2045257"
+      "165b8f01-3425-41bd-87e0-12a5e2045257",
+      "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+      "4799541f-c6cd-4172-88b3-5db88d2cbbec"
     ]
   }
 ]

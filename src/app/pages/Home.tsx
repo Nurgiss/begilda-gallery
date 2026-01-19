@@ -29,13 +29,20 @@ interface HomeProps {
   onNavigate: (page: string, id?: number) => void;
   news: News[];
   exhibitions: Exhibition[];
+  currency: 'USD'|'EUR'|'KZT';
+  convertPrice?: (priceUSD: number) => number;
 }
 
-export function Home({ onNavigate, news, exhibitions }: HomeProps) {
+export function Home({ onNavigate, news, exhibitions, currency, convertPrice }: HomeProps) {
   return (
     <div>
       <Hero onNavigate={onNavigate} exhibitions={exhibitions} />
-      <FeaturedPaintings onPaintingClick={(id) => onNavigate('detail', id)} onViewAll={() => onNavigate('catalog')} />
+      <FeaturedPaintings 
+        onPaintingClick={(id) => onNavigate('detail', id)} 
+        onViewAll={() => onNavigate('catalog')} 
+        currency={currency}
+        convertPrice={convertPrice}
+      />
       <NewsSection news={news} onNavigate={onNavigate} />
       <About />
       <Contact onNavigate={onNavigate} />

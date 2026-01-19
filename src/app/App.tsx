@@ -1995,26 +1995,29 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
   };
 
   const isAdminPage = currentPage.startsWith('admin-') && currentPage !== 'admin-login';
-  
-  // Try to fetch exchange rates from Nazbank API if configured (optional)
-  const fetchNazbankRates = async () => {
-    try {
-      const url = (import.meta.env.VITE_NAZBANK_API_URL as string) || '';
-      const key = (import.meta.env.VITE_NAZBANK_API_KEY as string) || '';
-      if (!url) return;
-      const res = await fetch(url, { headers: key ? { 'Authorization': `Bearer ${key}` } : {} });
-      const data = await res.json();
-      // Expected shape: data.rates.EUR, data.rates.KZT (adjust if API differs)
-      if (data?.rates) {
-        setRates({ EUR: data.rates.EUR || rates.EUR, KZT: data.rates.KZT || rates.KZT });
-      }
-    } catch (e) {
-      // ignore, keep defaults
-    }
-  };
 
-  // fetch on mount
-  useState(() => { fetchNazbankRates(); return; });
+  // Загружаем актуальные курсы из сервиса currency.ts (USD -> EUR, USD -> KZT)
+  useEffect(() => {
+    let isMounted = true;
+    import('../api/currency').then(({ getCurrencyRates }) => {
+      getCurrencyRates()
+        .then(r => {
+          if (!isMounted) return;
+          // r.usd - KZT за 1 USD, r.eur - KZT за 1 EUR
+          const usdToKzt = r.usd;
+          const usdToEur = r.usd / r.eur;
+          setRates({ EUR: usdToEur, KZT: usdToKzt });
+        })
+        .catch(() => {
+          // оставляем дефолтные значения
+        });
+    }).catch(() => {
+      // если модуль недоступен, просто используем дефолтные курсы
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const convertPrice = (priceUSD: number) => {
     if (currency === 'USD') return priceUSD;
@@ -2040,7 +2043,7 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
     switch (currentPage) {
       case 'home':
       case 'contact':
-        return <Home onNavigate={handleNavigate} news={news} exhibitions={exhibitions} />;
+        return <Home onNavigate={handleNavigate} news={news} exhibitions={exhibitions} currency={currency} convertPrice={convertPrice} />;
       case 'exhibitions':
         return <Exhibitions exhibitions={exhibitions} onNavigate={handleNavigate} />;
       case 'exhibition-detail':
@@ -2065,7 +2068,7 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
           <Artists exhibitions={exhibitions} onNavigate={handleNavigate} />
         );
       case 'shop':
-        return <Shop items={shopItems} onNavigate={handleNavigate} addToCart={addToCart} />;
+        return <Shop items={shopItems} onNavigate={handleNavigate} addToCart={addToCart} currency={currency} convertPrice={convertPrice} />;
       case 'shop-detail':
         return selectedShopItemId ? (
           <ShopDetail 
@@ -2073,17 +2076,19 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
             shopItems={shopItems} 
             onNavigate={handleNavigate}
             addToCart={addToCart}
+            currency={currency}
+            convertPrice={convertPrice}
           />
         ) : (
-          <Shop items={shopItems} onNavigate={handleNavigate} addToCart={addToCart} />
+          <Shop items={shopItems} onNavigate={handleNavigate} addToCart={addToCart} currency={currency} convertPrice={convertPrice} />
         );
       case 'catalog':
-        return <Catalog onPaintingClick={(id) => handleNavigate('detail', id)} />;
+        return <Catalog onPaintingClick={(id) => handleNavigate('detail', id)} currency={currency} convertPrice={convertPrice} />;
       case 'detail':
         return selectedPaintingId ? (
-          <PaintingDetail paintingId={selectedPaintingId} onNavigate={handleNavigate} addToCart={addToCart} />
+          <PaintingDetail paintingId={selectedPaintingId} onNavigate={handleNavigate} addToCart={addToCart} currency={currency} convertPrice={convertPrice} />
         ) : (
-          <Catalog onPaintingClick={(id) => handleNavigate('detail', id)} />
+          <Catalog onPaintingClick={(id) => handleNavigate('detail', id)} currency={currency} convertPrice={convertPrice} />
         );
       case 'checkout':
         return <Checkout cart={cart} onNavigate={handleNavigate} clearCart={clearCart} />;

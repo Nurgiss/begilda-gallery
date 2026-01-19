@@ -5,9 +5,11 @@ import { getPaintings } from '../../api/client';
 
 interface CatalogProps {
   onPaintingClick: (id: string | number) => void;
+  currency: 'USD'|'EUR'|'KZT';
+  convertPrice?: (priceUSD: number) => number;
 }
 
-export function Catalog({ onPaintingClick }: CatalogProps) {
+export function Catalog({ onPaintingClick, currency, convertPrice }: CatalogProps) {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [paintings, setPaintings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +61,8 @@ export function Catalog({ onPaintingClick }: CatalogProps) {
                   key={painting.id}
                   painting={painting}
                   onClick={() => onPaintingClick(painting.id)}
+                  currency={currency}
+                  convertPrice={convertPrice}
                 />
               ))
             ) : (

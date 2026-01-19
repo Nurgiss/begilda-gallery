@@ -15,8 +15,9 @@
       }
     ],
     "totalAmount": 320,
-    "status": "pending",
-    "createdAt": "2026-01-18T11:25:47.416Z"
+    "status": "processing",
+    "createdAt": "2026-01-18T11:25:47.416Z",
+    "updatedAt": "2026-01-18T16:55:28.518Z"
   },
   {
     "id": "908b8cb7-4cbd-4f9a-ab77-723fa31d804e",
@@ -62,5 +63,24 @@
     "totalAmount": 320,
     "status": "pending",
     "createdAt": "2026-01-18T11:33:43.720Z"
+  },
+  {
+    "id": "a8da8860-bd77-429d-bff0-c11df7b64efc",
+    "firstName": "dsada",
+    "lastName": "sadas",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "131231321312",
+    "items": [
+      {
+        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+        "itemType": "painting",
+        "title": "фывфвфв",
+        "price": 320,
+        "quantity": 1
+      }
+    ],
+    "totalAmount": 320,
+    "status": "pending",
+    "createdAt": "2026-01-18T17:01:35.761Z"
   }
 ]

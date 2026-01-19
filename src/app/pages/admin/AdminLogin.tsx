@@ -12,11 +12,12 @@ export default function AdminLogin({ onLogin, onCancel }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Временно без проверки - просто логин
-    const mockToken = 'test-token-' + Date.now();
-    try { 
-      localStorage.setItem('adminToken', mockToken); 
+    setError('');
+
+    // Простой клиентский логин без проверки на бэкенде
+    const mockToken = 'admin-token-' + Date.now();
+    try {
+      localStorage.setItem('adminToken', mockToken);
     } catch (e) {}
     onLogin(mockToken);
   };
@@ -26,16 +27,15 @@ export default function AdminLogin({ onLogin, onCancel }: Props) {
       <h1 className="page-title">Admin Login</h1>
       <form className="admin-form" onSubmit={handleSubmit} style={{ maxWidth: 420 }}>
         <div className="admin-form-group">
-          <label>Username</label>
+          <label>Логин</label>
           <input className="admin-form-group input" value={username} onChange={e => setUsername(e.target.value)} />
         </div>
         <div className="admin-form-group">
-          <label>Password</label>
+          <label>Пароль</label>
           <input type="password" className="admin-form-group input" value={password} onChange={e => setPassword(e.target.value)} />
         </div>
-        {error && <div style={{ color: 'var(--red)', marginBottom: 'var(--spacing-sm)' }}>{error}</div>}
         <div className="admin-form-actions">
-          <button className="admin-btn" type="submit">Sign in</button>
+          <button className="admin-btn" type="submit">Войти</button>
           {onCancel && (
             <button type="button" className="admin-btn admin-btn-secondary" onClick={onCancel}>Cancel</button>
           )}

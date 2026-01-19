@@ -9,7 +9,10 @@ interface PaintingCardProps {
 }
 
 export function PaintingCard({ painting, onClick, currency = 'USD', convertPrice }: PaintingCardProps) {
-  const converted = convertPrice ? convertPrice(painting.price) : painting.price;
+  // Для картин базовая цена хранится в USD (priceUSD),
+  // а также могут быть сохранены рассчитанные price (KZT) и priceEUR.
+  const baseUSD = typeof painting.priceUSD === 'number' ? painting.priceUSD : (typeof (painting as any).priceUSD === 'number' ? (painting as any).priceUSD : painting.price);
+  const converted = convertPrice ? convertPrice(baseUSD) : baseUSD;
   const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
   
   // Поддержка как старого формата (imageUrl, size), так и нового из API (image, dimensions)

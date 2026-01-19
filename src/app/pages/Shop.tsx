@@ -15,9 +15,11 @@ interface ShopProps {
   items: ShopItem[];
   onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
   addToCart: (item: ShopItem, type: 'shop') => void;
+  currency: 'USD'|'EUR'|'KZT';
+  convertPrice?: (priceUSD: number) => number;
 }
 
-export function Shop({ items, onNavigate, addToCart }: ShopProps) {
+export function Shop({ items, onNavigate, addToCart, currency, convertPrice }: ShopProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const categories = ['all', ...Array.from(new Set(items.map(item => item.category)))];
@@ -61,7 +63,16 @@ export function Shop({ items, onNavigate, addToCart }: ShopProps) {
                 <div className="shop-info-white">
                   <h3 className="shop-title-white">{item.title}</h3>
                   <p className="shop-artist-white">{item.artist}</p>
-                  <p className="shop-price-white">${item.price.toLocaleString()}</p>
+                  {(() => {
+                    const baseUSD = item.price || 0; // товары магазина хранят цену в USD
+                    const value = convertPrice ? convertPrice(baseUSD) : baseUSD;
+                    const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+                    return (
+                      <p className="shop-price-white">
+                        {symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                      </p>
+                    );
+                  })()}
                   <button 
                     className="btn" 
                     onClick={(e) => {

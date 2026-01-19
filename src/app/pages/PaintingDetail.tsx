@@ -6,9 +6,11 @@ interface PaintingDetailProps {
   paintingId: string | number;
   onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
   addToCart: (item: any, type: 'painting') => void;
+   currency: 'USD'|'EUR'|'KZT';
+   convertPrice?: (priceUSD: number) => number;
 }
 
-export function PaintingDetail({ paintingId, onNavigate, addToCart }: PaintingDetailProps) {
+export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, convertPrice }: PaintingDetailProps) {
   const [paintings, setPaintings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -76,8 +78,16 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart }: PaintingDe
           <div className="detail-content">
             <h1 className="detail-title">{painting.title}</h1>
             {painting.artist && <p style={{ fontSize: '1.15rem', color: '#666', marginBottom: '1rem', fontStyle: 'italic' }}>Артист: {painting.artist}</p>}
-            
-            <p className="detail-price">${painting.price.toLocaleString('en-US')}</p>
+            {(() => {
+              const baseUSD = typeof painting.priceUSD === 'number' ? painting.priceUSD : (painting.price || 0);
+              const value = convertPrice ? convertPrice(baseUSD) : baseUSD;
+              const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+              return (
+                <p className="detail-price">
+                  {symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                </p>
+              );
+            })()}
             
             <div className="detail-meta">
               <div className="meta-item">

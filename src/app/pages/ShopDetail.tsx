@@ -15,9 +15,11 @@ interface ShopDetailProps {
   shopItems: ShopItem[];
   onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
   addToCart: (item: ShopItem, type: 'shop') => void;
+  currency: 'USD'|'EUR'|'KZT';
+  convertPrice?: (priceUSD: number) => number;
 }
 
-export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart }: ShopDetailProps) {
+export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart, currency, convertPrice }: ShopDetailProps) {
   const shopItem = shopItems.find(item => item.id === shopItemId);
 
   if (!shopItem) {
@@ -57,8 +59,16 @@ export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart }: Sho
 
           <div className="detail-content">
             <h1 className="detail-title">{shopItem.title}</h1>
-
-            <p className="detail-price">${shopItem.price.toLocaleString('en-US')}</p>
+            {(() => {
+              const baseUSD = shopItem.price || 0; // цена товара магазина в USD
+              const value = convertPrice ? convertPrice(baseUSD) : baseUSD;
+              const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+              return (
+                <p className="detail-price">
+                  {symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                </p>
+              );
+            })()}
 
             <div className="detail-meta">
               <div className="meta-item">
