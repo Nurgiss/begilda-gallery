@@ -342,7 +342,7 @@ export default function App() {
         {renderPage()}
       </main>
       
-      {!isAdminPage && <Footer onNavigate={handleNavigate} />}
+      {<Footer onNavigate={handleNavigate} />}
     </div>
   );
 }
