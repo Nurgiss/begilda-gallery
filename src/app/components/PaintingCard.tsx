@@ -11,17 +11,18 @@ interface PaintingCardProps {
 export function PaintingCard({ painting, onClick, currency = 'USD', convertPrice }: PaintingCardProps) {
   // Для картин базовая цена хранится в USD (priceUSD),
   // а также могут быть сохранены рассчитанные price (KZT) и priceEUR.
-  const baseUSD = typeof painting.priceUSD === 'number' ? painting.priceUSD : (typeof (painting as any).priceUSD === 'number' ? (painting as any).priceUSD : painting.price);
+  const maybePriceUSD = (painting as any).priceUSD;
+  const baseUSD = typeof maybePriceUSD === 'number' ? maybePriceUSD : painting.price;
   const converted = convertPrice ? convertPrice(baseUSD) : baseUSD;
   const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
   
   // Поддержка как старого формата (imageUrl, size), так и нового из API (image, dimensions)
-  let imageUrl = painting.imageUrl || painting.image;
+  let imageUrl = painting.imageUrl || (painting as any).image;
   // Если путь начинается с /uploads/, добавляем базовый URL API
   if (imageUrl && imageUrl.startsWith('/uploads/')) {
     imageUrl = `http://localhost:3001${imageUrl}`;
   }
-  const size = painting.size || painting.dimensions;
+  const size = painting.size || (painting as any).dimensions;
   
   return (
     <div className="home-painting-card" onClick={onClick}>

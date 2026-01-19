@@ -3,7 +3,15 @@ import { getOrders, updateOrder, deleteOrder } from '../../../api/client';
 
 interface Order {
   id: string;
+  fullName?: string;
   email: string;
+  phone?: string;
+  deliveryType?: 'pickup' | 'delivery';
+  pickupPoint?: string;
+  country?: string;
+  postalCode?: string;
+  city?: string;
+  address?: string;
   items: Array<{
     itemId: number;
     itemType: 'painting' | 'shop';
@@ -133,7 +141,7 @@ export function OrdersManager() {
                 <tr>
                   <th>№</th>
                   <th>Дата</th>
-                  <th>Email</th>
+                  <th>Клиент</th>
                   <th>Товаров</th>
                   <th>Сумма</th>
                   <th>Статус</th>
@@ -157,7 +165,7 @@ export function OrdersManager() {
                     >
                       <td>#{order.id.slice(0, 8)}</td>
                       <td>{formatDate(order.createdAt)}</td>
-                      <td>{order.email}</td>
+                      <td>{order.fullName || order.email}</td>
                       <td>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
                       <td>${order.totalAmount.toLocaleString('en-US')}</td>
                       <td>
@@ -209,14 +217,66 @@ export function OrdersManager() {
                   📧 Контактная информация
                 </h3>
                 <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px' }}>
+                  {selectedOrder.fullName && (
+                    <p style={{ margin: '0.5rem 0' }}>
+                      <strong>ФИО:</strong> {selectedOrder.fullName}
+                    </p>
+                  )}
                   <p style={{ margin: '0.5rem 0' }}>
                     <strong>Email:</strong> <a href={`mailto:${selectedOrder.email}`}>{selectedOrder.email}</a>
                   </p>
+                  {selectedOrder.phone && (
+                    <p style={{ margin: '0.5rem 0' }}>
+                      <strong>Телефон:</strong> <a href={`tel:${selectedOrder.phone}`}>{selectedOrder.phone}</a>
+                    </p>
+                  )}
                   <p style={{ margin: '0.5rem 0' }}>
                     <strong>Дата заказа:</strong> {formatDate(selectedOrder.createdAt)}
                   </p>
                 </div>
               </div>
+              
+              {selectedOrder.deliveryType && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', color: '#555' }}>
+                    🚚 Информация о доставке
+                  </h3>
+                  <div style={{ backgroundColor: 'white', padding: '1rem', borderRadius: '8px' }}>
+                    <p style={{ margin: '0.5rem 0' }}>
+                      <strong>Тип:</strong> {selectedOrder.deliveryType === 'pickup' ? 'Самовывоз' : 'Доставка'}
+                    </p>
+                    {selectedOrder.deliveryType === 'pickup' && selectedOrder.pickupPoint && (
+                      <p style={{ margin: '0.5rem 0' }}>
+                        <strong>Пункт самовывоза:</strong> {selectedOrder.pickupPoint}
+                      </p>
+                    )}
+                    {selectedOrder.deliveryType === 'delivery' && (
+                      <>
+                        {selectedOrder.country && (
+                          <p style={{ margin: '0.5rem 0' }}>
+                            <strong>Страна:</strong> {selectedOrder.country}
+                          </p>
+                        )}
+                        {selectedOrder.city && (
+                          <p style={{ margin: '0.5rem 0' }}>
+                            <strong>Город:</strong> {selectedOrder.city}
+                          </p>
+                        )}
+                        {selectedOrder.postalCode && (
+                          <p style={{ margin: '0.5rem 0' }}>
+                            <strong>Индекс:</strong> {selectedOrder.postalCode}
+                          </p>
+                        )}
+                        {selectedOrder.address && (
+                          <p style={{ margin: '0.5rem 0' }}>
+                            <strong>Адрес:</strong> {selectedOrder.address}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
               
               <div style={{ marginBottom: '1.5rem' }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', color: '#555' }}>

@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 interface ShopItem {
-  id: number;
+  id: string | number;
   title: string;
-  artist: string;
   price: number;
   image: string;
   category: string;
   description: string;
+  artist?: string;
 }
 
 interface ShopProps {
   items: ShopItem[];
-  onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
+  onNavigate: (page: string, id?: string | number, type?: 'painting' | 'shop') => void;
   addToCart: (item: ShopItem, type: 'shop') => void;
   currency: 'USD'|'EUR'|'KZT';
   convertPrice?: (priceUSD: number) => number;
@@ -62,7 +62,7 @@ export function Shop({ items, onNavigate, addToCart, currency, convertPrice }: S
                 </div>
                 <div className="shop-info-white">
                   <h3 className="shop-title-white">{item.title}</h3>
-                  <p className="shop-artist-white">{item.artist}</p>
+                  {/* Товары в магазине могут не иметь артиста */}
                   {(() => {
                     const baseUSD = item.price || 0; // товары магазина хранят цену в USD
                     const value = convertPrice ? convertPrice(baseUSD) : baseUSD;

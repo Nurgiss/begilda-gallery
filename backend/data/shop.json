@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "f9aafdfa-ef98-4eb1-a5da-e9ebd464794c",
+    "title": "dsadadadadasd",
+    "artist": "Fsddsad",
+    "price": 50,
+    "image": "http://localhost:3001/uploads/c364b9c9-8866-4594-b74a-a6640b12e13a.jpg",
+    "category": "Merchandise",
+    "description": "dsaddsdsad",
+    "createdAt": "2026-01-18T19:43:35.303Z",
+    "updatedAt": "2026-01-19T09:31:08.472Z"
+  }
+]

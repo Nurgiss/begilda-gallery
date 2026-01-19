@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getNews, createNews, updateNews, deleteNews } from '../../../api/client';
+import { getNews, createNews, updateNews, deleteNews, uploadImage } from '../../../api/client';
 
 export function NewsManager() {
   const [news, setNews] = useState<any[]>([]);
@@ -69,17 +69,7 @@ export function NewsManager() {
 
     setUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await fetch('http://localhost:3001/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      const data = await response.json();
+      const data = await uploadImage(file);
       setFormData((prev: any) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);

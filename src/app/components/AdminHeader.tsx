@@ -55,6 +55,12 @@ export function AdminHeader({ currentPage, onNavigate, onLogout }: AdminHeaderPr
               Shop
             </a>
             <a 
+              className={`nav-link ${currentPage === 'admin-pickup-points' ? 'active' : ''}`}
+              onClick={() => onNavigate('admin-pickup-points')}
+            >
+              Пункты самовывоза
+            </a>
+            <a 
               className={`nav-link ${currentPage === 'admin-currency' ? 'active' : ''}`}
               onClick={() => onNavigate('admin-currency')}
               style={{ color: '#ffc107' }}
@@ -73,7 +79,7 @@ export function AdminHeader({ currentPage, onNavigate, onLogout }: AdminHeaderPr
                 style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
                 onClick={async () => {
                   try {
-                    const apiBase = (import.meta.env.VITE_API_BASE_URL as string) || 'http://127.0.0.1:8001/api';
+                    const apiBase = ((import.meta as any).env?.VITE_API_BASE_URL as string) || 'http://127.0.0.1:8001/api';
                     const token = localStorage.getItem('adminToken');
                     if (token) {
                       await fetch(`${apiBase}/logout`, {

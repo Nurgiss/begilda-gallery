@@ -1,8 +1,9 @@
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
+  artist: string;
   location: string;
   dates: string;
   description: string;
@@ -13,7 +14,7 @@ interface Exhibition {
 
 interface ExhibitionsProps {
   exhibitions: Exhibition[];
-  onNavigate: (page: string, id?: number) => void;
+  onNavigate: (page: string, id?: string | number) => void;
 }
 
 export function Exhibitions({ exhibitions, onNavigate }: ExhibitionsProps) {

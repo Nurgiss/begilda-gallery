@@ -3,7 +3,7 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getPaintings, getExhibition } from '../../api/client';
 
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
   artist: string;
   location: string;
@@ -27,7 +27,7 @@ interface Artwork {
 interface ExhibitionDetailProps {
   exhibition: Exhibition | undefined;
   artworks: Artwork[];
-  onNavigate: (page: string, id?: number) => void;
+  onNavigate: (page: string, id?: string | number) => void;
 }
 
 export function ExhibitionDetail({ exhibition, artworks, onNavigate }: ExhibitionDetailProps) {

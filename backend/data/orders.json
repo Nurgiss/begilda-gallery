@@ -1,36 +1,86 @@
 [
   {
-    "id": "bd6c11bf-b2d7-4df0-8551-4740e22bf8f2",
-    "firstName": "Ануарбек",
-    "lastName": "Нургиса",
+    "id": "8ec8f08d-a058-454b-92b9-b3a99e9ef9c6",
+    "firstName": "выфвфвы",
+    "lastName": "ваыв",
     "email": "nurgisaanuarbekov11@gmail.com",
-    "phone": "77474721098",
+    "phone": "1231232131232",
     "items": [
       {
         "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
         "itemType": "painting",
         "title": "фывфвфв",
         "price": 320,
+        "quantity": 3
+      }
+    ],
+    "totalAmount": 960,
+    "status": "processing",
+    "createdAt": "2026-01-19T09:10:35.119Z",
+    "updatedAt": "2026-01-19T11:26:26.922Z"
+  },
+  {
+    "id": "58617fcb-6432-42d9-ad20-1d92ec9d4df5",
+    "fullName": "Аававываывафы",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "12312312312321",
+    "deliveryType": "delivery",
+    "country": "Германия",
+    "postalCode": "05500",
+    "city": "Кёльн",
+    "address": "sadadadsadad",
+    "items": [
+      {
+        "itemId": "165b8f01-3425-41bd-87e0-12a5e2045257",
+        "itemType": "painting",
+        "title": "Закат над степью выфв",
+        "price": 550,
         "quantity": 1
       }
     ],
-    "totalAmount": 320,
-    "status": "processing",
-    "createdAt": "2026-01-18T11:25:47.416Z",
-    "updatedAt": "2026-01-18T16:55:28.518Z"
+    "totalAmount": 550,
+    "status": "pending",
+    "createdAt": "2026-01-19T11:15:01.899Z"
   },
   {
-    "id": "908b8cb7-4cbd-4f9a-ab77-723fa31d804e",
-    "firstName": "Нургиса",
-    "lastName": "Ануарбек",
+    "id": "0fb53d2c-675d-45ce-a9a1-3426ce10d858",
+    "fullName": "Nurgissa",
     "email": "nurgisaanuarbekov11@gmail.com",
-    "phone": "7747271273132",
+    "phone": "321321321321312",
+    "deliveryType": "delivery",
+    "country": "USA",
+    "postalCode": "1232131312312",
+    "city": "Phoenix",
+    "address": "123213323133",
     "items": [
       {
-        "itemId": 2,
+        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
+        "itemType": "painting",
+        "title": "фывфвфв",
+        "price": 320,
+        "quantity": 2
+      }
+    ],
+    "totalAmount": 640,
+    "status": "pending",
+    "createdAt": "2026-01-19T11:24:59.092Z"
+  },
+  {
+    "id": "088fe784-b995-4593-828e-6a7a4992cbf4",
+    "fullName": "выфвфы",
+    "email": "nurgisaanuarbekov11@gmail.com",
+    "phone": "asdadsad",
+    "deliveryType": "delivery",
+    "country": "Russia",
+    "postalCode": "2313123",
+    "city": "Yekaterinburg",
+    "address": "вфывывфывфы",
+    "items": [
+      {
+        "itemId": "f9aafdfa-ef98-4eb1-a5da-e9ebd464794c",
         "itemType": "shop",
-        "title": "Exhibition Catalogue - Contemporary Visions",
-        "price": 65,
+        "title": "dsadadadadasd",
+        "price": 50,
         "quantity": 1
       },
       {
@@ -41,46 +91,8 @@
         "quantity": 1
       }
     ],
-    "totalAmount": 385,
+    "totalAmount": 370,
     "status": "pending",
-    "createdAt": "2026-01-18T11:28:12.810Z"
-  },
-  {
-    "id": "aba740ee-132f-4b0d-9392-1e7cd6d8604b",
-    "firstName": "Нургиса",
-    "lastName": "Ануарбек",
-    "email": "nurgisaanuarbekov11@gmail.com",
-    "phone": "872131233123",
-    "items": [
-      {
-        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
-        "itemType": "painting",
-        "title": "фывфвфв",
-        "price": 320,
-        "quantity": 1
-      }
-    ],
-    "totalAmount": 320,
-    "status": "pending",
-    "createdAt": "2026-01-18T11:33:43.720Z"
-  },
-  {
-    "id": "a8da8860-bd77-429d-bff0-c11df7b64efc",
-    "firstName": "dsada",
-    "lastName": "sadas",
-    "email": "nurgisaanuarbekov11@gmail.com",
-    "phone": "131231321312",
-    "items": [
-      {
-        "itemId": "8faab717-7afb-4068-b7b2-b2c47d1c7e7f",
-        "itemType": "painting",
-        "title": "фывфвфв",
-        "price": 320,
-        "quantity": 1
-      }
-    ],
-    "totalAmount": 320,
-    "status": "pending",
-    "createdAt": "2026-01-18T17:01:35.761Z"
+    "createdAt": "2026-01-19T11:48:55.931Z"
   }
 ]

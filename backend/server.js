@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Создание папки для загрузок
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
@@ -59,6 +59,7 @@ const ARTISTS_FILE = path.join(DATA_DIR, 'artists.json');
 const NEWS_FILE = path.join(DATA_DIR, 'news.json');
 const SHOP_FILE = path.join(DATA_DIR, 'shop.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const PICKUP_POINTS_FILE = path.join(DATA_DIR, 'pickupPoints.json');
 
 // Initialize data directory
 async function initDataDir() {
@@ -72,7 +73,8 @@ async function initDataDir() {
       { path: ARTISTS_FILE, data: [] },
       { path: NEWS_FILE, data: [] },
       { path: SHOP_FILE, data: [] },
-      { path: ORDERS_FILE, data: [] }
+      { path: ORDERS_FILE, data: [] },
+      { path: PICKUP_POINTS_FILE, data: [] }
     ];
     
     for (const file of files) {
@@ -116,8 +118,12 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
-    const fileUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+
+    // Build a URL that works both in dev and behind a reverse proxy (Nginx)
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
     res.json({
       success: true,
       url: fileUrl,
@@ -597,6 +603,77 @@ app.delete('/api/orders/:id', async (req, res) => {
   }
 });
 
+// ==================== PICKUP POINTS API ====================
+
+// GET all pickup points
+app.get('/api/pickup-points', async (req, res) => {
+  const pickupPoints = await readData(PICKUP_POINTS_FILE);
+  res.json(pickupPoints);
+});
+
+// POST create pickup point
+app.post('/api/pickup-points', async (req, res) => {
+  const pickupPoints = await readData(PICKUP_POINTS_FILE);
+  const newPickupPoint = {
+    id: uuidv4(),
+    ...req.body,
+    createdAt: new Date().toISOString()
+  };
+  
+  pickupPoints.push(newPickupPoint);
+  const success = await writeData(PICKUP_POINTS_FILE, pickupPoints);
+  
+  if (success) {
+    res.status(201).json(newPickupPoint);
+  } else {
+    res.status(500).json({ error: 'Failed to create pickup point' });
+  }
+});
+
+// PUT update pickup point
+app.put('/api/pickup-points/:id', async (req, res) => {
+  const pickupPoints = await readData(PICKUP_POINTS_FILE);
+  const index = pickupPoints.findIndex(p => p.id === req.params.id);
+  
+  if (index !== -1) {
+    pickupPoints[index] = {
+      ...pickupPoints[index],
+      ...req.body,
+      id: req.params.id,
+      updatedAt: new Date().toISOString()
+    };
+    
+    const success = await writeData(PICKUP_POINTS_FILE, pickupPoints);
+    
+    if (success) {
+      res.json(pickupPoints[index]);
+    } else {
+      res.status(500).json({ error: 'Failed to update pickup point' });
+    }
+  } else {
+    res.status(404).json({ error: 'Pickup point not found' });
+  }
+});
+
+// DELETE pickup point
+app.delete('/api/pickup-points/:id', async (req, res) => {
+  const pickupPoints = await readData(PICKUP_POINTS_FILE);
+  const filtered = pickupPoints.filter(p => p.id !== req.params.id);
+  
+  if (filtered.length < pickupPoints.length) {
+    const success = await writeData(PICKUP_POINTS_FILE, filtered);
+    
+    if (success) {
+      res.json({ message: 'Pickup point deleted successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to delete pickup point' });
+    }
+  } else {
+    res.status(404).json({ error: 'Pickup point not found' });
+  }
+});
+
+// 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Begilda Gallery API is running' });

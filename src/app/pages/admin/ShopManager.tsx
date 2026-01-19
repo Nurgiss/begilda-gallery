@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getShopItems, createShopItem, updateShopItem, deleteShopItem } from '../../../api/client';
+import { getShopItems, createShopItem, updateShopItem, deleteShopItem, uploadImage } from '../../../api/client';
 
 export function ShopManager() {
   const [shopItems, setShopItems] = useState<any[]>([]);
@@ -10,7 +10,6 @@ export function ShopManager() {
 
   const [formData, setFormData] = useState<any>({
     title: '',
-    artist: '',
     price: 0,
     image: '',
     category: 'Prints',
@@ -37,7 +36,6 @@ export function ShopManager() {
     setEditingItem(null);
     setFormData({
       title: '',
-      artist: '',
       price: 0,
       image: '',
       category: 'Prints',
@@ -69,17 +67,7 @@ export function ShopManager() {
 
     setUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await fetch('http://localhost:3001/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      const data = await response.json();
+      const data = await uploadImage(file);
       setFormData((prev: any) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -150,34 +138,20 @@ export function ShopManager() {
                   />
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label className="form-label">Артист *</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Имя артиста"
-                      value={formData.artist}
-                      onChange={(e) => setFormData({ ...formData, artist: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Категория *</label>
-                    <select
-                      className="form-select"
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      required
-                    >
-                      <option value="Prints">Принты</option>
-                      <option value="Posters">Постеры</option>
-                      <option value="Merchandise">Мерч</option>
-                      <option value="Books">Книги</option>
-                      <option value="Other">Другое</option>
-                    </select>
-                  </div>
+                <div className="form-group">
+                  <label className="form-label">Категория *</label>
+                  <select
+                    className="form-select"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    required
+                  >
+                    <option value="Prints">Принты</option>
+                    <option value="Posters">Постеры</option>
+                    <option value="Merchandise">Мерч</option>
+                    <option value="Books">Книги</option>
+                    <option value="Other">Другое</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
@@ -262,13 +236,12 @@ export function ShopManager() {
             </form>
           </div>
         ) : (
-          <div className="admin-table-container">
+            <div className="admin-table-container">
             <table className="admin-table">
               <thead>
                 <tr>
                   <th>Изображение</th>
                   <th>Название</th>
-                  <th>Артист</th>
                   <th>Категория</th>
                   <th>Цена</th>
                   <th>Действия</th>
@@ -285,7 +258,6 @@ export function ShopManager() {
                       />
                     </td>
                     <td>{item.title}</td>
-                    <td>{item.artist}</td>
                     <td>
                       <span className="admin-status admin-status-available">
                         {item.category}

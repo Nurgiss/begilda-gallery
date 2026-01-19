@@ -44,13 +44,13 @@ export function ArtistsManager() {
     });
   };
 
-  const handleEdit = (artist: Artist) => {
+  const handleEdit = (artist: any) => {
     setIsEditing(true);
     setEditingArtist(artist);
     setFormData(artist);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Вы уверены, что хотите удалить этого артиста?')) {
       try {
         await deleteArtist(id);

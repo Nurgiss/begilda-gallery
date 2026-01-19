@@ -1,46 +1,104 @@
-import { useState } from 'react';
-import { createOrder } from '../../api/client';
+import { useState, useEffect } from 'react';
+import { createOrder, getPickupPoints } from '../../api/client';
 
-interface ShopItem {
-  id: number;
-  title: string;
-  artist: string;
-  price: number;
-  image: string;
-  category: string;
-  description: string;
+interface PickupPoint {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  phone: string;
+  workingHours: string;
+  isActive: boolean;
 }
 
 interface CheckoutProps {
-  cart: Array<{item: any, type: 'painting' | 'shop', quantity: number}>;
+  cart: Array<{ item: any; type: 'painting' | 'shop'; quantity: number }>;
   onNavigate: (page: string) => void;
   clearCart: () => void;
 }
 
+const COUNTRIES_CITIES: Record<string, string[]> = {
+  'Kazakhstan': ['Almaty', 'Astana', 'Shymkent', 'Karaganda', 'Aktobe', 'Taraz', 'Pavlodar', 'Ust-Kamenogorsk', 'Semey', 'Atyrau', 'Kostanay', 'Kyzylorda', 'Uralsk', 'Petropavlovsk', 'Aktau', 'Temirtau', 'Turkestan', 'Other'],
+  'Russia': ['Moscow', 'Saint Petersburg', 'Novosibirsk', 'Yekaterinburg', 'Kazan', 'Nizhny Novgorod', 'Chelyabinsk', 'Samara', 'Omsk', 'Rostov-on-Don', 'Ufa', 'Krasnoyarsk', 'Voronezh', 'Perm', 'Volgograd', 'Other'],
+  'USA': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'San Francisco', 'Columbus', 'Miami', 'Other'],
+  'United Kingdom': ['London', 'Birmingham', 'Manchester', 'Liverpool', 'Leeds', 'Sheffield', 'Edinburgh', 'Bristol', 'Glasgow', 'Cardiff', 'Belfast', 'Other'],
+  'Germany': ['Berlin', 'Hamburg', 'Munich', 'Cologne', 'Frankfurt', 'Stuttgart', 'Düsseldorf', 'Dortmund', 'Essen', 'Leipzig', 'Bremen', 'Dresden', 'Hannover', 'Nuremberg', 'Other'],
+  'France': ['Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Bordeaux', 'Lille', 'Rennes', 'Reims', 'Other'],
+  'Italy': ['Rome', 'Milan', 'Naples', 'Turin', 'Palermo', 'Genoa', 'Bologna', 'Florence', 'Bari', 'Catania', 'Venice', 'Verona', 'Other'],
+  'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Zaragoza', 'Málaga', 'Murcia', 'Palma', 'Las Palmas', 'Bilbao', 'Other'],
+  'China': ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen', 'Tianjin', 'Chongqing', 'Wuhan', 'Chengdu', 'Nanjing', 'Xi\'an', 'Hangzhou', 'Qingdao', 'Dalian', 'Other'],
+  'Japan': ['Tokyo', 'Osaka', 'Yokohama', 'Nagoya', 'Sapporo', 'Fukuoka', 'Kobe', 'Kyoto', 'Kawasaki', 'Hiroshima', 'Other'],
+  'UAE': ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain', 'Other'],
+  'Turkey': ['Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Adana', 'Gaziantep', 'Konya', 'Other'],
+  'Canada': ['Toronto', 'Montreal', 'Vancouver', 'Calgary', 'Edmonton', 'Ottawa', 'Winnipeg', 'Quebec City', 'Other'],
+  'Australia': ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide', 'Canberra', 'Hobart', 'Darwin', 'Other'],
+  'Other': ['Other']
+};
+
+const COUNTRIES = Object.keys(COUNTRIES_CITIES);
+
 export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
-  
+  const [pickupPoints, setPickupPoints] = useState<PickupPoint[]>([]);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     email: '',
-    phone: ''
+    phone: '',
+    deliveryType: 'delivery' as 'pickup' | 'delivery',
+    pickupPoint: '',
+    country: '',
+    postalCode: '',
+    city: '',
+    address: ''
   });
-  
+
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  useEffect(() => {
+    loadPickupPoints();
+  }, []);
+
+  const loadPickupPoints = async () => {
+    try {
+      const data = await getPickupPoints();
+      setPickupPoints(data.filter((p: PickupPoint) => p.isActive));
+    } catch (error) {
+      console.error('Error loading pickup points:', error);
+    }
+  };
+  
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
+      const totalAmount = cart.reduce((sum, { item, quantity }) => {
+        const price = item.priceUSD || item.price || 0;
+        return sum + price * quantity;
+      }, 0);
+
+      const hasShopItems = cart.some(({ type }) => type === 'shop');
+
+      // Minimum order requirement: Shop items delivery only from $100
+      if (formData.deliveryType === 'delivery' && hasShopItems && totalAmount < 100) {
+        alert('Minimum order amount for Shop items delivery is $100.');
+        setLoading(false);
+        return;
+      }
+
       // Формируем данные заказа
       const orderData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
+        deliveryType: formData.deliveryType,
+        pickupPoint: formData.deliveryType === 'pickup' ? formData.pickupPoint : undefined,
+        country: formData.deliveryType === 'delivery' ? formData.country : undefined,
+        postalCode: formData.deliveryType === 'delivery' ? formData.postalCode : undefined,
+        city: formData.deliveryType === 'delivery' ? formData.city : undefined,
+        address: formData.deliveryType === 'delivery' ? formData.address : undefined,
         items: cart.map(({ item, type, quantity }) => ({
           itemId: item.id,
           itemType: type,
@@ -48,15 +106,13 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
           price: item.priceUSD || item.price,
           quantity
         })),
-        totalAmount: cart.reduce((sum, { item, quantity }) => {
-          const price = item.priceUSD || item.price || 0;
-          return sum + (price * quantity);
-        }, 0),
+        totalAmount,
         status: 'pending',
         createdAt: new Date().toISOString()
       };
-      
-      await createOrder(orderData);
+
+      const created = await createOrder(orderData);
+      setOrderId(created?.id || null);
       setLoading(false);
       setProcessing(true);
 
@@ -68,7 +124,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
       }, 2000);
     } catch (error) {
       console.error('Error creating order:', error);
-      alert('Ошибка при оформлении заказа. Попробуйте еще раз.');
+      alert('Error placing order. Please try again.');
     } finally {
       // Дополнительный setLoading(false) на случай ошибки
       setLoading(false);
@@ -79,23 +135,34 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
     return (
       <div className="checkout-page">
         <div className="container" style={{ maxWidth: '600px', padding: 'var(--spacing-xl) 0' }}>
-          <h1 className="page-title" style={{ textAlign: 'left', marginBottom: 'var(--spacing-md)' }}>Заказ оформлен</h1>
-          <p style={{ marginBottom: 'var(--spacing-lg)', color: '#666', maxWidth: '480px' }}>
-            Спасибо за ваш заказ. Мы свяжемся с вами по указанным контактам:
+          <h1 className="page-title" style={{ textAlign: 'left', marginBottom: 'var(--spacing-md)' }}>Order Placed</h1>
+          <p style={{ marginBottom: 'var(--spacing-sm)', color: '#666', maxWidth: '480px' }}>
+            Thank you for your order.
+          </p>
+          {orderId && (
+            <p style={{ marginBottom: 'var(--spacing-md)', fontWeight: 500 }}>
+              Your order number: <span style={{ fontFamily: 'monospace' }}>{orderId}</span>
+            </p>
+          )}
+          <p style={{ marginBottom: 'var(--spacing-md)', color: '#666', maxWidth: '480px' }}>
+            We will contact you at the provided details:
           </p>
           <div style={{ marginBottom: 'var(--spacing-lg)', fontSize: '14px', lineHeight: 1.6 }}>
-            {formData.firstName || formData.lastName ? (
-              <div>{formData.lastName} {formData.firstName}</div>
-            ) : null}
+            {formData.fullName && <div>{formData.fullName}</div>}
             {formData.email && <div>{formData.email}</div>}
             {formData.phone && <div>{formData.phone}</div>}
           </div>
+          <div style={{ marginBottom: 'var(--spacing-lg)', fontSize: '14px', lineHeight: 1.6 }}>
+            <p style={{ fontWeight: 600, marginBottom: '4px' }}>Our contacts:</p>
+            <p style={{ margin: 0 }}>Email: info@begilda.gallery</p>
+            <p style={{ margin: 0 }}>Phone: +7 (000) 000-00-00</p>
+          </div>
           <div style={{ display: 'flex', gap: '12px' }}>
             <button className="btn" onClick={() => onNavigate('home')}>
-              На главную
+              Back to Home
             </button>
             <button className="btn btn-secondary" onClick={() => onNavigate('catalog')}>
-              Продолжить покупки
+              Continue Shopping
             </button>
           </div>
         </div>
@@ -107,7 +174,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
     return (
       <div className="checkout-page">
         <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
-          <p style={{ marginBottom: 'var(--spacing-md)' }}>Оформляем ваш заказ…</p>
+          <p style={{ marginBottom: 'var(--spacing-md)' }}>Processing your order…</p>
         </div>
       </div>
     );
@@ -124,17 +191,29 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
     );
   }
 
+  const totalAmount = cart.reduce((sum, { item, quantity }) => {
+    const price = item.priceUSD || item.price || 0;
+    return sum + price * quantity;
+  }, 0);
+
+  const hasShopItems = cart.some(({ type }) => type === 'shop');
+  const isDelivery = formData.deliveryType === 'delivery';
+  const minAmount = 100;
+  const needsMinimum = hasShopItems && isDelivery;
+  const meetsMinimum = !needsMinimum || totalAmount >= minAmount;
+  const progressPercent = needsMinimum ? Math.min((totalAmount / minAmount) * 100, 100) : 100;
+
   return (
     <div className="checkout-page">
       <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-xl) 0' }}>
         <button 
           className="btn btn-secondary" 
-          onClick={() => onNavigate('catalog')}
+          onClick={() => onNavigate('cart')}
           style={{ marginBottom: 'var(--spacing-lg)' }}
         >
-          Назад в каталог
+          Back to Cart
         </button>
-        <h1 className="page-title" style={{ marginBottom: 'var(--spacing-md)' }}>Оформление заказа</h1>
+        <h1 className="page-title" style={{ marginBottom: 'var(--spacing-md)' }}>Checkout</h1>
         
         {/* Сводка заказа */}
         <div style={{ 
@@ -142,7 +221,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
           padding: '24px 32px', 
           marginBottom: 'var(--spacing-xl)'
         }}>
-          <h2 style={{ fontSize: '18px', marginBottom: '16px', color: '#333', fontWeight: 500 }}>Ваш заказ</h2>
+          <h2 style={{ fontSize: '18px', marginBottom: '16px', color: '#333', fontWeight: 500 }}>Your Order</h2>
           
           {cart.map((cartItem, index) => {
             const price = cartItem.item.priceUSD || cartItem.item.price || 0;
@@ -156,7 +235,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
                 <div>
                   <p style={{ margin: 0, fontWeight: '600', color: '#333' }}>{cartItem.item.title}</p>
                   <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem', color: '#666' }}>
-                    Количество: {cartItem.quantity}
+                    Quantity: {cartItem.quantity}
                   </p>
                 </div>
                 <p style={{ margin: 0, fontWeight: '600', color: '#333', fontSize: '1.1rem' }}>
@@ -173,7 +252,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
             paddingTop: '16px',
             borderTop: '1px solid #333'
           }}>
-            <span style={{ fontSize: '14px', fontWeight: 600 }}>Итого</span>
+            <span style={{ fontSize: '14px', fontWeight: 600 }}>Total</span>
             <span style={{ fontSize: '18px', fontWeight: 600 }}>
               ${cart.reduce((sum, item) => {
                 const price = item.item.priceUSD || item.item.price || 0;
@@ -181,32 +260,57 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
               }, 0).toLocaleString('en-US')}
             </span>
           </div>
+          <p style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+            Amount shown excludes shipping cost. Shipping will be calculated individually after order placement.
+          </p>
         </div>
         
-        {/* Форма */}
-        <form onSubmit={handleSubmit}>
-          <h2 className="section-title" style={{ fontSize: '20px', marginBottom: 'var(--spacing-md)', textAlign: 'left' }}>Контактная информация</h2>
-
-          <div className="form-group">
-            <label className="form-label" htmlFor="lastName">Фамилия *</label>
-            <input
-              id="lastName"
-              type="text"
-              className="form-input"
-              value={formData.lastName}
-              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              required
-            />
+        {/* Прогресс-бар минимальной суммы для доставки Shop */}
+        {needsMinimum && (
+          <div style={{ 
+            backgroundColor: '#fff3cd', 
+            padding: '16px 24px', 
+            marginBottom: 'var(--spacing-xl)',
+            borderLeft: '4px solid #ffc107'
+          }}>
+            <p style={{ margin: 0, marginBottom: '12px', fontSize: '14px', color: '#856404', fontWeight: 500 }}>
+              Minimum amount for Shop items delivery: $100
+            </p>
+            <div style={{ 
+              width: '100%', 
+              height: '8px', 
+              backgroundColor: '#e0e0e0', 
+              borderRadius: '4px',
+              overflow: 'hidden',
+              marginBottom: '8px'
+            }}>
+              <div style={{ 
+                width: `${progressPercent}%`, 
+                height: '100%', 
+                backgroundColor: meetsMinimum ? '#28a745' : '#ffc107',
+                transition: 'width 0.3s ease, background-color 0.3s ease'
+              }} />
+            </div>
+            <p style={{ margin: 0, fontSize: '13px', color: '#856404' }}>
+              {meetsMinimum 
+                ? '✓ Minimum reached' 
+                : `$${(minAmount - totalAmount).toFixed(2)} more to minimum`}
+            </p>
           </div>
+        )}
+        
+        {/* Form */}
+        <form onSubmit={handleSubmit}>
+          <h2 className="section-title" style={{ fontSize: '20px', marginBottom: 'var(--spacing-md)', textAlign: 'left' }}>Contact Information</h2>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="firstName">Имя *</label>
+            <label className="form-label" htmlFor="fullName">Full Name *</label>
             <input
-              id="firstName"
+              id="fullName"
               type="text"
               className="form-input"
-              value={formData.firstName}
-              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               required
             />
           </div>
@@ -224,7 +328,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="phone">Телефон *</label>
+            <label className="form-label" htmlFor="phone">Phone *</label>
             <input
               id="phone"
               type="tel"
@@ -235,17 +339,151 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
             />
           </div>
 
+          <h2 className="section-title" style={{ fontSize: '20px', margin: 'var(--spacing-lg) 0 var(--spacing-md)', textAlign: 'left' }}>
+            Delivery Method and Address
+          </h2>
+
+          <div className="form-group">
+            <label className="form-label">Delivery Type *</label>
+            <div className="segmented-control">
+              <button
+                type="button"
+                className={`segmented-option ${formData.deliveryType === 'pickup' ? 'active' : ''}`}
+                onClick={() => setFormData({ ...formData, deliveryType: 'pickup' })}
+              >
+                Pickup
+              </button>
+              <button
+                type="button"
+                className={`segmented-option ${formData.deliveryType === 'delivery' ? 'active' : ''}`}
+                onClick={() => setFormData({ ...formData, deliveryType: 'delivery' })}
+              >
+                Delivery
+              </button>
+            </div>
+          </div>
+
+          {formData.deliveryType === 'pickup' ? (
+            <div className="form-group">
+              <label className="form-label">Pickup Point *</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {pickupPoints.length === 0 ? (
+                  <p style={{ color: '#666', fontSize: '14px' }}>No pickup points available</p>
+                ) : (
+                  pickupPoints.map((point) => (
+                    <label
+                      key={point.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '12px',
+                        padding: '16px',
+                        border: formData.pickupPoint === point.id ? '2px solid #000' : '1px solid #ddd',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        backgroundColor: formData.pickupPoint === point.id ? '#f8f9fa' : 'white',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="pickupPoint"
+                        value={point.id}
+                        checked={formData.pickupPoint === point.id}
+                        onChange={(e) => setFormData({ ...formData, pickupPoint: e.target.value })}
+                        required={formData.deliveryType === 'pickup'}
+                        style={{ marginTop: '4px', cursor: 'pointer' }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, marginBottom: '4px' }}>{point.name}</div>
+                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '2px' }}>
+                          {point.city}, {point.address}
+                        </div>
+                        <div style={{ fontSize: '14px', color: '#666', marginBottom: '2px' }}>
+                          📞 {point.phone}
+                        </div>
+                        <div style={{ fontSize: '14px', color: '#666' }}>
+                          🕐 {point.workingHours}
+                        </div>
+                      </div>
+                    </label>
+                  ))
+                )}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="form-group">
+                <label className="form-label" htmlFor="country">Country *</label>
+                <select
+                  id="country"
+                  className="form-select"
+                  value={formData.country}
+                  onChange={(e) => setFormData({ ...formData, country: e.target.value, city: '' })}
+                  required={formData.deliveryType === 'delivery'}
+                >
+                  <option value="">Select country</option>
+                  {COUNTRIES.map(country => (
+                    <option key={country} value={country}>{country}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="postalCode">Postal Code *</label>
+                <input
+                  id="postalCode"
+                  type="text"
+                  className="form-input"
+                  value={formData.postalCode}
+                  onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                  required={formData.deliveryType === 'delivery'}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="city">City *</label>
+                <select
+                  id="city"
+                  className="form-select"
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  required={formData.deliveryType === 'delivery'}
+                  disabled={!formData.country}
+                >
+                  <option value="">Select city</option>
+                  {formData.country && COUNTRIES_CITIES[formData.country]?.map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="address">Address *</label>
+                <input
+                  id="address"
+                  type="text"
+                  className="form-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  required={formData.deliveryType === 'delivery'}
+                />
+              </div>
+            </>
+          )}
+
           <button 
             type="submit" 
             className="btn" 
-            disabled={loading}
+            disabled={loading || !meetsMinimum}
             style={{ 
               width: '100%',
               marginTop: 'var(--spacing-md)',
-              opacity: loading ? 0.6 : 1
+              opacity: (loading || !meetsMinimum) ? 0.6 : 1,
+              cursor: (loading || !meetsMinimum) ? 'not-allowed' : 'pointer'
             }}
           >
-            {loading ? 'Оформляем заказ…' : 'Оформить заказ'}
+            {loading ? 'Processing order…' : !meetsMinimum ? `Minimum $${minAmount} for delivery` : 'Place Order'}
           </button>
         </form>
       </div>

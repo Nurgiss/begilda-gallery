@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { getArtists, getPaintings } from '../../api/client';
 
 interface Artist {
-  id: number;
+  id: string | number;
   name: string;
   bio: string;
   image: string;
@@ -13,7 +13,7 @@ interface Artist {
 }
 
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
   artist: string;
   location: string;
@@ -37,8 +37,8 @@ interface Artwork {
 
 interface ArtistsProps {
   exhibitions: Exhibition[];
-  selectedArtistId?: number;
-  onNavigate: (page: string, id?: number, type?: 'painting' | 'shop') => void;
+  selectedArtistId?: string | number;
+  onNavigate: (page: string, id?: string | number, type?: 'painting' | 'shop') => void;
   addToCart?: (item: any, type: 'painting') => void;
 }
 

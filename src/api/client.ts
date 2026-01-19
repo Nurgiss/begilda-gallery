@@ -172,17 +172,35 @@ export function deleteOrder(id: string) {
   return deleteJSON(`/orders/${id}`);
 }
 
+// ==================== PICKUP POINTS ====================
+export function getPickupPoints() {
+  return getJSON('/pickup-points');
+}
+
+export function createPickupPoint(data: any) {
+  return postJSON('/pickup-points', data);
+}
+
+export function updatePickupPoint(id: string, data: any) {
+  return putJSON(`/pickup-points/${id}`, data);
+}
+
+export function deletePickupPoint(id: string) {
+  return deleteJSON(`/pickup-points/${id}`);
+}
+
 // ==================== UPLOAD ====================
 export async function uploadImage(file: File) {
   const fd = new FormData();
   fd.append('image', file);
   const headers = getHeaders();
   delete headers['Content-Type']; // Let browser set it for FormData
-  
-  const res = await fetch(`${API_BASE}/upload-image`, { 
-    method: 'POST', 
-    body: fd, 
-    headers 
+
+  // Backend exposes POST /api/upload
+  const res = await fetch(`${API_BASE}/upload`, {
+    method: 'POST',
+    body: fd,
+    headers,
   });
   if (!res.ok) throw new Error(`Upload failed ${res.status}`);
   return res.json();
@@ -219,6 +237,10 @@ export default {
   createOrder,
   updateOrder,
   deleteOrder,
+  getPickupPoints,
+  createPickupPoint,
+  updatePickupPoint,
+  deletePickupPoint,
   uploadImage,
 };
 

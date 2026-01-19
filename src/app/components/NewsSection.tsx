@@ -1,7 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface News {
-  id: number;
+  id: string | number;
   title: string;
   excerpt: string;
   content: string;
@@ -12,7 +12,7 @@ interface News {
 
 interface NewsSectionProps {
   news: News[];
-  onNavigate: (page: string, newsId?: number) => void;
+  onNavigate: (page: string, newsId?: string | number) => void;
 }
 
 export function NewsSection({ news, onNavigate }: NewsSectionProps) {

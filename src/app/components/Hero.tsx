@@ -1,7 +1,6 @@
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
-  artist: string;
   location: string;
   dates: string;
   description: string;
@@ -10,10 +9,7 @@ interface Exhibition {
 }
 
 interface HeroProps {
-  onNavigate: (page: string, id?: number) => void;
-}
-interface HeroProps {
-  onNavigate: (page: string, id?: number) => void;
+  onNavigate: (page: string, id?: string | number) => void;
   exhibitions?: Exhibition[];
 }
 
@@ -37,10 +33,6 @@ export function Hero({ onNavigate, exhibitions }: HeroProps) {
             <p className="hero-subtitle">{featuredExhibition.description}</p>
 
             <div className="hero-exhibition-info">
-              <div className="hero-info-item">
-                <span className="hero-info-label">Artist</span>
-                <span className="hero-info-value">{featuredExhibition.artist}</span>
-              </div>
               <div className="hero-info-item">
                 <span className="hero-info-label">Location</span>
                 <span className="hero-info-value">{featuredExhibition.location}</span>

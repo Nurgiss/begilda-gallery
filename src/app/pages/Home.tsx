@@ -5,7 +5,7 @@ import { About } from '../components/About';
 import { Contact } from '../components/Contact';
 
 interface News {
-  id: number;
+  id: string | number;
   title: string;
   excerpt: string;
   content: string;
@@ -15,7 +15,7 @@ interface News {
 }
 
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
   artist: string;
   location: string;
@@ -26,7 +26,7 @@ interface Exhibition {
 }
 
 interface HomeProps {
-  onNavigate: (page: string, id?: number) => void;
+  onNavigate: (page: string, id?: string | number) => void;
   news: News[];
   exhibitions: Exhibition[];
   currency: 'USD'|'EUR'|'KZT';

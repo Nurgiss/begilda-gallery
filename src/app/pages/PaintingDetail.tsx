@@ -68,11 +68,13 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
         </div>
         <div className="detail-grid" style={{ overflow: 'hidden' }}>
           <div>
-            <ImageWithFallback 
-              src={imageUrl} 
-              alt={painting.title} 
-              className="detail-image"
-            />
+            <div className="detail-main-image-wrapper">
+              <ImageWithFallback 
+                src={imageUrl} 
+                alt={painting.title} 
+                className="detail-main-image"
+              />
+            </div>
           </div>
           
           <div className="detail-content">
@@ -92,7 +94,12 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
             <div className="detail-meta">
               <div className="meta-item">
                 <span className="meta-label">Size</span>
-                <span className="meta-value">{painting.size}</span>
+                <span className="meta-value">{painting.dimensions || 'N/A'}</span>
+              </div>
+              
+              <div className="meta-item">
+                <span className="meta-label">Material</span>
+                <span className="meta-value">{painting.medium || 'N/A'}</span>
               </div>
               
               <div className="meta-item">
@@ -102,6 +109,7 @@ export function PaintingDetail({ paintingId, onNavigate, addToCart, currency, co
                   {painting.category === 'landscape' && 'Landscape'}
                   {painting.category === 'portrait' && 'Portrait'}
                   {painting.category === 'modern' && 'Modern'}
+                  {!painting.category && 'N/A'}
                 </span>
               </div>
               

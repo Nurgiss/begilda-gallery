@@ -1,7 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface News {
-  id: number;
+  id: string | number;
   title: string;
   excerpt: string;
   content: string;

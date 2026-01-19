@@ -22,13 +22,37 @@ import { ExhibitionsManager } from './pages/admin/ExhibitionsManager';
 import { ArtistsManager } from './pages/admin/ArtistsManager';
 import { ShopManager } from './pages/admin/ShopManager';
 import { CurrencySettings } from './pages/admin/CurrencySettings';
-import { getPaintings, getExhibitions } from '../api/client';
+import { PickupPointsManager } from './pages/admin/PickupPointsManager';
+import { getPaintings, getExhibitions, getNews, getShopItems } from '../api/client';
 import '../styles/index.css';
 
-type Page = 'home' | 'exhibitions' | 'artists' | 'news' | 'catalog' | 'shop' | 'detail' | 'shop-detail' | 'exhibition-detail' | 'artist-detail' | 'checkout' | 'cart' | 'contact' | 'news-detail' | 'admin-paintings' | 'admin-orders' | 'admin-news' | 'admin-exhibitions' | 'admin-artists' | 'admin-shop';
+type Page =
+  | 'home'
+  | 'exhibitions'
+  | 'artists'
+  | 'news'
+  | 'catalog'
+  | 'shop'
+  | 'detail'
+  | 'shop-detail'
+  | 'exhibition-detail'
+  | 'artist-detail'
+  | 'checkout'
+  | 'cart'
+  | 'contact'
+  | 'news-detail'
+  | 'admin-login'
+  | 'admin-paintings'
+  | 'admin-orders'
+  | 'admin-news'
+  | 'admin-exhibitions'
+  | 'admin-artists'
+  | 'admin-shop'
+  | 'admin-currency'
+  | 'admin-pickup-points';
 
 interface News {
-  id: number;
+  id: string | number;
   title: string;
   excerpt: string;
   content: string;
@@ -38,7 +62,7 @@ interface News {
 }
 
 interface Exhibition {
-  id: number;
+  id: string | number;
   title: string;
   artist: string;
   location: string;
@@ -87,10 +111,10 @@ export default function App() {
   const [currency, setCurrency] = useState<'USD'|'EUR'|'KZT'>('USD');
   const [rates, setRates] = useState<{EUR:number;KZT:number}>({ EUR: 0.92, KZT: 480 });
   const [selectedPaintingId, setSelectedPaintingId] = useState<string | number | null>(null);
-  const [selectedNewsId, setSelectedNewsId] = useState<number | null>(null);
-  const [selectedExhibitionId, setSelectedExhibitionId] = useState<number | null>(null);
-  const [selectedArtistId, setSelectedArtistId] = useState<number | null>(null);
-  const [selectedShopItemId, setSelectedShopItemId] = useState<number | null>(null);
+  const [selectedNewsId, setSelectedNewsId] = useState<string | number | null>(null);
+  const [selectedExhibitionId, setSelectedExhibitionId] = useState<string | number | null>(null);
+  const [selectedArtistId, setSelectedArtistId] = useState<string | number | null>(null);
+  const [selectedShopItemId, setSelectedShopItemId] = useState<string | number | null>(null);
   const [cart, setCart] = useState<Array<{item: any, type: 'painting' | 'shop', quantity: number}>>(() => {
     try {
       const stored = localStorage.getItem('cart');
@@ -292,10 +316,16 @@ export default function App() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const exhibitionsData = await getExhibitions();
+        const [exhibitionsData, newsData, shopData] = await Promise.all([
+          getExhibitions(),
+          getNews(),
+          getShopItems()
+        ]);
         setExhibitions(exhibitionsData);
+        setNews(newsData);
+        setShopItems(shopData);
       } catch (error) {
-        console.error('Error loading exhibitions:', error);
+        console.error('Error loading initial data:', error);
       }
     };
     loadData();
@@ -1861,7 +1891,7 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
     }
   ]);
   
-  const handleNavigate = (page: string, id?: number, type?: 'painting' | 'shop') => {
+  const handleNavigate = (page: string, id?: string | number, type?: 'painting' | 'shop') => {
     setCurrentPage(page as Page);
     if (page === 'detail' && id) {
       setSelectedPaintingId(id);
@@ -1893,70 +1923,6 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const handleAddNews = (newsItem: Omit<News, 'id'>) => {
-    const newNews = {
-      ...newsItem,
-      id: Math.max(...news.map(n => n.id), 0) + 1
-    };
-    setNews([...news, newNews]);
-  };
-
-  const handleEditNews = (updatedNews: News) => {
-    setNews(news.map(n => n.id === updatedNews.id ? updatedNews : n));
-  };
-
-  const handleDeleteNews = (id: number) => {
-    setNews(news.filter(n => n.id !== id));
-  };
-
-  const handleAddExhibition = (exhibition: Omit<Exhibition, 'id'>) => {
-    const newExhibition = {
-      ...exhibition,
-      id: Math.max(...exhibitions.map(e => e.id), 0) + 1
-    };
-    setExhibitions([...exhibitions, newExhibition]);
-  };
-
-  const handleEditExhibition = (updatedExhibition: Exhibition) => {
-    setExhibitions(exhibitions.map(e => e.id === updatedExhibition.id ? updatedExhibition : e));
-  };
-
-  const handleDeleteExhibition = (id: number) => {
-    setExhibitions(exhibitions.filter(e => e.id !== id));
-  };
-
-  const handleAddArtist = (artist: Omit<Artist, 'id'>) => {
-    const newArtist = {
-      ...artist,
-      id: Math.max(...artists.map(a => a.id), 0) + 1
-    };
-    setArtists([...artists, newArtist]);
-  };
-
-  const handleEditArtist = (updatedArtist: Artist) => {
-    setArtists(artists.map(a => a.id === updatedArtist.id ? updatedArtist : a));
-  };
-
-  const handleDeleteArtist = (id: number) => {
-    setArtists(artists.filter(a => a.id !== id));
-  };
-
-  const handleAddShopItem = (item: Omit<ShopItem, 'id'>) => {
-    const newItem = {
-      ...item,
-      id: Math.max(...shopItems.map(i => i.id), 0) + 1
-    };
-    setShopItems([...shopItems, newItem]);
-  };
-
-  const handleEditShopItem = (updatedItem: ShopItem) => {
-    setShopItems(shopItems.map(i => i.id === updatedItem.id ? updatedItem : i));
-  };
-
-  const handleDeleteShopItem = (id: number) => {
-    setShopItems(shopItems.filter(i => i.id !== id));
-  };
-
   const addToCart = (item: any, type: 'painting' | 'shop') => {
     setCart(prevCart => {
       const existingItem = prevCart.find(cartItem => cartItem.item.id === item.id && cartItem.type === type);
@@ -2117,7 +2083,9 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
                       />
                       <div className="cart-item-details">
                         <h3 className="cart-item-title">{cartItem.item.title}</h3>
-                        <p className="cart-item-artist">{cartItem.item.artist}</p>
+                        {cartItem.item.artist && (
+                          <p className="cart-item-artist">{cartItem.item.artist}</p>
+                        )}
                         <p className="cart-item-price">
                           ${
                             (cartItem.item.priceUSD || cartItem.item.price || 0)
@@ -2193,8 +2161,10 @@ The Modern Art Gallery invites you to join us in celebrating the voices that wil
         return <ShopManager />;
       case 'admin-currency':
         return <CurrencySettings />;
+      case 'admin-pickup-points':
+        return <PickupPointsManager />;
       default:
-        return <Home onNavigate={handleNavigate} news={news} exhibitions={exhibitions} />;
+        return <Home onNavigate={handleNavigate} news={news} exhibitions={exhibitions} currency={currency} convertPrice={convertPrice} />;
     }
   };
   
