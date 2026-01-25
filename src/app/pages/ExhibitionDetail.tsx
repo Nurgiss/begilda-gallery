@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getPaintings, getExhibition } from '../../api/client';
+import { PaintingCard } from '../components/PaintingCard';
+import { useAppContext } from '../context/AppContext';
 import { Exhibition, Painting } from '../../types';
 
 export function ExhibitionDetail() {
   const { id } = useParams<{ id: string }>();
+  const { currency, convertPrice } = useAppContext();
   const [exhibition, setExhibition] = useState<Exhibition | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [exhibitionPaintings, setExhibitionPaintings] = useState<Painting[]>([]);
@@ -191,33 +194,15 @@ export function ExhibitionDetail() {
           <div className="container-wide">
             <h2 className="section-title-white">All Works</h2>
             
-            <div className="artworks-grid-white">
-              {displayArtworks.map((artwork) => {
-                const imageUrl = artwork.imageUrl || artwork.image;
-                const displayImage = imageUrl?.startsWith('/uploads/') 
-                  ? `http://localhost:3001${imageUrl}` 
-                  : imageUrl;
-                
-                return (
-                  <div key={artwork.id} className="artwork-card-white">
-                    <div className="artwork-image-wrapper">
-                      <ImageWithFallback 
-                        src={displayImage} 
-                        alt={artwork.title}
-                        className="artwork-image"
-                      />
-                    </div>
-                    <div className="artwork-info">
-                      <h3 className="artwork-title">{artwork.title}</h3>
-                      <p className="artwork-meta">{artwork.year} · {artwork.medium || 'Mixed Media'}</p>
-                      <p className="artwork-dimensions">{artwork.dimensions || ''}</p>
-                      {artwork.priceUSD && (
-                        <p className="artwork-price">${artwork.priceUSD.toLocaleString()}</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="home-paintings-grid">
+              {displayArtworks.map((painting) => (
+                <PaintingCard
+                  key={painting.id}
+                  painting={painting}
+                  currency={currency}
+                  convertPrice={convertPrice}
+                />
+              ))}
             </div>
           </div>
         </section>
