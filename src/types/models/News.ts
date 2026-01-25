@@ -6,4 +6,5 @@ export interface News {
   image: string;
   date: string;
   category: string;
+  instagramUrl?: string;
 }

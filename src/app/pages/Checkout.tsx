@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { createOrder, getPickupPoints } from '../../api/client';
-import { PickupPoint, CartItem } from '../../types';
-
-interface CheckoutProps {
-  cart: CartItem[];
-  onNavigate: (page: string) => void;
-  clearCart: () => void;
-}
+import { PickupPoint } from '../../types';
+import { useAppContext } from '../context/AppContext';
 
 const COUNTRIES_CITIES: Record<string, string[]> = {
   'Kazakhstan': ['Almaty', 'Astana', 'Shymkent', 'Karaganda', 'Aktobe', 'Taraz', 'Pavlodar', 'Ust-Kamenogorsk', 'Semey', 'Atyrau', 'Kostanay', 'Kyzylorda', 'Uralsk', 'Petropavlovsk', 'Aktau', 'Temirtau', 'Turkestan', 'Other'],
@@ -28,7 +24,9 @@ const COUNTRIES_CITIES: Record<string, string[]> = {
 
 const COUNTRIES = Object.keys(COUNTRIES_CITIES);
 
-export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
+export function Checkout() {
+  const { cart, clearCart } = useAppContext();
+  const navigate = useNavigate();
   const [pickupPoints, setPickupPoints] = useState<PickupPoint[]>([]);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -213,12 +211,8 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
             <p style={{ margin: 0 }}>Phone: +7 (000) 000-00-00</p>
           </div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <button className="btn" onClick={() => onNavigate('home')}>
-              Back to Home
-            </button>
-            <button className="btn btn-secondary" onClick={() => onNavigate('catalog')}>
-              Continue Shopping
-            </button>
+            <Link to="/" className="btn">Back to Home</Link>
+            <Link to="/catalog" className="btn btn-secondary">Continue Shopping</Link>
           </div>
         </div>
       </div>
@@ -239,9 +233,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
     return (
       <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
         <p>Your cart is empty</p>
-        <button className="btn" onClick={() => onNavigate('catalog')} style={{ marginTop: 'var(--spacing-md)' }}>
-          Back to Catalog
-        </button>
+        <Link to="/catalog" className="btn" style={{ marginTop: 'var(--spacing-md)' }}>Back to Catalog</Link>
       </div>
     );
   }
@@ -263,7 +255,7 @@ export function Checkout({ cart, onNavigate, clearCart }: CheckoutProps) {
       <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-xl) 0' }}>
         <button 
           className="btn btn-secondary" 
-          onClick={() => onNavigate('cart')}
+          onClick={() => navigate('/cart')}
           style={{ marginBottom: 'var(--spacing-lg)' }}
         >
           Back to Cart

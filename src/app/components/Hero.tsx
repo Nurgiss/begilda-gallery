@@ -1,26 +1,22 @@
-interface Exhibition {
-  id: string | number;
-  title: string;
-  location: string;
-  dates: string;
-  description: string;
-  image: string;
-  status: 'current' | 'upcoming' | 'past';
-}
+import { Link } from 'react-router-dom';
+import { Exhibition } from '../../types';
 
 interface HeroProps {
-  onNavigate: (page: string, id?: string | number) => void;
   exhibitions?: Exhibition[];
 }
 
-export function Hero({ onNavigate, exhibitions }: HeroProps) {
+export function Hero({ exhibitions }: HeroProps) {
   const featuredExhibition = exhibitions?.find(e => e.status === 'current') || exhibitions?.[0];
 
   if (!featuredExhibition) {
     return null;
   }
 
-  const bgStyle = { backgroundImage: `url(${featuredExhibition.image})`, backgroundSize: 'cover', backgroundPosition: 'center' };
+  const bgStyle = {
+    backgroundImage: `url(${featuredExhibition.image})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  };
 
   return (
     <section className="hero" style={{ ...bgStyle, minHeight: '100vh', position: 'relative' }}>
@@ -44,10 +40,9 @@ export function Hero({ onNavigate, exhibitions }: HeroProps) {
         </div>
 
         <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="btn" onClick={() => onNavigate('exhibition-detail', featuredExhibition.id)}>
+          <Link to={`/exhibitions/${featuredExhibition.id}`} className="btn">
             View Exhibition
-          </button>
-    
+          </Link>
         </div>
       </div>
       <div className="hero-scroll">Scroll down</div>

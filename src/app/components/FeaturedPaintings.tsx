@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getPaintings } from '../../api/client';
 import { PaintingCard } from './PaintingCard';
+import { useAppContext } from '../context/AppContext';
+import { Painting } from '../../types';
 
-interface FeaturedPaintingsProps {
-  onPaintingClick: (id: string | number) => void;
-  currency?: 'USD'|'EUR'|'KZT';
-  convertPrice?: (price: number) => number;
-  onViewAll?: () => void;
-}
-
-export function FeaturedPaintings({ onPaintingClick, currency = 'USD', convertPrice, onViewAll }: FeaturedPaintingsProps) {
-  const [paintings, setPaintings] = useState<any[]>([]);
+export function FeaturedPaintings() {
+  const { currency, convertPrice } = useAppContext();
+  const [paintings, setPaintings] = useState<Painting[]>([]);
 
   useEffect(() => {
-    getPaintings().then(data => setPaintings(data)).catch(console.error);
+    getPaintings()
+      .then((data) => setPaintings(data))
+      .catch(console.error);
   }, []);
 
-  const featuredPaintings = paintings.filter(p => p.featured && !p.exhibitionOnly);
-  
+  const featuredPaintings = paintings.filter((p) => p.featured && !p.exhibitionOnly);
+
   return (
     <section className="home-paintings-section">
       <div className="container-wide">
@@ -25,26 +24,23 @@ export function FeaturedPaintings({ onPaintingClick, currency = 'USD', convertPr
         <p className="home-section-subtitle">
           Specially selected works that best represent the artistic vision and style
         </p>
-        
+
         <div className="home-paintings-grid">
           {featuredPaintings.map((painting) => (
-            <PaintingCard 
+            <PaintingCard
               key={painting.id}
               painting={painting}
-              onClick={() => onPaintingClick(painting.id)}
               currency={currency}
               convertPrice={convertPrice}
             />
           ))}
         </div>
+
         {featuredPaintings.length > 0 && (
           <div className="home-section-cta">
-            <button 
-              className="btn-white-outline"
-              onClick={() => onViewAll ? onViewAll() : undefined}
-            >
+            <Link to="/catalog" className="btn-white-outline">
               View All
-            </button>
+            </Link>
           </div>
         )}
       </div>

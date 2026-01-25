@@ -13,6 +13,7 @@ export interface Painting {
   category?: string;
   availability: boolean;
   featured?: boolean;
+  exhibitionOnly?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

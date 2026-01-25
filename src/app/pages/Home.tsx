@@ -1,31 +1,39 @@
+import { useState, useEffect } from 'react';
 import { Hero } from '../components/Hero';
 import { FeaturedPaintings } from '../components/FeaturedPaintings';
 import { NewsSection } from '../components/NewsSection';
 import { About } from '../components/About';
 import { Contact } from '../components/Contact';
-import { News, Exhibition, Currency } from '../../types';
+import { getExhibitions, getNews } from '../../api/client';
+import { News, Exhibition } from '../../types';
 
-interface HomeProps {
-  onNavigate: (page: string, id?: string | number) => void;
-  news: News[];
-  exhibitions: Exhibition[];
-  currency: Currency;
-  convertPrice?: (priceUSD: number) => number;
-}
+export function Home() {
+  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+  const [news, setNews] = useState<News[]>([]);
 
-export function Home({ onNavigate, news, exhibitions, currency, convertPrice }: HomeProps) {
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [exhibitionsData, newsData] = await Promise.all([
+          getExhibitions(),
+          getNews(),
+        ]);
+        setExhibitions(exhibitionsData);
+        setNews(newsData);
+      } catch (error) {
+        console.error('Error loading home data:', error);
+      }
+    };
+    loadData();
+  }, []);
+
   return (
     <div>
-      <Hero onNavigate={onNavigate} exhibitions={exhibitions} />
-      <FeaturedPaintings 
-        onPaintingClick={(id) => onNavigate('detail', id)} 
-        onViewAll={() => onNavigate('catalog')} 
-        currency={currency}
-        convertPrice={convertPrice}
-      />
-      <NewsSection news={news} onNavigate={onNavigate} />
+      <Hero exhibitions={exhibitions} />
+      <FeaturedPaintings />
+      <NewsSection news={news} />
       <About />
-      <Contact onNavigate={onNavigate} />
+      <Contact />
     </div>
   );
 }

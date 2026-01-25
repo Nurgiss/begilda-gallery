@@ -1,21 +1,12 @@
+import { Link } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-
-interface News {
-  id: string | number;
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  date: string;
-  category: string;
-}
+import { News } from '../../types';
 
 interface NewsSectionProps {
   news: News[];
-  onNavigate: (page: string, newsId?: string | number) => void;
 }
 
-export function NewsSection({ news, onNavigate }: NewsSectionProps) {
+export function NewsSection({ news }: NewsSectionProps) {
   const latestNews = news.slice(0, 3);
 
   return (
@@ -45,7 +36,13 @@ export function NewsSection({ news, onNavigate }: NewsSectionProps) {
               <div className="home-news-content">
                 <div className="home-news-meta">
                   <span className="home-news-category">{item.category}</span>
-                  <span className="home-news-date">{new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  <span className="home-news-date">
+                    {new Date(item.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </span>
                 </div>
                 <h3 className="home-news-title">{item.title}</h3>
                 <p className="home-news-excerpt">{item.excerpt}</p>
@@ -56,12 +53,9 @@ export function NewsSection({ news, onNavigate }: NewsSectionProps) {
 
         {news.length > 3 && (
           <div className="home-section-cta">
-            <button 
-              className="btn-white-outline"
-              onClick={() => onNavigate('news')}
-            >
+            <Link to="/news" className="btn-white-outline">
               View All News
-            </button>
+            </Link>
           </div>
         )}
       </div>

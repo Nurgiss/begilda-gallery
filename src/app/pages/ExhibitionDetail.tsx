@@ -1,34 +1,30 @@
 import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getPaintings, getExhibition } from '../../api/client';
-import { Exhibition } from '../../types';
+import { Exhibition, Painting } from '../../types';
 
-interface ExhibitionDetailProps {
-  exhibition: Exhibition | undefined;
-  onNavigate: (page: string, id?: string | number) => void;
-}
-
-export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailProps) {
+export function ExhibitionDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [exhibition, setExhibition] = useState<Exhibition | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [exhibitionPaintings, setExhibitionPaintings] = useState<any[]>([]);
+  const [exhibitionPaintings, setExhibitionPaintings] = useState<Painting[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Загружаем актуальную версию выставки и связанные с ней картины
   useEffect(() => {
-    const loadExhibitionPaintings = async () => {
+    const loadExhibitionData = async () => {
       try {
-        if (!exhibition) {
-          setExhibitionPaintings([]);
+        if (!id) {
           setLoading(false);
           return;
         }
 
-        // Берём свежую версию выставки из backend (там точно есть paintingIds)
-        const fullExhibition: any = await getExhibition(String(exhibition.id));
+        const fullExhibition = await getExhibition(id);
+        setExhibition(fullExhibition);
 
         if (fullExhibition?.paintingIds && fullExhibition.paintingIds.length > 0) {
           const allPaintings = await getPaintings();
-          const filtered = allPaintings.filter((p: any) =>
+          const filtered = allPaintings.filter((p: Painting) =>
             fullExhibition.paintingIds.includes(p.id)
           );
           setExhibitionPaintings(filtered);
@@ -36,7 +32,8 @@ export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailPro
           setExhibitionPaintings([]);
         }
       } catch (err) {
-        console.error('Error loading exhibition paintings:', err);
+        console.error('Error loading exhibition:', err);
+        setExhibition(null);
         setExhibitionPaintings([]);
       } finally {
         setLoading(false);
@@ -44,17 +41,27 @@ export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailPro
     };
 
     setLoading(true);
-    loadExhibitionPaintings();
-  }, [exhibition]);
+    loadExhibitionData();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="exhibition-detail-page">
+        <div className="container">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!exhibition) {
     return (
       <div className="exhibition-detail-page">
         <div className="container">
           <h1>Exhibition not found</h1>
-          <button className="btn" onClick={() => onNavigate('exhibitions')}>
+          <Link to="/exhibitions" className="btn">
             Back to Exhibitions
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -139,8 +146,8 @@ export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailPro
                 </button>
                 
                 <div className="slider-image-wrapper">
-                  <ImageWithFallback 
-                    src={displayArtworks[currentSlide]?.image || displayArtworks[currentSlide]?.imageUrl} 
+                  <ImageWithFallback
+                    src={displayArtworks[currentSlide]?.image}
                     alt={displayArtworks[currentSlide]?.title}
                     className="slider-image"
                   />
@@ -219,9 +226,9 @@ export function ExhibitionDetail({ exhibition, onNavigate }: ExhibitionDetailPro
       {/* Back Button */}
       <section className="exhibition-back-section">
         <div className="container-wide">
-          <button className="btn btn-secondary" onClick={() => onNavigate('exhibitions')}>
+          <Link to="/exhibitions" className="btn btn-secondary">
             ← Back to Exhibitions
-          </button>
+          </Link>
         </div>
       </section>
     </div>

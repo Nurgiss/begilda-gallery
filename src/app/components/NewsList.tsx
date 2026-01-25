@@ -1,45 +1,22 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
-
-interface News {
-  id: string | number;
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  date: string;
-  category: string;
-}
+import { News } from '../../types';
 
 interface NewsListProps {
   news: News[];
-  onNavigate: (page: string, newsId?: string | number) => void;
 }
 
-export function NewsList({ news, onNavigate }: NewsListProps) {
+export function NewsList({ news }: NewsListProps) {
   return (
     <div className="news-list-page">
       <section className="news-list-section">
         <div className="container-wide">
           <h1 className="page-title-white">News</h1>
-          <p className="home-section-subtitle">
-            Stay updated with the latest exhibitions, events and announcements
-          </p>
-
+          <p className="home-section-subtitle">Stay updated with the latest exhibitions, events and announcements</p>
           <div className="news-list-grid">
             {news.map((item) => (
-              <a
-                key={item.id}
-                className="home-news-card"
-                href={item.instagramUrl || 'https://instagram.com'}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a key={item.id} className="home-news-card" href={item.instagramUrl || 'https://instagram.com'} target="_blank" rel="noopener noreferrer">
                 <div className="home-news-image-wrapper">
-                  <ImageWithFallback
-                    src={item.image}
-                    alt={item.title}
-                    className="home-news-image"
-                  />
+                  <ImageWithFallback src={item.image} alt={item.title} className="home-news-image" />
                 </div>
                 <div className="home-news-content">
                   <div className="home-news-meta">

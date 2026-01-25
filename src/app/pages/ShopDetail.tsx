@@ -1,83 +1,60 @@
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { ShopItem, Currency } from '../../types';
+import { ShopItem } from '../../types';
+import { getShopItems } from '../../api/client';
+import { useAppContext } from '../context/AppContext';
 
-interface ShopDetailProps {
-  shopItemId: string | number;
-  shopItems: ShopItem[];
-  onNavigate: (page: string, id?: string | number, type?: 'painting' | 'shop') => void;
-  addToCart: (item: ShopItem, type: 'shop') => void;
-  currency: Currency;
-  convertPrice?: (priceUSD: number) => number;
-}
+export function ShopDetail() {
+  const { id } = useParams<{ id: string }>();
+  const { addToCart, currency, convertPrice } = useAppContext();
+  const [shopItem, setShopItem] = useState<ShopItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export function ShopDetail({ shopItemId, shopItems, onNavigate, addToCart, currency, convertPrice }: ShopDetailProps) {
-  const shopItem = shopItems.find(item => item.id === shopItemId);
+  useEffect(() => {
+    getShopItems()
+      .then(items => setShopItem(items.find((i: ShopItem) => String(i.id) === id) || null))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) return <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0' }}><p>Loading...</p></div>;
 
   if (!shopItem) {
     return (
       <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
         <p>Shop item not found</p>
-        <button className="btn" onClick={() => onNavigate('shop')} style={{ marginTop: 'var(--spacing-md)' }}>
-          Back to Shop
-        </button>
+        <Link to="/shop" className="btn" style={{ marginTop: 'var(--spacing-md)' }}>Back to Shop</Link>
       </div>
     );
   }
+
+  const value = convertPrice ? convertPrice(shopItem.price || 0) : shopItem.price || 0;
+  const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
 
   return (
     <div className="detail-page">
       <div className="container-wide">
         <div style={{ marginBottom: '2rem' }}>
-          <button 
-            className="btn btn-secondary" 
-            onClick={() => onNavigate('shop')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: 'translateY(1px)' }}>
-              <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <Link to="/shop" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             Back to Shop
-          </button>
+          </Link>
         </div>
         <div className="detail-grid" style={{ overflow: 'hidden' }}>
           <div className="detail-image-section">
             <div className="shop-detail-image-wrapper">
-              <ImageWithFallback
-                src={shopItem.image}
-                alt={shopItem.title}
-                className="shop-detail-image"
-              />
+              <ImageWithFallback src={shopItem.image} alt={shopItem.title} className="shop-detail-image" />
             </div>
           </div>
-
           <div className="detail-info-section">
             <div className="detail-category">{shopItem.category}</div>
             <h1 className="detail-title">{shopItem.title}</h1>
-            {(() => {
-              const baseUSD = shopItem.price || 0; // цена товара магазина в USD
-              const value = convertPrice ? convertPrice(baseUSD) : baseUSD;
-              const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
-              return (
-                <p className="detail-price">
-                  {symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                </p>
-              );
-            })()}
+            <p className="detail-price">{symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</p>
             <p className="detail-description">{shopItem.description}</p>
-
             <div className="detail-actions">
-              <button
-                className="btn"
-                onClick={() => addToCart(shopItem, 'shop')}
-              >
-                Add to Cart
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => onNavigate('shop')}
-              >
-                Back to Shop
-              </button>
+              <button className="btn" onClick={() => addToCart(shopItem, 'shop')}>Add to Cart</button>
+              <Link to="/shop" className="btn btn-secondary">Back to Shop</Link>
             </div>
           </div>
         </div>
