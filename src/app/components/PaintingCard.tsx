@@ -9,15 +9,15 @@ interface PaintingCardProps {
 }
 
 export function PaintingCard({ painting, currency = 'USD', convertPrice }: PaintingCardProps) {
-  const baseUSD = painting.priceUSD ?? painting.price;
-  const converted = convertPrice ? convertPrice(baseUSD) : baseUSD;
+  const baseUSD = painting.priceUSD ?? painting.price ?? 0;
+  const converted = (convertPrice ? convertPrice(baseUSD) : baseUSD) ?? 0;
   const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
 
-  let imageUrl = painting.image;
+  let imageUrl = painting.image || painting.imageUrl;
   if (imageUrl && imageUrl.startsWith('/uploads/')) {
     imageUrl = `http://localhost:3001${imageUrl}`;
   }
-  const size = painting.dimensions;
+  const size = painting.dimensions || (painting as any).size;
 
   return (
     <Link to={`/catalog/${painting.id}`} className="home-painting-card">
