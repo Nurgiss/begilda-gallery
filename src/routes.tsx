@@ -12,6 +12,9 @@ import { CartPage } from './app/pages/CartPage';
 import { Checkout } from './app/pages/Checkout';
 import { NewsPage } from './app/pages/NewsPage';
 import { NewsDetailPage } from './app/pages/NewsDetailPage';
+import AdminApp from './app/AdminApp';
+
+const adminPrefix = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'admin';
 
 export const routes: RouteObject[] = [
   {
@@ -71,5 +74,9 @@ export const routes: RouteObject[] = [
         element: <NewsDetailPage />,
       },
     ],
+  },
+  {
+    path: adminPrefix,
+    element: <AdminApp />,
   },
 ];
