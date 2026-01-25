@@ -6,6 +6,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +55,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // Статические файлы для загруженных изображений
 app.use('/uploads', express.static(UPLOADS_DIR));
+
+// JWT Authentication Middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+    req.user = user;
+    next();
+  });
+};
 
 // Data file paths
 const DATA_DIR = path.join(__dirname, 'data');
@@ -110,10 +133,53 @@ async function writeData(filePath, data) {
   }
 }
 
+// ==================== AUTH API ====================
+
+// POST login
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password required' });
+    }
+
+    // Validate credentials
+    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+    const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+
+    if (!adminPasswordHash) {
+      console.error('ADMIN_PASSWORD_HASH not configured in .env');
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+
+    if (username.trim() !== adminUsername) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, adminPasswordHash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { username, role: 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
 // ==================== UPLOAD API ====================
 
 // POST upload image
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', authenticateToken, upload.single('image'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -156,7 +222,7 @@ app.get('/api/paintings/:id', async (req, res) => {
 });
 
 // POST create painting
-app.post('/api/paintings', async (req, res) => {
+app.post('/api/paintings', authenticateToken, async (req, res) => {
   const paintings = await readData(PAINTINGS_FILE);
   const newPainting = {
     id: uuidv4(),
@@ -175,7 +241,7 @@ app.post('/api/paintings', async (req, res) => {
 });
 
 // PUT update painting
-app.put('/api/paintings/:id', async (req, res) => {
+app.put('/api/paintings/:id', authenticateToken, async (req, res) => {
   const paintings = await readData(PAINTINGS_FILE);
   const index = paintings.findIndex(p => p.id === req.params.id);
   
@@ -200,7 +266,7 @@ app.put('/api/paintings/:id', async (req, res) => {
 });
 
 // DELETE painting
-app.delete('/api/paintings/:id', async (req, res) => {
+app.delete('/api/paintings/:id', authenticateToken, async (req, res) => {
   const paintings = await readData(PAINTINGS_FILE);
   const filtered = paintings.filter(p => p.id !== req.params.id);
   
@@ -235,7 +301,7 @@ app.get('/api/exhibitions/:id', async (req, res) => {
   }
 });
 
-app.post('/api/exhibitions', async (req, res) => {
+app.post('/api/exhibitions', authenticateToken, async (req, res) => {
   const exhibitions = await readData(EXHIBITIONS_FILE);
   const newExhibition = {
     id: uuidv4(),
@@ -253,7 +319,7 @@ app.post('/api/exhibitions', async (req, res) => {
   }
 });
 
-app.put('/api/exhibitions/:id', async (req, res) => {
+app.put('/api/exhibitions/:id', authenticateToken, async (req, res) => {
   const exhibitions = await readData(EXHIBITIONS_FILE);
   const index = exhibitions.findIndex(e => e.id === req.params.id);
   
@@ -277,7 +343,7 @@ app.put('/api/exhibitions/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/exhibitions/:id', async (req, res) => {
+app.delete('/api/exhibitions/:id', authenticateToken, async (req, res) => {
   const exhibitions = await readData(EXHIBITIONS_FILE);
   const filtered = exhibitions.filter(e => e.id !== req.params.id);
   
@@ -312,7 +378,7 @@ app.get('/api/artists/:id', async (req, res) => {
   }
 });
 
-app.post('/api/artists', async (req, res) => {
+app.post('/api/artists', authenticateToken, async (req, res) => {
   const artists = await readData(ARTISTS_FILE);
   const newArtist = {
     id: uuidv4(),
@@ -330,7 +396,7 @@ app.post('/api/artists', async (req, res) => {
   }
 });
 
-app.put('/api/artists/:id', async (req, res) => {
+app.put('/api/artists/:id', authenticateToken, async (req, res) => {
   const artists = await readData(ARTISTS_FILE);
   const index = artists.findIndex(a => a.id === req.params.id);
   
@@ -354,7 +420,7 @@ app.put('/api/artists/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/artists/:id', async (req, res) => {
+app.delete('/api/artists/:id', authenticateToken, async (req, res) => {
   const artists = await readData(ARTISTS_FILE);
   const filtered = artists.filter(a => a.id !== req.params.id);
   
@@ -389,7 +455,7 @@ app.get('/api/news/:id', async (req, res) => {
   }
 });
 
-app.post('/api/news', async (req, res) => {
+app.post('/api/news', authenticateToken, async (req, res) => {
   const news = await readData(NEWS_FILE);
   const newArticle = {
     id: uuidv4(),
@@ -407,7 +473,7 @@ app.post('/api/news', async (req, res) => {
   }
 });
 
-app.put('/api/news/:id', async (req, res) => {
+app.put('/api/news/:id', authenticateToken, async (req, res) => {
   const news = await readData(NEWS_FILE);
   const index = news.findIndex(n => n.id === req.params.id);
   
@@ -431,7 +497,7 @@ app.put('/api/news/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/news/:id', async (req, res) => {
+app.delete('/api/news/:id', authenticateToken, async (req, res) => {
   const news = await readData(NEWS_FILE);
   const filtered = news.filter(n => n.id !== req.params.id);
   
@@ -466,7 +532,7 @@ app.get('/api/shop/:id', async (req, res) => {
   }
 });
 
-app.post('/api/shop', async (req, res) => {
+app.post('/api/shop', authenticateToken, async (req, res) => {
   const shop = await readData(SHOP_FILE);
   const newItem = {
     id: uuidv4(),
@@ -484,7 +550,7 @@ app.post('/api/shop', async (req, res) => {
   }
 });
 
-app.put('/api/shop/:id', async (req, res) => {
+app.put('/api/shop/:id', authenticateToken, async (req, res) => {
   const shop = await readData(SHOP_FILE);
   const index = shop.findIndex(s => s.id === req.params.id);
   
@@ -508,7 +574,7 @@ app.put('/api/shop/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/shop/:id', async (req, res) => {
+app.delete('/api/shop/:id', authenticateToken, async (req, res) => {
   const shop = await readData(SHOP_FILE);
   const filtered = shop.filter(s => s.id !== req.params.id);
   
@@ -527,7 +593,7 @@ app.delete('/api/shop/:id', async (req, res) => {
 
 // ==================== ORDERS API ====================
 
-app.get('/api/orders', async (req, res) => {
+app.get('/api/orders', authenticateToken, async (req, res) => {
   const orders = await readData(ORDERS_FILE);
   res.json(orders);
 });
@@ -564,7 +630,7 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-app.put('/api/orders/:id', async (req, res) => {
+app.put('/api/orders/:id', authenticateToken, async (req, res) => {
   const orders = await readData(ORDERS_FILE);
   const index = orders.findIndex(o => o.id === req.params.id);
   
@@ -588,7 +654,7 @@ app.put('/api/orders/:id', async (req, res) => {
   }
 });
 
-app.delete('/api/orders/:id', async (req, res) => {
+app.delete('/api/orders/:id', authenticateToken, async (req, res) => {
   const orders = await readData(ORDERS_FILE);
   const filtered = orders.filter(o => o.id !== req.params.id);
   
@@ -614,7 +680,7 @@ app.get('/api/pickup-points', async (req, res) => {
 });
 
 // POST create pickup point
-app.post('/api/pickup-points', async (req, res) => {
+app.post('/api/pickup-points', authenticateToken, async (req, res) => {
   const pickupPoints = await readData(PICKUP_POINTS_FILE);
   const newPickupPoint = {
     id: uuidv4(),
@@ -633,7 +699,7 @@ app.post('/api/pickup-points', async (req, res) => {
 });
 
 // PUT update pickup point
-app.put('/api/pickup-points/:id', async (req, res) => {
+app.put('/api/pickup-points/:id', authenticateToken, async (req, res) => {
   const pickupPoints = await readData(PICKUP_POINTS_FILE);
   const index = pickupPoints.findIndex(p => p.id === req.params.id);
   
@@ -658,7 +724,7 @@ app.put('/api/pickup-points/:id', async (req, res) => {
 });
 
 // DELETE pickup point
-app.delete('/api/pickup-points/:id', async (req, res) => {
+app.delete('/api/pickup-points/:id', authenticateToken, async (req, res) => {
   const pickupPoints = await readData(PICKUP_POINTS_FILE);
   const filtered = pickupPoints.filter(p => p.id !== req.params.id);
   

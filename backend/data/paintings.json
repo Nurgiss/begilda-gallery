@@ -50,5 +50,11 @@
     "price": 102144,
     "priceEUR": 172.3,
     "createdAt": "2026-01-18T10:46:54.275Z"
+  },
+  {
+    "id": "a711e561-3947-4ee9-b6f4-63658cc350f0",
+    "title": "Test Painting",
+    "artist": "Test Artist",
+    "createdAt": "2026-01-25T17:30:51.346Z"
   }
 ]

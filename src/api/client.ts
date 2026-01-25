@@ -1,4 +1,11 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3001/api';
+
+function handleAuthError() {
+  try {
+    localStorage.removeItem('adminToken');
+  } catch (e) {}
+  // Optionally redirect to login or dispatch event here
+}
 
 function getHeaders() {
   const headers: Record<string, string> = {
@@ -13,6 +20,9 @@ function getHeaders() {
 
 async function getJSON(path: string) {
   const res = await fetch(`${API_BASE}${path}`, { headers: getHeaders() });
+  if (res.status === 401 || res.status === 403) {
+    handleAuthError();
+  }
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
 }
@@ -23,6 +33,9 @@ async function postJSON(path: string, data: any) {
     headers: getHeaders(),
     body: JSON.stringify(data)
   });
+  if (res.status === 401 || res.status === 403) {
+    handleAuthError();
+  }
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
 }
@@ -33,6 +46,9 @@ async function putJSON(path: string, data: any) {
     headers: getHeaders(),
     body: JSON.stringify(data)
   });
+  if (res.status === 401 || res.status === 403) {
+    handleAuthError();
+  }
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
 }
@@ -42,8 +58,16 @@ async function deleteJSON(path: string) {
     method: 'DELETE',
     headers: getHeaders()
   });
+  if (res.status === 401 || res.status === 403) {
+    handleAuthError();
+  }
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json();
+}
+
+// ==================== AUTH ====================
+export async function login(username: string, password: string) {
+  return postJSON('/auth/login', { username, password });
 }
 
 // ==================== PAINTINGS ====================
