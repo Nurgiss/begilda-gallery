@@ -130,5 +130,5 @@ These items are not immediate priorities but worth considering:
 
 ## Related Documentation
 
-- [Project Overview](./overview.md) - Platform description and architecture
-- [LLM Coding Guide](./llm-guide.md) - Instructions for AI assistants
+- [LLM Context](./.llm-context.md) - Architecture, patterns, and coding standards for developers
+- [README](../README.md) - Platform description, setup instructions, and overview

@@ -1,6 +1,6 @@
-# Begilda Gallery - Artist Portfolio Website
+# Begilda Gallery
 
-Полнофункциональный веб-сайт галереи с бэкендом на Node.js и фронтендом на React + TypeScript.
+Гибридная художественная галерея, объединяющая физическое выставочное пространство в Казахстане с полнофункциональной онлайн-платформой. Веб-сайт галереи с бэкендом на Node.js и фронтендом на React + TypeScript.
 
 ## 🚀 Быстрый старт
 
@@ -28,6 +28,28 @@ npm install  # только первый раз
 npm run dev
 ```
 Frontend запустится на http://localhost:5175
+
+## 👥 Целевая аудитория
+
+- **Общая публика** — Случайные посетители, ищущие искусство для культурного обогащения или покупки
+- **Любители искусства** — Постоянные посетители, следящие за художниками и выставками
+- **Коллекционеры** — Серьёзные покупатели оригинальных произведений
+- **Международные туристы** — Посетители Казахстана, ищущие местное искусство
+
+Платформа поддерживает три языка: **русский**, **казахский** и **английский** (i18n в процессе разработки).
+
+## ✨ Возможности
+
+- ✅ Полный каталог картин с фильтрацией
+- ✅ Текущие, будущие и прошлые выставки
+- ✅ Профили художников и их работы
+- ✅ Интернет-магазин товаров
+- ✅ Корзина и оформление заказов
+- ✅ Поддержка множества валют (KZT, USD, EUR)
+- ✅ Отслеживание заказов по номеру ссылки
+- ✅ Административная панель для управления контентом
+- ✅ Загрузка и управление изображениями
+- ✅ Адаптивный дизайн
 
 ## 📁 Структура проекта
 
@@ -217,69 +239,9 @@ ISC
 
 Begilda Gallery Team
 
-- GET /exhibitions
-  - Response 200:
-```json
-[{"id":"e1","title":"Solo Show","status":"current","location":"Gallery","startDate":"2026-01-10","endDate":"2026-02-10","image":"/assets/e1.jpg","description":"..."}]
-```
+## 📚 Документация для разработчиков
 
-- GET /news
-  - Response 200: list of news items (id,title,excerpt,image,instagramUrl,date)
+Для подробной информации о кодировании и архитектуре проекта см. [docs/.llm-context.md](./docs/.llm-context.md).
 
-- Cart endpoints
-  - POST /cart (create/update), GET /cart, DELETE /cart/:itemId
-  - Cart item shape: { itemId, type: 'painting'|'shop', quantity, unitPrice }
-
-- Orders
-  - POST /orders — create order; expect body with cart items and customer info; return 201 with order id
-  - GET /orders/:id — retrieve order status
-
-- Authentication (if used)
-  - Support token-based auth (Bearer) or cookie sessions. The frontend currently has no auth UI — discuss if required.
-
-## CORS and Security
--- Allow the frontend origin in CORS policy for dev (or use `*` for quick local testing).
-- If using cookies for auth, ensure `SameSite`/`Secure` settings are compatible with the frontend host.
-
-## Frontend integration notes
-- `VITE_API_BASE_URL` should point to the API; frontend will call that base. Search for `VITE_API_BASE_URL` in the code and wire fetch calls accordingly (not all components call the API yet — client stubs may be added).
-- CSS grid behaviour is controlled by variables in `src/styles/main.css`:
-  - `--site-gutter` — site side padding
-  - `--grid-min` — standard minimum column width
-  - `--grid-min-painting` — catalog painting min width
-  Changing these affects layout globally.
-
-## Files of interest
-- Components: `src/app/components/*` (Header.tsx, HeaderDark.tsx, Hero.tsx, PaintingCard.tsx, FeaturedPaintings.tsx, NewsList.tsx)
-- Pages: `src/app/pages/*` (Home.tsx, Catalog.tsx, Exhibitions.tsx, NewsList.tsx)
-- Styles: `src/styles/main.css`
-- Mock data: `src/data/paintings.ts`, `src/data/orders.ts`
-
-## Build & Deploy recommendations
-- Serve the static build (`dist/`) from any static host (Netlify, Vercel, Nginx). If server-side rendering is planned, adapt accordingly.
-- For production, set `VITE_API_BASE_URL` to the API production URL and ensure CORS and auth are configured.
-
-## Handoff checklist (quick)
-- [ ] Provide backend base URL and working endpoints matching the shapes above.
-- [ ] Confirm auth approach (token vs cookie) and update frontend accordingly.
-- [ ] Provide sample responses and any required error shapes.
-- [ ] Provide images and asset paths or mount an assets endpoint.
-- [ ] Run a production build test with the real API and report any client errors.
-
-## Next steps I can do for you
-- Generate a minimal OpenAPI (yaml) spec for the endpoints above.
-- Add a small `src/api/client.ts` with fetch/axios stubs wired to `VITE_API_BASE_URL`.
-- Create a tiny mock-server (json-server or msw) to simulate the API locally.
-
-If you want the README extended with an OpenAPI file or the API client stubs, tell me which one and I'll add it.
-
-  # Artist Portfolio Website
-
-  This is a code bundle for Artist Portfolio Website. The original project is available at https://www.figma.com/design/r768J7GmkAZqgefhNqFNIs/Artist-Portfolio-Website.
-
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
+Планы развития платформы см. в [docs/improvements.md](./docs/improvements.md).
   
