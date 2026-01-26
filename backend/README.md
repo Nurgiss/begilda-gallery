@@ -69,13 +69,49 @@ npm start
 
 ## Хранение данных
 
-Данные хранятся в JSON файлах в папке `backend/data/`:
+### База данных
+Проект использует **Prisma ORM** с поддержкой SQLite (разработка) и PostgreSQL (продакшн).
+
+**Схема**: [prisma/schema.prisma](prisma/schema.prisma)
+
+### Миграция данных
+
+Для импорта данных из JSON файлов в базу данных:
+```bash
+npm run db:migrate
+```
+
+**На новом сервере (первый запуск)**:
+```bash
+npx prisma generate   # Генерация Prisma Client
+npx prisma db push    # Создание таблиц
+npm run db:migrate    # Импорт данных из JSON
+```
+
+Исходные JSON файлы в папке `backend/data/`:
 - `paintings.json` - картины
 - `exhibitions.json` - выставки
 - `artists.json` - художники
 - `news.json` - новости
 - `shop.json` - товары магазина
 - `orders.json` - заказы
+- `pickupPoints.json` - пункты выдачи
+
+### Переключение SQLite ↔ PostgreSQL
+
+Измените `DATABASE_URL` в `.env`:
+
+**SQLite** (разработка):
+```
+DATABASE_URL="file:./data/gallery.db"
+```
+
+**PostgreSQL** (продакшн):
+```
+DATABASE_URL="postgresql://user:password@localhost:5432/begilda_gallery"
+```
+
+Затем: `npx prisma migrate deploy`
 
 ## Пример использования
 

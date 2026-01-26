@@ -11,11 +11,18 @@ cd backend
 # Установить зависимости (только первый раз)
 npm install
 
+# Настроить базу данных (только первый раз)
+npx prisma generate   # Генерация Prisma Client
+npx prisma db push    # Создание схемы БД
+npm run db:migrate    # Импорт данных из JSON
+
 # Запустить сервер
 npm start
 ```
 
 Backend запустится на **http://localhost:3001**
+
+**База данных**: Используется SQLite (файл `backend/data/gallery.db`). Для переключения на PostgreSQL см. [backend/README.md](backend/README.md)
 
 ### 2. Запуск Frontend
 
