@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "sqlite" // Change to "postgresql" for production
-  url      = env("DATABASE_URL")
 }
 
 model Artist {
