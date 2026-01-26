@@ -50,7 +50,8 @@ export function PaintingDetail() {
     imageUrl = `http://localhost:3001${imageUrl}`;
   }
 
-  const baseUSD = painting.priceUSD ?? painting.price;
+  const baseUSD = painting.priceUSD ?? painting.price ?? 0;
+  const hasPrice = (painting.priceUSD ?? painting.price) != null;
   const displayPrice = convertPrice(baseUSD);
   const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
 
@@ -89,8 +90,14 @@ export function PaintingDetail() {
               </p>
             )}
             <p className="detail-price">
-              {symbol}
-              {displayPrice.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+              {hasPrice ? (
+                <>
+                  {symbol}
+                  {displayPrice.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                </>
+              ) : (
+                'Price on request'
+              )}
             </p>
 
             <div className="detail-meta">
