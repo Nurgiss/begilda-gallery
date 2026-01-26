@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { getArtists, createArtist, updateArtist, deleteArtist } from '../../../api/client';
+import type { Artist } from '../../../types/models/Artist';
+import type { ArtistFormData } from '../../../types/forms';
 
 export function ArtistsManager() {
-  const [artists, setArtists] = useState<any[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingArtist, setEditingArtist] = useState<any | null>(null);
+  const [editingArtist, setEditingArtist] = useState<Artist | null>(null);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<ArtistFormData>({
     name: '',
     bio: '',
     image: '',
@@ -44,10 +46,17 @@ export function ArtistsManager() {
     });
   };
 
-  const handleEdit = (artist: any) => {
+  const handleEdit = (artist: Artist) => {
     setIsEditing(true);
     setEditingArtist(artist);
-    setFormData(artist);
+    setFormData({
+      name: artist.name,
+      bio: artist.bio,
+      image: artist.image,
+      nationality: artist.nationality,
+      born: artist.born,
+      specialty: artist.specialty
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -67,7 +76,7 @@ export function ArtistsManager() {
 
     try {
       if (editingArtist) {
-        await updateArtist(editingArtist.id, formData);
+        await updateArtist(String(editingArtist.id), formData);
       } else {
         await createArtist(formData);
       }
@@ -262,7 +271,7 @@ export function ArtistsManager() {
                         </button>
                         <button
                           className="admin-btn-delete"
-                          onClick={() => handleDelete(artist.id)}
+                          onClick={() => handleDelete(String(artist.id))}
                         >
                           Удалить
                         </button>

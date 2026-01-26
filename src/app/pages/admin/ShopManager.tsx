@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getShopItems, createShopItem, updateShopItem, deleteShopItem, uploadImage } from '../../../api/client';
+import type { ShopItem } from '../../../types/models/ShopItem';
+import type { ShopItemFormData } from '../../../types/forms';
 
 export function ShopManager() {
-  const [shopItems, setShopItems] = useState<any[]>([]);
+  const [shopItems, setShopItems] = useState<ShopItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingItem, setEditingItem] = useState<any | null>(null);
+  const [editingItem, setEditingItem] = useState<ShopItem | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<ShopItemFormData>({
     title: '',
     price: 0,
     image: '',
@@ -43,10 +45,16 @@ export function ShopManager() {
     });
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: ShopItem) => {
     setIsEditing(true);
     setEditingItem(item);
-    setFormData(item);
+    setFormData({
+      title: item.title,
+      price: item.price,
+      image: item.image,
+      category: item.category,
+      description: item.description
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -68,7 +76,7 @@ export function ShopManager() {
     setUploadingImage(true);
     try {
       const data = await uploadImage(file);
-      setFormData((prev: any) => ({ ...prev, image: data.url }));
+      setFormData((prev) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Ошибка при загрузке изображения');
@@ -82,7 +90,7 @@ export function ShopManager() {
 
     try {
       if (editingItem) {
-        await updateShopItem(editingItem.id, formData);
+        await updateShopItem(String(editingItem.id), formData);
       } else {
         await createShopItem(formData);
       }
@@ -274,7 +282,7 @@ export function ShopManager() {
                         </button>
                         <button
                           className="admin-btn-delete"
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => handleDelete(String(item.id))}
                         >
                           Удалить
                         </button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AdminHeader } from './components/AdminHeader';
 import AdminLogin from './pages/admin/AdminLogin';
 import { PaintingsManager } from './pages/admin/PaintingsManager';

@@ -1,28 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getOrders, updateOrder, deleteOrder } from '../../../api/client';
-
-interface Order {
-  id: string;
-  fullName?: string;
-  email: string;
-  phone?: string;
-  deliveryType?: 'pickup' | 'delivery';
-  pickupPoint?: string;
-  country?: string;
-  postalCode?: string;
-  city?: string;
-  address?: string;
-  items: Array<{
-    itemId: number;
-    itemType: 'painting' | 'shop';
-    title: string;
-    price: number;
-    quantity: number;
-  }>;
-  totalAmount: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
-  createdAt: string;
-}
+import type { Order } from '../../../types/models/Order';
 
 export function OrdersManager() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -238,7 +216,7 @@ export function OrdersManager() {
                         <select
                           className="form-select"
                           value={order.status}
-                          onChange={(e) => handleStatusChange(order.id, e.target.value as Order['status'])}
+                          onChange={(e) => handleStatusChange(String(order.id), e.target.value as Order['status'])}
                           style={{ marginRight: '0.5rem', padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
                         >
                           <option value="pending">Ожидает</option>
@@ -246,8 +224,8 @@ export function OrdersManager() {
                           <option value="completed">Завершён</option>
                           <option value="cancelled">Отменён</option>
                         </select>
-                        <button 
-                          onClick={() => handleDelete(order.id)}
+                        <button
+                          onClick={() => handleDelete(String(order.id))}
                           className="admin-btn-delete"
                           style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
                         >

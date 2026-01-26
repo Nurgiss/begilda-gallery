@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import api from '../../api/client';
+import type { UploadResponse } from '../../types/api';
 
 interface AdminUploadProps {
   onUpload?: (url: string) => void;
@@ -9,7 +10,7 @@ export function AdminUpload({ onUpload }: AdminUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<UploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFile = (f: File | null) => {
@@ -34,8 +35,9 @@ export function AdminUpload({ onUpload }: AdminUploadProps) {
       const usable = res?.thumb || res?.original || res?.webp;
       if (usable && onUpload) onUpload(usable);
       setError(null);
-    } catch (e: any) {
-      setError(e?.message || 'Upload failed');
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Upload failed';
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -83,7 +85,7 @@ export function AdminUpload({ onUpload }: AdminUploadProps) {
               </li>
             )}
           </ul>
-          {result.webpan && <img src={result.webp} alt="uploaded" style={{ maxWidth: 300 }} />}
+          {result.webp && <img src={result.webp} alt="uploaded" style={{ maxWidth: 300 }} />}
         </div>
       )}
     </div>

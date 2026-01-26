@@ -17,7 +17,7 @@ export function PaintingCard({ painting, currency = 'USD', convertPrice }: Paint
   if (imageUrl && imageUrl.startsWith('/uploads/')) {
     imageUrl = `http://localhost:3001${imageUrl}`;
   }
-  const size = painting.dimensions || (painting as any).size;
+  const size = painting.dimensions || painting.size;
 
   return (
     <Link to={`/catalog/${painting.id}`} className="home-painting-card">

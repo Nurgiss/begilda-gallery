@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPickupPoints, createPickupPoint, updatePickupPoint, deletePickupPoint } from '../../../api/client';
-
-interface PickupPoint {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  phone: string;
-  workingHours: string;
-  isActive: boolean;
-  createdAt: string;
-}
+import type { PickupPoint } from '../../../types/models/PickupPoint';
 
 export function PickupPointsManager() {
   const [pickupPoints, setPickupPoints] = useState<PickupPoint[]>([]);
@@ -44,7 +34,7 @@ export function PickupPointsManager() {
     e.preventDefault();
     try {
       if (editing) {
-        await updatePickupPoint(editing.id, formData);
+        await updatePickupPoint(String(editing.id), formData);
       } else {
         await createPickupPoint(formData);
       }
@@ -68,10 +58,10 @@ export function PickupPointsManager() {
     });
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string | number) => {
     if (confirm('Вы уверены, что хотите удалить этот пункт самовывоза?')) {
       try {
-        await deletePickupPoint(id);
+        await deletePickupPoint(String(id));
         await loadPickupPoints();
       } catch (error) {
         console.error('Error deleting pickup point:', error);

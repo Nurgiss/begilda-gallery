@@ -1,19 +1,22 @@
 export interface Order {
   id: string | number;
+  fullName?: string;
+  email: string;
+  phone?: string;
+  deliveryType?: 'pickup' | 'delivery';
+  pickupPoint?: string;
+  country?: string;
+  postalCode?: string;
+  city?: string;
+  address?: string;
   items: Array<{
-    itemId: string | number;
-    type: 'painting' | 'shop';
+    itemId: number;
+    itemType: 'painting' | 'shop';
+    title: string;
+    price: number;
     quantity: number;
-    unitPrice: number;
   }>;
-  customerInfo?: {
-    name: string;
-    email: string;
-    phone?: string;
-    address?: string;
-  };
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-  total: number;
+  totalAmount: number;
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
   createdAt: string;
-  updatedAt?: string;
 }

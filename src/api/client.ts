@@ -1,33 +1,64 @@
-const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3001/api';
+import type { Painting } from '@/types/models/Painting';
+import type { Exhibition } from '@/types/models/Exhibition';
+import type { Artist } from '@/types/models/Artist';
+import type { News } from '@/types/models/News';
+import type { ShopItem } from '@/types/models/ShopItem';
+import type { Order } from '@/types/models/Order';
+import type { PickupPoint } from '@/types/models/PickupPoint';
+import type {
+  LoginRequest,
+  LoginResponse,
+  CreatePaintingRequest,
+  UpdatePaintingRequest,
+  CreateExhibitionRequest,
+  UpdateExhibitionRequest,
+  CreateArtistRequest,
+  UpdateArtistRequest,
+  CreateNewsRequest,
+  UpdateNewsRequest,
+  CreateShopItemRequest,
+  UpdateShopItemRequest,
+  CreateOrderRequest,
+  UpdateOrderRequest,
+  CreatePickupPointRequest,
+  UpdatePickupPointRequest,
+  UploadResponse,
+  DeleteResponse,
+} from '@/types/api';
 
-function handleAuthError() {
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
+
+function handleAuthError(): void {
   try {
     localStorage.removeItem('adminToken');
-  } catch (e) {}
-  // Optionally redirect to login or dispatch event here
+  } catch {
+    // Ignore localStorage errors in SSR or restricted contexts
+  }
 }
 
-function getHeaders() {
+function getHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
   try {
     const token = localStorage.getItem('adminToken');
     if (token) headers['Authorization'] = `Bearer ${token}`;
-  } catch (e) {}
+  } catch {
+    // Ignore localStorage errors
+  }
   return headers;
 }
 
-async function getJSON(path: string) {
+async function getJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { headers: getHeaders() });
   if (res.status === 401 || res.status === 403) {
     handleAuthError();
   }
   if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
-async function postJSON(path: string, data: any) {
+async function postJSON<TReq, TRes>(path: string, data: TReq): Promise<TRes> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: 'POST',
     headers: getHeaders(),
@@ -37,10 +68,10 @@ async function postJSON(path: string, data: any) {
     handleAuthError();
   }
   if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  return res.json() as Promise<TRes>;
 }
 
-async function putJSON(path: string, data: any) {
+async function putJSON<TReq, TRes>(path: string, data: TReq): Promise<TRes> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: 'PUT',
     headers: getHeaders(),
@@ -50,10 +81,10 @@ async function putJSON(path: string, data: any) {
     handleAuthError();
   }
   if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  return res.json() as Promise<TRes>;
 }
 
-async function deleteJSON(path: string) {
+async function deleteJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: 'DELETE',
     headers: getHeaders()
@@ -62,175 +93,175 @@ async function deleteJSON(path: string) {
     handleAuthError();
   }
   if (!res.ok) throw new Error(`API error ${res.status}`);
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
 // ==================== AUTH ====================
-export async function login(username: string, password: string) {
-  return postJSON('/auth/login', { username, password });
+export function login(username: string, password: string): Promise<LoginResponse> {
+  return postJSON<LoginRequest, LoginResponse>('/auth/login', { username, password });
 }
 
 // ==================== PAINTINGS ====================
-export function getPaintings() {
-  return getJSON('/paintings');
+export function getPaintings(): Promise<Painting[]> {
+  return getJSON<Painting[]>('/paintings');
 }
 
-export function getPainting(id: string) {
-  return getJSON(`/paintings/${id}`);
+export function getPainting(id: string): Promise<Painting> {
+  return getJSON<Painting>(`/paintings/${id}`);
 }
 
-export function createPainting(data: any) {
-  return postJSON('/paintings', data);
+export function createPainting(data: CreatePaintingRequest): Promise<Painting> {
+  return postJSON<CreatePaintingRequest, Painting>('/paintings', data);
 }
 
-export function updatePainting(id: string, data: any) {
-  return putJSON(`/paintings/${id}`, data);
+export function updatePainting(id: string, data: UpdatePaintingRequest): Promise<Painting> {
+  return putJSON<UpdatePaintingRequest, Painting>(`/paintings/${id}`, data);
 }
 
-export function deletePainting(id: string) {
-  return deleteJSON(`/paintings/${id}`);
+export function deletePainting(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/paintings/${id}`);
 }
 
 // ==================== EXHIBITIONS ====================
-export function getExhibitions() {
-  return getJSON('/exhibitions');
+export function getExhibitions(): Promise<Exhibition[]> {
+  return getJSON<Exhibition[]>('/exhibitions');
 }
 
-export function getExhibition(id: string) {
-  return getJSON(`/exhibitions/${id}`);
+export function getExhibition(id: string): Promise<Exhibition> {
+  return getJSON<Exhibition>(`/exhibitions/${id}`);
 }
 
-export function createExhibition(data: any) {
-  return postJSON('/exhibitions', data);
+export function createExhibition(data: CreateExhibitionRequest): Promise<Exhibition> {
+  return postJSON<CreateExhibitionRequest, Exhibition>('/exhibitions', data);
 }
 
-export function updateExhibition(id: string, data: any) {
-  return putJSON(`/exhibitions/${id}`, data);
+export function updateExhibition(id: string, data: UpdateExhibitionRequest): Promise<Exhibition> {
+  return putJSON<UpdateExhibitionRequest, Exhibition>(`/exhibitions/${id}`, data);
 }
 
-export function deleteExhibition(id: string) {
-  return deleteJSON(`/exhibitions/${id}`);
+export function deleteExhibition(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/exhibitions/${id}`);
 }
 
 // ==================== ARTISTS ====================
-export function getArtists() {
-  return getJSON('/artists');
+export function getArtists(): Promise<Artist[]> {
+  return getJSON<Artist[]>('/artists');
 }
 
-export function getArtist(id: string) {
-  return getJSON(`/artists/${id}`);
+export function getArtist(id: string): Promise<Artist> {
+  return getJSON<Artist>(`/artists/${id}`);
 }
 
-export function createArtist(data: any) {
-  return postJSON('/artists', data);
+export function createArtist(data: CreateArtistRequest): Promise<Artist> {
+  return postJSON<CreateArtistRequest, Artist>('/artists', data);
 }
 
-export function updateArtist(id: string, data: any) {
-  return putJSON(`/artists/${id}`, data);
+export function updateArtist(id: string, data: UpdateArtistRequest): Promise<Artist> {
+  return putJSON<UpdateArtistRequest, Artist>(`/artists/${id}`, data);
 }
 
-export function deleteArtist(id: string) {
-  return deleteJSON(`/artists/${id}`);
+export function deleteArtist(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/artists/${id}`);
 }
 
 // ==================== NEWS ====================
-export function getNews() {
-  return getJSON('/news');
+export function getNews(): Promise<News[]> {
+  return getJSON<News[]>('/news');
 }
 
-export function getNewsArticle(id: string) {
-  return getJSON(`/news/${id}`);
+export function getNewsArticle(id: string): Promise<News> {
+  return getJSON<News>(`/news/${id}`);
 }
 
-export function createNews(data: any) {
-  return postJSON('/news', data);
+export function createNews(data: CreateNewsRequest): Promise<News> {
+  return postJSON<CreateNewsRequest, News>('/news', data);
 }
 
-export function updateNews(id: string, data: any) {
-  return putJSON(`/news/${id}`, data);
+export function updateNews(id: string, data: UpdateNewsRequest): Promise<News> {
+  return putJSON<UpdateNewsRequest, News>(`/news/${id}`, data);
 }
 
-export function deleteNews(id: string) {
-  return deleteJSON(`/news/${id}`);
+export function deleteNews(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/news/${id}`);
 }
 
 // ==================== SHOP ====================
-export function getShopItems() {
-  return getJSON('/shop');
+export function getShopItems(): Promise<ShopItem[]> {
+  return getJSON<ShopItem[]>('/shop');
 }
 
-export function getShopItem(id: string) {
-  return getJSON(`/shop/${id}`);
+export function getShopItem(id: string): Promise<ShopItem> {
+  return getJSON<ShopItem>(`/shop/${id}`);
 }
 
-export function createShopItem(data: any) {
-  return postJSON('/shop', data);
+export function createShopItem(data: CreateShopItemRequest): Promise<ShopItem> {
+  return postJSON<CreateShopItemRequest, ShopItem>('/shop', data);
 }
 
-export function updateShopItem(id: string, data: any) {
-  return putJSON(`/shop/${id}`, data);
+export function updateShopItem(id: string, data: UpdateShopItemRequest): Promise<ShopItem> {
+  return putJSON<UpdateShopItemRequest, ShopItem>(`/shop/${id}`, data);
 }
 
-export function deleteShopItem(id: string) {
-  return deleteJSON(`/shop/${id}`);
+export function deleteShopItem(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/shop/${id}`);
 }
 
 // ==================== ORDERS ====================
-export function getOrders() {
-  return getJSON('/orders');
+export function getOrders(): Promise<Order[]> {
+  return getJSON<Order[]>('/orders');
 }
 
-export function getOrder(id: string) {
-  return getJSON(`/orders/${id}`);
+export function getOrder(id: string): Promise<Order> {
+  return getJSON<Order>(`/orders/${id}`);
 }
 
-export function createOrder(data: any) {
-  return postJSON('/orders', data);
+export function createOrder(data: CreateOrderRequest): Promise<Order> {
+  return postJSON<CreateOrderRequest, Order>('/orders', data);
 }
 
-export function updateOrder(id: string, data: any) {
-  return putJSON(`/orders/${id}`, data);
+export function updateOrder(id: string, data: UpdateOrderRequest): Promise<Order> {
+  return putJSON<UpdateOrderRequest, Order>(`/orders/${id}`, data);
 }
 
-export function deleteOrder(id: string) {
-  return deleteJSON(`/orders/${id}`);
+export function deleteOrder(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/orders/${id}`);
 }
 
 // ==================== PICKUP POINTS ====================
-export function getPickupPoints() {
-  return getJSON('/pickup-points');
+export function getPickupPoints(): Promise<PickupPoint[]> {
+  return getJSON<PickupPoint[]>('/pickup-points');
 }
 
-export function createPickupPoint(data: any) {
-  return postJSON('/pickup-points', data);
+export function createPickupPoint(data: CreatePickupPointRequest): Promise<PickupPoint> {
+  return postJSON<CreatePickupPointRequest, PickupPoint>('/pickup-points', data);
 }
 
-export function updatePickupPoint(id: string, data: any) {
-  return putJSON(`/pickup-points/${id}`, data);
+export function updatePickupPoint(id: string, data: UpdatePickupPointRequest): Promise<PickupPoint> {
+  return putJSON<UpdatePickupPointRequest, PickupPoint>(`/pickup-points/${id}`, data);
 }
 
-export function deletePickupPoint(id: string) {
-  return deleteJSON(`/pickup-points/${id}`);
+export function deletePickupPoint(id: string): Promise<DeleteResponse> {
+  return deleteJSON<DeleteResponse>(`/pickup-points/${id}`);
 }
 
 // ==================== UPLOAD ====================
-export async function uploadImage(file: File) {
+export async function uploadImage(file: File): Promise<UploadResponse> {
   const fd = new FormData();
   fd.append('image', file);
   const headers = getHeaders();
-  delete headers['Content-Type']; // Let browser set it for FormData
+  delete headers['Content-Type'];
 
-  // Backend exposes POST /api/upload
   const res = await fetch(`${API_BASE}/upload`, {
     method: 'POST',
     body: fd,
     headers,
   });
   if (!res.ok) throw new Error(`Upload failed ${res.status}`);
-  return res.json();
+  return res.json() as Promise<UploadResponse>;
 }
 
 export default {
+  login,
   getPaintings,
   getPainting,
   createPainting,
@@ -267,4 +298,3 @@ export default {
   deletePickupPoint,
   uploadImage,
 };
-

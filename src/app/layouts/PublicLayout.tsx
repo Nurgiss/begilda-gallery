@@ -4,7 +4,7 @@ import { Header } from '../components/Header';
 import { HeaderDark } from '../components/HeaderDark';
 import { Footer } from '../components/Footer';
 import { AppProvider } from '../context/AppContext';
-import { CartItem, Currency, CurrencyRates } from '../../types';
+import { CartItem, Currency, CurrencyRates, Painting, ShopItem } from '../../types';
 
 export function PublicLayout() {
   const location = useLocation();
@@ -33,10 +33,16 @@ export function PublicLayout() {
 
   const convertPrice = (priceUSD: number) => currency === 'EUR' ? priceUSD * rates.EUR : currency === 'KZT' ? priceUSD * rates.KZT : priceUSD;
 
-  const addToCart = (item: CartItem['item'], type: 'painting' | 'shop') => {
+  const addToCart = (item: Painting | ShopItem, type: 'painting' | 'shop') => {
     setCart(prev => {
       const existing = prev.find(c => c.item.id === item.id && c.type === type);
-      return existing ? prev.map(c => c.item.id === item.id && c.type === type ? { ...c, quantity: c.quantity + 1 } : c) : [...prev, { item, type, quantity: 1 }];
+      if (existing) {
+        return prev.map(c => c.item.id === item.id && c.type === type ? { ...c, quantity: c.quantity + 1 } : c);
+      }
+      const newItem: CartItem = type === 'painting'
+        ? { item: item as Painting, type: 'painting', quantity: 1 }
+        : { item: item as ShopItem, type: 'shop', quantity: 1 };
+      return [...prev, newItem];
     });
   };
 

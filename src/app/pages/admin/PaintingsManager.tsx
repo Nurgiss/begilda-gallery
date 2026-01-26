@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { getPaintings, createPainting, updatePainting, deletePainting, getArtists, uploadImage } from '../../../api/client';
 import { convertUSDtoKZT, convertUSDtoEUR, getCurrencyRates } from '../../../api/currency';
+import type { Painting } from '../../../types/models/Painting';
+import type { Artist } from '../../../types/models/Artist';
+import type { PaintingFormData } from '../../../types/forms';
 
 export function PaintingsManager() {
-  const [paintings, setPaintings] = useState<any[]>([]);
-  const [artists, setArtists] = useState<any[]>([]);
+  const [paintings, setPaintings] = useState<Painting[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingPainting, setEditingPainting] = useState<any | null>(null);
+  const [editingPainting, setEditingPainting] = useState<Painting | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
-  
-  const [formData, setFormData] = useState<any>({
+
+  const [formData, setFormData] = useState<PaintingFormData>({
     title: '',
     artist: '',
     year: new Date().getFullYear(),
@@ -104,10 +107,23 @@ export function PaintingsManager() {
     setCalculatedPrices({ kzt: 0, eur: 0 });
   };
   
-  const handleEdit = (painting: any) => {
+  const handleEdit = (painting: Painting) => {
     setIsEditing(true);
     setEditingPainting(painting);
-    setFormData(painting);
+    setFormData({
+      title: painting.title,
+      artist: painting.artist || '',
+      year: painting.year,
+      priceUSD: painting.priceUSD || 0,
+      dimensions: painting.dimensions,
+      category: painting.category || 'abstract',
+      description: painting.description,
+      image: painting.image || painting.imageUrl || '',
+      medium: painting.medium,
+      availability: painting.availability,
+      featured: painting.featured || false,
+      exhibitionOnly: painting.exhibitionOnly || false
+    });
   };
   
   const handleDelete = async (id: string) => {
@@ -129,7 +145,7 @@ export function PaintingsManager() {
     setUploadingImage(true);
     try {
       const data = await uploadImage(file);
-      setFormData((prev: any) => ({ ...prev, image: data.url }));
+      setFormData((prev) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Ошибка при загрузке изображения');
@@ -150,7 +166,7 @@ export function PaintingsManager() {
       };
       
       if (editingPainting) {
-        await updatePainting(editingPainting.id, paintingData);
+        await updatePainting(String(editingPainting.id), paintingData);
       } else {
         await createPainting(paintingData);
       }
@@ -583,9 +599,9 @@ export function PaintingsManager() {
                         >
                           Редактировать
                         </button>
-                        <button 
+                        <button
                           className="admin-btn-delete"
-                          onClick={() => handleDelete(painting.id)}
+                          onClick={() => handleDelete(String(painting.id))}
                         >
                           Удалить
                         </button>

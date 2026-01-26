@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getArtists, getPaintings } from '../../api/client';
-import { Artist, Artwork } from '../../types';
+import { Artist, Painting } from '../../types';
 
 export function Artists() {
   const { id } = useParams<{ id: string }>();
   const [artists, setArtists] = useState<Artist[]>([]);
-  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [artworks, setArtworks] = useState<Painting[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

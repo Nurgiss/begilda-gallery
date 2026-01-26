@@ -21,10 +21,11 @@ export default function AdminLogin({ onLogin, onCancel }: Props) {
       const response = await login(username, password);
       localStorage.setItem('adminToken', response.token);
       onLogin(response.token);
-    } catch (err: any) {
-      if (err.message.includes('401')) {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '';
+      if (message.includes('401')) {
         setError('Invalid username or password');
-      } else if (err.message.includes('400')) {
+      } else if (message.includes('400')) {
         setError('Please enter both username and password');
       } else {
         setError('Login failed. Please try again.');

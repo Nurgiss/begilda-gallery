@@ -27,8 +27,9 @@ export function ExhibitionDetail() {
 
         if (fullExhibition?.paintingIds && fullExhibition.paintingIds.length > 0) {
           const allPaintings = await getPaintings();
+          const paintingIds = fullExhibition.paintingIds;
           const filtered = allPaintings.filter((p: Painting) =>
-            fullExhibition.paintingIds.includes(p.id)
+            paintingIds.includes(String(p.id))
           );
           setExhibitionPaintings(filtered);
         } else {

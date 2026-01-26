@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { getNews, createNews, updateNews, deleteNews, uploadImage } from '../../../api/client';
+import type { News } from '../../../types/models/News';
+import type { NewsFormData } from '../../../types/forms';
 
 export function NewsManager() {
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingNews, setEditingNews] = useState<any | null>(null);
+  const [editingNews, setEditingNews] = useState<News | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<NewsFormData>({
     title: '',
     excerpt: '',
     content: '',
     image: '',
     date: new Date().toISOString().split('T')[0],
-    category: 'Выставки'
+    category: 'Выставки',
+    instagramUrl: ''
   });
 
   useEffect(() => {
@@ -41,14 +44,23 @@ export function NewsManager() {
       content: '',
       image: '',
       date: new Date().toISOString().split('T')[0],
-      category: 'Выставки'
+      category: 'Выставки',
+      instagramUrl: ''
     });
   };
 
-  const handleEdit = (newsItem: any) => {
+  const handleEdit = (newsItem: News) => {
     setIsEditing(true);
     setEditingNews(newsItem);
-    setFormData(newsItem);
+    setFormData({
+      title: newsItem.title,
+      excerpt: newsItem.excerpt,
+      content: newsItem.content,
+      image: newsItem.image,
+      date: newsItem.date,
+      category: newsItem.category,
+      instagramUrl: newsItem.instagramUrl || ''
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -70,7 +82,7 @@ export function NewsManager() {
     setUploadingImage(true);
     try {
       const data = await uploadImage(file);
-      setFormData((prev: any) => ({ ...prev, image: data.url }));
+      setFormData((prev) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Ошибка при загрузке изображения');
@@ -84,7 +96,7 @@ export function NewsManager() {
 
     try {
       if (editingNews) {
-        await updateNews(editingNews.id, formData);
+        await updateNews(String(editingNews.id), formData);
       } else {
         await createNews(formData);
       }
@@ -287,7 +299,7 @@ export function NewsManager() {
                         </button>
                         <button
                           className="admin-btn-delete"
-                          onClick={() => handleDelete(newsItem.id)}
+                          onClick={() => handleDelete(String(newsItem.id))}
                         >
                           Удалить
                         </button>

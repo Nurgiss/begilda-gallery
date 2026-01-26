@@ -1,12 +1,5 @@
 // Сервис для работы с курсами валют Нацбанка РК
 
-interface ExchangeRate {
-  title: string;
-  code: string;
-  value: number;
-  a_date: string;
-}
-
 interface CurrencyRates {
   usd: number;
   eur: number;

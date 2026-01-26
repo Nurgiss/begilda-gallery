@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
 import { getExhibitions, createExhibition, updateExhibition, deleteExhibition, getPaintings } from '../../../api/client';
+import type { Exhibition } from '../../../types/models/Exhibition';
+import type { Painting } from '../../../types/models/Painting';
+import type { ExhibitionFormData } from '../../../types/forms';
 
 export function ExhibitionsManager() {
-  const [exhibitions, setExhibitions] = useState<any[]>([]);
-  const [paintings, setPaintings] = useState<any[]>([]);
+  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
+  const [paintings, setPaintings] = useState<Painting[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingExhibition, setEditingExhibition] = useState<any | null>(null);
+  const [editingExhibition, setEditingExhibition] = useState<Exhibition | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<ExhibitionFormData>({
     title: '',
+    artist: '',
     location: '',
     dates: '',
     description: '',
@@ -49,6 +53,7 @@ export function ExhibitionsManager() {
     setEditingExhibition(null);
     setFormData({
       title: '',
+      artist: '',
       location: '',
       dates: '',
       description: '',
@@ -58,10 +63,19 @@ export function ExhibitionsManager() {
     });
   };
 
-  const handleEdit = (exhibition: any) => {
+  const handleEdit = (exhibition: Exhibition) => {
     setIsEditing(true);
     setEditingExhibition(exhibition);
-    setFormData(exhibition);
+    setFormData({
+      title: exhibition.title,
+      artist: exhibition.artist,
+      location: exhibition.location,
+      dates: exhibition.dates,
+      description: exhibition.description,
+      image: exhibition.image,
+      status: exhibition.status,
+      paintingIds: exhibition.paintingIds || []
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -92,8 +106,8 @@ export function ExhibitionsManager() {
 
       if (!response.ok) throw new Error('Upload failed');
 
-      const data = await response.json();
-      setFormData((prev: any) => ({ ...prev, image: data.url }));
+      const data = await response.json() as { url: string };
+      setFormData((prev) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);
       alert('Ошибка при загрузке изображения');
@@ -107,7 +121,7 @@ export function ExhibitionsManager() {
 
     try {
       if (editingExhibition) {
-        await updateExhibition(editingExhibition.id, formData);
+        await updateExhibition(String(editingExhibition.id), formData);
       } else {
         await createExhibition(formData);
       }
@@ -193,7 +207,7 @@ export function ExhibitionsManager() {
                     <select
                       className="form-select"
                       value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, status: e.target.value as 'upcoming' | 'current' | 'past' })}
                       required
                     >
                       <option value="upcoming">Предстоящая</option>
@@ -278,14 +292,15 @@ export function ExhibitionsManager() {
                   ) : (
                     <div style={{ display: 'grid', gap: '0.75rem' }}>
                       {paintings.map(painting => {
-                        const isSelected = formData.paintingIds?.includes(painting.id);
+                        const paintingIdStr = String(painting.id);
+                        const isSelected = formData.paintingIds?.includes(paintingIdStr);
                         const imageUrl = painting.imageUrl || painting.image;
-                        const displayImage = imageUrl?.startsWith('/uploads/') 
-                          ? `http://localhost:3001${imageUrl}` 
+                        const displayImage = imageUrl?.startsWith('/uploads/')
+                          ? `http://localhost:3001${imageUrl}`
                           : imageUrl;
 
                         return (
-                          <label 
+                          <label
                             key={painting.id}
                             style={{
                               display: 'flex',
@@ -304,8 +319,8 @@ export function ExhibitionsManager() {
                               checked={isSelected}
                               onChange={(e) => {
                                 const newIds = e.target.checked
-                                  ? [...(formData.paintingIds || []), painting.id]
-                                  : (formData.paintingIds || []).filter((id: string) => id !== painting.id);
+                                  ? [...(formData.paintingIds || []), paintingIdStr]
+                                  : (formData.paintingIds || []).filter((id: string) => id !== paintingIdStr);
                                 setFormData({ ...formData, paintingIds: newIds });
                               }}
                               style={{ width: '20px', height: '20px', cursor: 'pointer' }}
@@ -336,11 +351,11 @@ export function ExhibitionsManager() {
                       })}
                     </div>
                   )}
-                  {formData.paintingIds?.length > 0 && (
-                    <div style={{ 
-                      marginTop: '1rem', 
-                      padding: '0.75rem', 
-                      backgroundColor: '#d4edda', 
+                  {formData.paintingIds && formData.paintingIds.length > 0 && (
+                    <div style={{
+                      marginTop: '1rem',
+                      padding: '0.75rem',
+                      backgroundColor: '#d4edda',
                       borderRadius: '6px',
                       color: '#155724',
                       fontSize: '0.9rem'
@@ -412,7 +427,7 @@ export function ExhibitionsManager() {
                         </button>
                         <button
                           className="admin-btn-delete"
-                          onClick={() => handleDelete(exhibition.id)}
+                          onClick={() => handleDelete(String(exhibition.id))}
                         >
                           Удалить
                         </button>

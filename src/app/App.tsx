@@ -24,6 +24,7 @@ import {
   CartItem,
   Currency,
   CurrencyRates,
+  Painting,
 } from '../types';
 import '../styles/index.css';
 
@@ -117,7 +118,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const addToCart = (item: any, type: 'painting' | 'shop') => {
+  const addToCart = (item: Painting | ShopItem, type: 'painting' | 'shop') => {
     setCart(prevCart => {
       const existingItem = prevCart.find(cartItem => cartItem.item.id === item.id && cartItem.type === type);
       if (existingItem) {

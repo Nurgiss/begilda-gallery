@@ -153,19 +153,18 @@ export function Checkout() {
         city: formData.deliveryType === 'delivery' ? formData.city : undefined,
         address: formData.deliveryType === 'delivery' ? formData.address : undefined,
         items: cart.map(({ item, type, quantity }) => ({
-          itemId: item.id,
+          itemId: typeof item.id === 'number' ? item.id : parseInt(String(item.id), 10),
           itemType: type,
           title: item.title,
           price: item.priceUSD || item.price,
           quantity
         })),
         totalAmount,
-        status: 'pending',
-        createdAt: new Date().toISOString()
+        status: 'pending' as const
       };
 
       const created = await createOrder(orderData);
-      setOrderId(created?.id || null);
+      setOrderId(created?.id ? String(created.id) : null);
       setLoading(false);
       setProcessing(true);
 

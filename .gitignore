@@ -6,3 +6,11 @@ backend/uploads/
 .DS_Store
 .env
 .env.*
+
+# Database files
+*.db
+*.db.*
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal

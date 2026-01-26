@@ -3,14 +3,8 @@ export interface PickupPoint {
   name: string;
   address: string;
   city: string;
-  country: string;
+  phone: string;
+  workingHours: string;
   isActive: boolean;
-  workingHours?: string;
-  phone?: string;
-  hours?: string;
- 
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
+  createdAt: string;
 }

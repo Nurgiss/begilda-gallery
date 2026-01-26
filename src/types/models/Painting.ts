@@ -7,8 +7,10 @@ export interface Painting {
   priceUSD?: number;
   priceEUR?: number;
   image: string;
+  imageUrl?: string;
   description: string;
   dimensions: string;
+  size?: string;
   medium: string;
   category?: string;
   availability: boolean;

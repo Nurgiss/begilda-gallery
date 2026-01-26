@@ -6,6 +6,7 @@ export interface Exhibition {
   dates: string;
   description: string;
   image: string;
+  imageUrl?: string;
   status: 'current' | 'upcoming' | 'past';
   paintingIds?: string[];
 }
