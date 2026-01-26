@@ -19,8 +19,7 @@ import * as shopRepo from './repositories/shop.js';
 import * as ordersRepo from './repositories/orders.js';
 import * as pickupPointsRepo from './repositories/pickupPoints.js';
 
-// Import database initialization
-import { getDb, closeDb } from './db/index.js';
+import { prisma } from './db/client.js';
 
 dotenv.config();
 
@@ -486,27 +485,24 @@ app.get('/api/health', (_req: Request, res: Response) => {
 });
 
 // Graceful shutdown
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log('\nShutting down gracefully...');
-  closeDb();
+  await prisma.$disconnect();
   process.exit(0);
 });
 
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log('\nShutting down gracefully...');
-  closeDb();
+  await prisma.$disconnect();
   process.exit(0);
 });
 
 // Start server
 function startServer(): void {
-  // Initialize database on startup
-  getDb();
-
   app.listen(PORT, () => {
     console.log(`🎨 Begilda Gallery API server running on http://localhost:${PORT}`);
     console.log(`📊 API endpoints available at http://localhost:${PORT}/api`);
-    console.log(`💾 Using SQLite database`);
+    console.log(`💾 Using Prisma with SQLite database`);
   });
 }
 
