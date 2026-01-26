@@ -1,104 +1,72 @@
-import { getDb } from '../db/index.js';
-import { v4 as uuidv4 } from 'uuid';
-import type { ArtistRow, Artist, CreateArtistInput, UpdateArtistInput } from '../types/db.js';
+import { prisma } from '../db/client.js';
+import type { Artist as PrismaArtist } from '@prisma/client';
+import type { Artist, CreateArtistInput, UpdateArtistInput } from '../types/db.js';
 
-function toApiFormat(row: ArtistRow | undefined): Artist | null {
-  if (!row) return null;
+function toApiFormat(row: PrismaArtist): Artist {
   return {
     id: row.id,
     name: row.name,
-    bio: row.bio,
-    image: row.image,
-    nationality: row.nationality,
-    born: row.born,
-    specialty: row.specialty,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at ?? undefined,
+    bio: row.bio ?? undefined,
+    image: row.image ?? undefined,
+    nationality: row.nationality ?? undefined,
+    born: row.born ?? undefined,
+    specialty: row.specialty ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt?.toISOString(),
   };
 }
 
-export function getAll(): Artist[] {
-  const db = getDb();
-  const rows = db.prepare('SELECT * FROM artists ORDER BY name').all() as ArtistRow[];
-  return rows.map((row) => toApiFormat(row)!);
+export async function getAll(): Promise<Artist[]> {
+  const artists = await prisma.artist.findMany({
+    orderBy: { name: 'asc' },
+  });
+  return artists.map(toApiFormat);
 }
 
-export function getById(id: string): Artist | null {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM artists WHERE id = ?').get(id) as ArtistRow | undefined;
-  return toApiFormat(row);
+export async function getById(id: string): Promise<Artist | null> {
+  const artist = await prisma.artist.findUnique({
+    where: { id },
+  });
+  return artist ? toApiFormat(artist) : null;
 }
 
-export function create(data: CreateArtistInput): Artist {
-  const db = getDb();
-  const id = uuidv4();
-  const now = new Date().toISOString();
-
-  db.prepare(`
-    INSERT INTO artists (id, name, bio, image, nationality, born, specialty, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    id,
-    data.name,
-    data.bio ?? null,
-    data.image ?? null,
-    data.nationality ?? null,
-    data.born ?? null,
-    data.specialty ?? null,
-    now
-  );
-
-  return getById(id)!;
+export async function create(data: CreateArtistInput): Promise<Artist> {
+  const artist = await prisma.artist.create({
+    data: {
+      name: data.name,
+      bio: data.bio ?? null,
+      image: data.image ?? null,
+      nationality: data.nationality ?? null,
+      born: data.born ?? null,
+      specialty: data.specialty ?? null,
+    },
+  });
+  return toApiFormat(artist);
 }
 
-export function update(id: string, data: UpdateArtistInput): Artist | null {
-  const db = getDb();
-  const existing = getById(id);
+export async function update(id: string, data: UpdateArtistInput): Promise<Artist | null> {
+  const existing = await prisma.artist.findUnique({ where: { id } });
   if (!existing) return null;
 
-  const now = new Date().toISOString();
-  const fields: string[] = [];
-  const values: (string | null)[] = [];
-
-  if (data.name !== undefined) {
-    fields.push('name = ?');
-    values.push(data.name);
-  }
-  if (data.bio !== undefined) {
-    fields.push('bio = ?');
-    values.push(data.bio ?? null);
-  }
-  if (data.image !== undefined) {
-    fields.push('image = ?');
-    values.push(data.image ?? null);
-  }
-  if (data.nationality !== undefined) {
-    fields.push('nationality = ?');
-    values.push(data.nationality ?? null);
-  }
-  if (data.born !== undefined) {
-    fields.push('born = ?');
-    values.push(data.born ?? null);
-  }
-  if (data.specialty !== undefined) {
-    fields.push('specialty = ?');
-    values.push(data.specialty ?? null);
-  }
-
-  if (fields.length === 0) {
-    return existing;
-  }
-
-  fields.push('updated_at = ?');
-  values.push(now);
-  values.push(id);
-
-  db.prepare(`UPDATE artists SET ${fields.join(', ')} WHERE id = ?`).run(...values);
-  return getById(id);
+  const artist = await prisma.artist.update({
+    where: { id },
+    data: {
+      ...(data.name !== undefined && { name: data.name }),
+      ...(data.bio !== undefined && { bio: data.bio }),
+      ...(data.image !== undefined && { image: data.image }),
+      ...(data.nationality !== undefined && { nationality: data.nationality }),
+      ...(data.born !== undefined && { born: data.born }),
+      ...(data.specialty !== undefined && { specialty: data.specialty }),
+    },
+  });
+  return toApiFormat(artist);
 }
 
-export function remove(id: string): boolean {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM artists WHERE id = ?').run(id);
-  return result.changes > 0;
+export async function remove(id: string): Promise<boolean> {
+  try {
+    await prisma.artist.delete({ where: { id } });
+    return true;
+  } catch {
+    return false;
+  }
 }

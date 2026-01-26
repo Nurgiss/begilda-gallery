@@ -1,122 +1,92 @@
-import { getDb } from '../db/index.js';
-import { v4 as uuidv4 } from 'uuid';
-import type { ShopItemRow, ShopItem, CreateShopItemInput, UpdateShopItemInput } from '../types/db.js';
+import { prisma } from '../db/client.js';
+import type { ShopItem as PrismaShopItem } from '@prisma/client';
+import type { ShopItem, CreateShopItemInput, UpdateShopItemInput } from '../types/db.js';
 
-function toApiFormat(row: ShopItemRow | undefined): ShopItem | null {
+function toApiFormat(row: PrismaShopItem | null): ShopItem | null {
   if (!row) return null;
   return {
     id: row.id,
     title: row.title,
     artist: row.artist ?? undefined,
     price: row.price ?? undefined,
-    priceUSD: row.price_usd ?? undefined,
-    priceEUR: row.price_eur ?? undefined,
+    priceUSD: row.priceUsd ?? undefined,
+    priceEUR: row.priceEur ?? undefined,
     image: row.image ?? undefined,
-    imageUrl: row.image_url ?? undefined,
+    imageUrl: row.imageUrl ?? undefined,
     category: row.category ?? undefined,
     description: row.description ?? undefined,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at ?? undefined,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt?.toISOString(),
   };
 }
 
-export function getAll(): ShopItem[] {
-  const db = getDb();
-  const rows = db.prepare('SELECT * FROM shop_items ORDER BY created_at DESC').all() as ShopItemRow[];
+export async function getAll(): Promise<ShopItem[]> {
+  const rows = await prisma.shopItem.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
   return rows.map((row) => toApiFormat(row)!);
 }
 
-export function getById(id: string): ShopItem | null {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM shop_items WHERE id = ?').get(id) as ShopItemRow | undefined;
+export async function getById(id: string): Promise<ShopItem | null> {
+  const row = await prisma.shopItem.findUnique({
+    where: { id },
+  });
   return toApiFormat(row);
 }
 
-export function create(data: CreateShopItemInput): ShopItem {
-  const db = getDb();
-  const id = uuidv4();
-  const now = new Date().toISOString();
+export async function create(data: CreateShopItemInput): Promise<ShopItem> {
+  const row = await prisma.shopItem.create({
+    data: {
+      title: data.title,
+      artist: data.artist ?? null,
+      price: data.price ?? null,
+      priceUsd: data.priceUSD ?? null,
+      priceEur: data.priceEUR ?? null,
+      image: data.image ?? null,
+      imageUrl: data.imageUrl ?? null,
+      category: data.category ?? null,
+      description: data.description ?? null,
+    },
+  });
 
-  db.prepare(`
-    INSERT INTO shop_items (id, title, artist, price, price_usd, price_eur, image, image_url, category, description, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(
-    id,
-    data.title,
-    data.artist ?? null,
-    data.price ?? null,
-    data.priceUSD ?? null,
-    data.priceEUR ?? null,
-    data.image ?? null,
-    data.imageUrl ?? null,
-    data.category ?? null,
-    data.description ?? null,
-    now
-  );
-
-  return getById(id)!;
+  return toApiFormat(row)!;
 }
 
-export function update(id: string, data: UpdateShopItemInput): ShopItem | null {
-  const db = getDb();
-  const existing = getById(id);
+export async function update(id: string, data: UpdateShopItemInput): Promise<ShopItem | null> {
+  const existing = await getById(id);
   if (!existing) return null;
 
-  const now = new Date().toISOString();
-  const fields: string[] = [];
-  const values: (string | number | null)[] = [];
+  const updateData: Record<string, any> = {};
 
-  if (data.title !== undefined) {
-    fields.push('title = ?');
-    values.push(data.title);
-  }
-  if (data.artist !== undefined) {
-    fields.push('artist = ?');
-    values.push(data.artist ?? null);
-  }
-  if (data.price !== undefined) {
-    fields.push('price = ?');
-    values.push(data.price ?? null);
-  }
-  if (data.priceUSD !== undefined) {
-    fields.push('price_usd = ?');
-    values.push(data.priceUSD ?? null);
-  }
-  if (data.priceEUR !== undefined) {
-    fields.push('price_eur = ?');
-    values.push(data.priceEUR ?? null);
-  }
-  if (data.image !== undefined) {
-    fields.push('image = ?');
-    values.push(data.image ?? null);
-  }
-  if (data.imageUrl !== undefined) {
-    fields.push('image_url = ?');
-    values.push(data.imageUrl ?? null);
-  }
-  if (data.category !== undefined) {
-    fields.push('category = ?');
-    values.push(data.category ?? null);
-  }
-  if (data.description !== undefined) {
-    fields.push('description = ?');
-    values.push(data.description ?? null);
-  }
+  if (data.title !== undefined) updateData.title = data.title;
+  if (data.artist !== undefined) updateData.artist = data.artist ?? null;
+  if (data.price !== undefined) updateData.price = data.price ?? null;
+  if (data.priceUSD !== undefined) updateData.priceUsd = data.priceUSD ?? null;
+  if (data.priceEUR !== undefined) updateData.priceEur = data.priceEUR ?? null;
+  if (data.image !== undefined) updateData.image = data.image ?? null;
+  if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl ?? null;
+  if (data.category !== undefined) updateData.category = data.category ?? null;
+  if (data.description !== undefined) updateData.description = data.description ?? null;
 
-  if (fields.length === 0) {
+  if (Object.keys(updateData).length === 0) {
     return existing;
   }
 
-  fields.push('updated_at = ?');
-  values.push(now);
-  values.push(id);
+  const row = await prisma.shopItem.update({
+    where: { id },
+    data: updateData,
+  });
 
-  db.prepare(`UPDATE shop_items SET ${fields.join(', ')} WHERE id = ?`).run(...values);
-  return getById(id);
+  return toApiFormat(row);
 }
 
-export function remove(id: string): boolean {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM shop_items WHERE id = ?').run(id);
-  return result.changes > 0;
+export async function remove(id: string): Promise<boolean> {
+  try {
+    await prisma.shopItem.delete({
+      where: { id },
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }

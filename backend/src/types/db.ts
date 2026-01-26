@@ -129,11 +129,11 @@ export interface OrderItemRow {
 export interface Artist {
   id: string;
   name: string;
-  bio: string | null;
-  image: string | null;
-  nationality: string | null;
-  born: string | null;
-  specialty: string | null;
+  bio?: string | null;
+  image?: string | null;
+  nationality?: string | null;
+  born?: string | null;
+  specialty?: string | null;
   createdAt?: string;
   updatedAt?: string | null;
 }

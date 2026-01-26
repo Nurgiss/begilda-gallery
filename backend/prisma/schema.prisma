@@ -1,0 +1,180 @@
+// Begilda Gallery Database Schema
+// Prisma ORM schema supporting both SQLite (dev) and PostgreSQL (prod)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Change to "postgresql" for production
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id          String     @id @default(uuid())
+  name        String
+  bio         String?
+  image       String?
+  nationality String?
+  born        String?
+  specialty   String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+  
+  paintings   Painting[]
+
+  @@map("artists")
+}
+
+model Painting {
+  id             String                @id @default(uuid())
+  title          String
+  artistId       String?               @map("artist_id")
+  artistName     String?               @map("artist_name")
+  year           Int?
+  price          Int?
+  priceUsd       Float?                @map("price_usd")
+  priceEur       Float?                @map("price_eur")
+  image          String?
+  imageUrl       String?               @map("image_url")
+  description    String?
+  dimensions     String?
+  size           String?
+  medium         String?
+  category       String?
+  availability   Boolean               @default(true)
+  featured       Boolean               @default(false)
+  exhibitionOnly Boolean               @default(false) @map("exhibition_only")
+  createdAt      DateTime              @default(now()) @map("created_at")
+  updatedAt      DateTime?             @updatedAt @map("updated_at")
+
+  artist         Artist?               @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  exhibitions    ExhibitionPainting[]
+
+  @@index([artistId])
+  @@index([category])
+  @@index([availability])
+  @@index([featured])
+  @@map("paintings")
+}
+
+model Exhibition {
+  id          String                @id @default(uuid())
+  title       String
+  artist      String?
+  location    String?
+  dates       String?
+  description String?
+  image       String?
+  imageUrl    String?               @map("image_url")
+  status      String                @default("upcoming") // 'current' | 'upcoming' | 'past'
+  createdAt   DateTime              @default(now()) @map("created_at")
+  updatedAt   DateTime?             @updatedAt @map("updated_at")
+
+  paintings   ExhibitionPainting[]
+
+  @@index([status])
+  @@map("exhibitions")
+}
+
+model ExhibitionPainting {
+  exhibitionId String     @map("exhibition_id")
+  paintingId   String     @map("painting_id")
+  displayOrder Int        @default(0) @map("display_order")
+
+  exhibition   Exhibition @relation(fields: [exhibitionId], references: [id], onDelete: Cascade)
+  painting     Painting   @relation(fields: [paintingId], references: [id], onDelete: Cascade)
+
+  @@id([exhibitionId, paintingId])
+  @@map("exhibition_paintings")
+}
+
+model News {
+  id           String    @id @default(uuid())
+  title        String
+  excerpt      String?
+  content      String?
+  image        String?
+  date         String?
+  category     String?
+  instagramUrl String?   @map("instagram_url")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
+  @@index([date])
+  @@map("news")
+}
+
+model ShopItem {
+  id          String    @id @default(uuid())
+  title       String
+  artist      String?
+  price       Int?
+  priceUsd    Float?    @map("price_usd")
+  priceEur    Float?    @map("price_eur")
+  image       String?
+  imageUrl    String?   @map("image_url")
+  category    String?
+  description String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("shop_items")
+}
+
+model PickupPoint {
+  id           String    @id @default(uuid())
+  name         String
+  address      String?
+  city         String?
+  phone        String?
+  workingHours String?   @map("working_hours")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
+  orders       Order[]
+
+  @@index([isActive])
+  @@map("pickup_points")
+}
+
+model Order {
+  id             String        @id @default(uuid())
+  fullName       String?       @map("full_name")
+  email          String
+  phone          String?
+  deliveryType   String?       @map("delivery_type") // 'pickup' | 'delivery'
+  pickupPointId  String?       @map("pickup_point_id")
+  country        String?
+  postalCode     String?       @map("postal_code")
+  city           String?
+  address        String?
+  totalAmount    Int?          @map("total_amount")
+  status         String        @default("pending") // 'pending' | 'processing' | 'completed' | 'cancelled'
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime?     @updatedAt @map("updated_at")
+
+  pickupPoint    PickupPoint?  @relation(fields: [pickupPointId], references: [id], onDelete: SetNull)
+  items          OrderItem[]
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id       Int       @id @default(autoincrement())
+  orderId  String    @map("order_id")
+  itemId   String    @map("item_id")
+  itemType String    @map("item_type") // 'painting' | 'shop'
+  title    String?
+  price    Int?
+  quantity Int       @default(1)
+
+  order    Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order_items")
+}

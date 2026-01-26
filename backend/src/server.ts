@@ -163,13 +163,13 @@ app.post('/api/upload', authenticateToken, upload.single('image'), (req: Request
 
 // ==================== PAINTINGS API ====================
 
-app.get('/api/paintings', (_req: Request, res: Response) => {
-  const paintings = paintingsRepo.getAll();
+app.get('/api/paintings', async (_req: Request, res: Response) => {
+  const paintings = await paintingsRepo.getAll();
   res.json(paintings);
 });
 
-app.get('/api/paintings/:id', (req: Request, res: Response) => {
-  const painting = paintingsRepo.getById(req.params.id);
+app.get('/api/paintings/:id', async (req: Request, res: Response) => {
+  const painting = await paintingsRepo.getById(String(req.params.id));
 
   if (painting) {
     res.json(painting);
@@ -178,9 +178,9 @@ app.get('/api/paintings/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/paintings', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/paintings', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const painting = paintingsRepo.create(req.body);
+    const painting = await paintingsRepo.create(req.body);
     res.status(201).json(painting);
   } catch (error) {
     console.error('Create painting error:', error);
@@ -188,8 +188,8 @@ app.post('/api/paintings', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.put('/api/paintings/:id', authenticateToken, (req: Request, res: Response) => {
-  const painting = paintingsRepo.update(req.params.id, req.body);
+app.put('/api/paintings/:id', authenticateToken, async (req: Request, res: Response) => {
+  const painting = await paintingsRepo.update(String(req.params.id), req.body);
 
   if (painting) {
     res.json(painting);
@@ -198,8 +198,8 @@ app.put('/api/paintings/:id', authenticateToken, (req: Request, res: Response) =
   }
 });
 
-app.delete('/api/paintings/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = paintingsRepo.remove(req.params.id);
+app.delete('/api/paintings/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await paintingsRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Painting deleted successfully' });
@@ -210,13 +210,13 @@ app.delete('/api/paintings/:id', authenticateToken, (req: Request, res: Response
 
 // ==================== EXHIBITIONS API ====================
 
-app.get('/api/exhibitions', (_req: Request, res: Response) => {
-  const exhibitions = exhibitionsRepo.getAll();
+app.get('/api/exhibitions', async (_req: Request, res: Response) => {
+  const exhibitions = await exhibitionsRepo.getAll();
   res.json(exhibitions);
 });
 
-app.get('/api/exhibitions/:id', (req: Request, res: Response) => {
-  const exhibition = exhibitionsRepo.getById(req.params.id);
+app.get('/api/exhibitions/:id', async (req: Request, res: Response) => {
+  const exhibition = await exhibitionsRepo.getById(String(req.params.id));
 
   if (exhibition) {
     res.json(exhibition);
@@ -225,9 +225,9 @@ app.get('/api/exhibitions/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/exhibitions', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/exhibitions', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const exhibition = exhibitionsRepo.create(req.body);
+    const exhibition = await exhibitionsRepo.create(req.body);
     res.status(201).json(exhibition);
   } catch (error) {
     console.error('Create exhibition error:', error);
@@ -235,8 +235,8 @@ app.post('/api/exhibitions', authenticateToken, (req: Request, res: Response) =>
   }
 });
 
-app.put('/api/exhibitions/:id', authenticateToken, (req: Request, res: Response) => {
-  const exhibition = exhibitionsRepo.update(req.params.id, req.body);
+app.put('/api/exhibitions/:id', authenticateToken, async (req: Request, res: Response) => {
+  const exhibition = await exhibitionsRepo.update(String(req.params.id), req.body);
 
   if (exhibition) {
     res.json(exhibition);
@@ -245,8 +245,8 @@ app.put('/api/exhibitions/:id', authenticateToken, (req: Request, res: Response)
   }
 });
 
-app.delete('/api/exhibitions/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = exhibitionsRepo.remove(req.params.id);
+app.delete('/api/exhibitions/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await exhibitionsRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Exhibition deleted successfully' });
@@ -257,13 +257,13 @@ app.delete('/api/exhibitions/:id', authenticateToken, (req: Request, res: Respon
 
 // ==================== ARTISTS API ====================
 
-app.get('/api/artists', (_req: Request, res: Response) => {
-  const artists = artistsRepo.getAll();
+app.get('/api/artists', async (_req: Request, res: Response) => {
+  const artists = await artistsRepo.getAll();
   res.json(artists);
 });
 
-app.get('/api/artists/:id', (req: Request, res: Response) => {
-  const artist = artistsRepo.getById(req.params.id);
+app.get('/api/artists/:id', async (req: Request, res: Response) => {
+  const artist = await artistsRepo.getById(String(req.params.id));
 
   if (artist) {
     res.json(artist);
@@ -272,9 +272,9 @@ app.get('/api/artists/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/artists', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/artists', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const artist = artistsRepo.create(req.body);
+    const artist = await artistsRepo.create(req.body);
     res.status(201).json(artist);
   } catch (error) {
     console.error('Create artist error:', error);
@@ -282,8 +282,8 @@ app.post('/api/artists', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.put('/api/artists/:id', authenticateToken, (req: Request, res: Response) => {
-  const artist = artistsRepo.update(req.params.id, req.body);
+app.put('/api/artists/:id', authenticateToken, async (req: Request, res: Response) => {
+  const artist = await artistsRepo.update(String(req.params.id), req.body);
 
   if (artist) {
     res.json(artist);
@@ -292,8 +292,8 @@ app.put('/api/artists/:id', authenticateToken, (req: Request, res: Response) => 
   }
 });
 
-app.delete('/api/artists/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = artistsRepo.remove(req.params.id);
+app.delete('/api/artists/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await artistsRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Artist deleted successfully' });
@@ -304,13 +304,13 @@ app.delete('/api/artists/:id', authenticateToken, (req: Request, res: Response) 
 
 // ==================== NEWS API ====================
 
-app.get('/api/news', (_req: Request, res: Response) => {
-  const news = newsRepo.getAll();
+app.get('/api/news', async (_req: Request, res: Response) => {
+  const news = await newsRepo.getAll();
   res.json(news);
 });
 
-app.get('/api/news/:id', (req: Request, res: Response) => {
-  const article = newsRepo.getById(req.params.id);
+app.get('/api/news/:id', async (req: Request, res: Response) => {
+  const article = await newsRepo.getById(String(req.params.id));
 
   if (article) {
     res.json(article);
@@ -319,9 +319,9 @@ app.get('/api/news/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/news', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/news', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const article = newsRepo.create(req.body);
+    const article = await newsRepo.create(req.body);
     res.status(201).json(article);
   } catch (error) {
     console.error('Create news error:', error);
@@ -329,8 +329,8 @@ app.post('/api/news', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.put('/api/news/:id', authenticateToken, (req: Request, res: Response) => {
-  const article = newsRepo.update(req.params.id, req.body);
+app.put('/api/news/:id', authenticateToken, async (req: Request, res: Response) => {
+  const article = await newsRepo.update(String(req.params.id), req.body);
 
   if (article) {
     res.json(article);
@@ -339,8 +339,8 @@ app.put('/api/news/:id', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.delete('/api/news/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = newsRepo.remove(req.params.id);
+app.delete('/api/news/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await newsRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'News article deleted successfully' });
@@ -351,13 +351,13 @@ app.delete('/api/news/:id', authenticateToken, (req: Request, res: Response) => 
 
 // ==================== SHOP API ====================
 
-app.get('/api/shop', (_req: Request, res: Response) => {
-  const items = shopRepo.getAll();
+app.get('/api/shop', async (_req: Request, res: Response) => {
+  const items = await shopRepo.getAll();
   res.json(items);
 });
 
-app.get('/api/shop/:id', (req: Request, res: Response) => {
-  const item = shopRepo.getById(req.params.id);
+app.get('/api/shop/:id', async (req: Request, res: Response) => {
+  const item = await shopRepo.getById(String(req.params.id));
 
   if (item) {
     res.json(item);
@@ -366,9 +366,9 @@ app.get('/api/shop/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/shop', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/shop', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const item = shopRepo.create(req.body);
+    const item = await shopRepo.create(req.body);
     res.status(201).json(item);
   } catch (error) {
     console.error('Create shop item error:', error);
@@ -376,8 +376,8 @@ app.post('/api/shop', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.put('/api/shop/:id', authenticateToken, (req: Request, res: Response) => {
-  const item = shopRepo.update(req.params.id, req.body);
+app.put('/api/shop/:id', authenticateToken, async (req: Request, res: Response) => {
+  const item = await shopRepo.update(String(req.params.id), req.body);
 
   if (item) {
     res.json(item);
@@ -386,8 +386,8 @@ app.put('/api/shop/:id', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.delete('/api/shop/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = shopRepo.remove(req.params.id);
+app.delete('/api/shop/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await shopRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Shop item deleted successfully' });
@@ -398,13 +398,13 @@ app.delete('/api/shop/:id', authenticateToken, (req: Request, res: Response) => 
 
 // ==================== ORDERS API ====================
 
-app.get('/api/orders', authenticateToken, (_req: Request, res: Response) => {
-  const orders = ordersRepo.getAll();
+app.get('/api/orders', authenticateToken, async (_req: Request, res: Response) => {
+  const orders = await ordersRepo.getAll();
   res.json(orders);
 });
 
-app.get('/api/orders/:id', (req: Request, res: Response) => {
-  const order = ordersRepo.getById(req.params.id);
+app.get('/api/orders/:id', async (req: Request, res: Response) => {
+  const order = await ordersRepo.getById(String(req.params.id));
 
   if (order) {
     res.json(order);
@@ -413,9 +413,9 @@ app.get('/api/orders/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/orders', (req: Request, res: Response) => {
+app.post('/api/orders', async (req: Request, res: Response) => {
   try {
-    const order = ordersRepo.create(req.body);
+    const order = await ordersRepo.create(req.body);
     res.status(201).json(order);
   } catch (error) {
     console.error('Create order error:', error);
@@ -423,8 +423,8 @@ app.post('/api/orders', (req: Request, res: Response) => {
   }
 });
 
-app.put('/api/orders/:id', authenticateToken, (req: Request, res: Response) => {
-  const order = ordersRepo.update(req.params.id, req.body);
+app.put('/api/orders/:id', authenticateToken, async (req: Request, res: Response) => {
+  const order = await ordersRepo.update(String(req.params.id), req.body);
 
   if (order) {
     res.json(order);
@@ -433,8 +433,8 @@ app.put('/api/orders/:id', authenticateToken, (req: Request, res: Response) => {
   }
 });
 
-app.delete('/api/orders/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = ordersRepo.remove(req.params.id);
+app.delete('/api/orders/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await ordersRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Order deleted successfully' });
@@ -445,14 +445,14 @@ app.delete('/api/orders/:id', authenticateToken, (req: Request, res: Response) =
 
 // ==================== PICKUP POINTS API ====================
 
-app.get('/api/pickup-points', (_req: Request, res: Response) => {
-  const pickupPoints = pickupPointsRepo.getAll();
+app.get('/api/pickup-points', async (_req: Request, res: Response) => {
+  const pickupPoints = await pickupPointsRepo.getAll();
   res.json(pickupPoints);
 });
 
-app.post('/api/pickup-points', authenticateToken, (req: Request, res: Response) => {
+app.post('/api/pickup-points', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const pickupPoint = pickupPointsRepo.create(req.body);
+    const pickupPoint = await pickupPointsRepo.create(req.body);
     res.status(201).json(pickupPoint);
   } catch (error) {
     console.error('Create pickup point error:', error);
@@ -460,8 +460,8 @@ app.post('/api/pickup-points', authenticateToken, (req: Request, res: Response) 
   }
 });
 
-app.put('/api/pickup-points/:id', authenticateToken, (req: Request, res: Response) => {
-  const pickupPoint = pickupPointsRepo.update(req.params.id, req.body);
+app.put('/api/pickup-points/:id', authenticateToken, async (req: Request, res: Response) => {
+  const pickupPoint = await pickupPointsRepo.update(String(req.params.id), req.body);
 
   if (pickupPoint) {
     res.json(pickupPoint);
@@ -470,8 +470,8 @@ app.put('/api/pickup-points/:id', authenticateToken, (req: Request, res: Respons
   }
 });
 
-app.delete('/api/pickup-points/:id', authenticateToken, (req: Request, res: Response) => {
-  const deleted = pickupPointsRepo.remove(req.params.id);
+app.delete('/api/pickup-points/:id', authenticateToken, async (req: Request, res: Response) => {
+  const deleted = await pickupPointsRepo.remove(String(req.params.id));
 
   if (deleted) {
     res.json({ message: 'Pickup point deleted successfully' });
