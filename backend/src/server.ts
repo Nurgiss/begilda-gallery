@@ -127,7 +127,7 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ username, role: 'admin' }, process.env.JWT_SECRET as string, {
-      expiresIn: '24h',
+      expiresIn: (process.env.JWT_EXPIRES_IN || '24h') as jwt.SignOptions['expiresIn'],
     });
 
     res.json({ token });

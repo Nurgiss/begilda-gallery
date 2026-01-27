@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getExhibitions, createExhibition, updateExhibition, deleteExhibition, getPaintings } from '../../../api/client';
+import { getExhibitions, createExhibition, updateExhibition, deleteExhibition, getPaintings, uploadImage } from '../../../api/client';
 import type { Exhibition } from '../../../types/models/Exhibition';
 import type { Painting } from '../../../types/models/Painting';
 import type { ExhibitionFormData } from '../../../types/forms';
@@ -96,17 +96,7 @@ export function ExhibitionsManager() {
 
     setUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await fetch('http://localhost:3001/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      const data = await response.json() as { url: string };
+      const data = await uploadImage(file);
       setFormData((prev) => ({ ...prev, image: data.url }));
     } catch (error) {
       console.error('Error uploading image:', error);

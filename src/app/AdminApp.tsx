@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AdminHeader } from './components/AdminHeader';
 import AdminLogin from './pages/admin/AdminLogin';
+import { setAuthErrorHandler, clearAuthErrorHandler } from '../api/client';
 import { PaintingsManager } from './pages/admin/PaintingsManager';
 import { OrdersManager } from './pages/admin/OrdersManager';
 import { NewsManager } from './pages/admin/NewsManager';
@@ -21,11 +22,17 @@ export default function AdminApp() {
     setCurrentPage(page as Page);
   };
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setIsAuthenticated(false);
     localStorage.removeItem('adminToken');
     setCurrentPage('admin-login');
-  };
+  }, []);
+
+  // Register auth error handler for automatic logout on token expiry
+  useEffect(() => {
+    setAuthErrorHandler(handleLogout);
+    return () => clearAuthErrorHandler();
+  }, [handleLogout]);
 
   // If not authenticated, show login
   if (!isAuthenticated && currentPage !== 'admin-login') {

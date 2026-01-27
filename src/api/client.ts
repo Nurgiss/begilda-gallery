@@ -28,11 +28,26 @@ import type {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
+// Auth error callback - set by AdminApp to handle logout on token expiry
+let onAuthError: (() => void) | null = null;
+
+export function setAuthErrorHandler(handler: () => void): void {
+  onAuthError = handler;
+}
+
+export function clearAuthErrorHandler(): void {
+  onAuthError = null;
+}
+
 function handleAuthError(): void {
   try {
     localStorage.removeItem('adminToken');
   } catch {
     // Ignore localStorage errors in SSR or restricted contexts
+  }
+  // Notify the app about auth failure (e.g., token expired)
+  if (onAuthError) {
+    onAuthError();
   }
 }
 
@@ -261,6 +276,8 @@ export async function uploadImage(file: File): Promise<UploadResponse> {
 }
 
 export default {
+  setAuthErrorHandler,
+  clearAuthErrorHandler,
   login,
   getPaintings,
   getPainting,
