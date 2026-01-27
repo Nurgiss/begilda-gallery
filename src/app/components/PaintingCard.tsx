@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Painting } from '../../types';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ImageViewer } from './image_viewer/ImageViewer';
 
 interface PaintingCardProps {
   painting: Painting;
@@ -27,6 +28,9 @@ export function PaintingCard({ painting, currency = 'USD', convertPrice }: Paint
           alt={painting.title}
           className="home-painting-image"
         />
+        <div className="home-painting-image-button" onClick={(e) => e.preventDefault()}>
+          <ImageViewer src={imageUrl ?? ''} alt={painting.title} />
+        </div>
       </div>
 
       <div className="home-painting-info">

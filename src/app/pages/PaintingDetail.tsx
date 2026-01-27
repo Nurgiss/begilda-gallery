@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPaintings } from '../../api/client';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { ImageViewer } from '../components/image_viewer/ImageViewer';
 import { useAppContext } from '../context/AppContext';
 import { Painting } from '../../types';
 
@@ -77,8 +78,11 @@ export function PaintingDetail() {
 
         <div className="detail-grid" style={{ overflow: 'hidden' }}>
           <div>
-            <div className="detail-main-image-wrapper">
+            <div className="detail-main-image-wrapper" style={{ position: 'relative' }}>
               <ImageWithFallback src={imageUrl} alt={painting.title} className="detail-main-image" />
+              <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10 }}>
+                <ImageViewer src={imageUrl} alt={painting.title} />
+              </div>
             </div>
           </div>
 

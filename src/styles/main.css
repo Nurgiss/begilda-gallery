@@ -602,6 +602,7 @@
   overflow: hidden;
   margin-bottom: 12px;
   padding: 16px;
+  position: relative;
 }
 
 .home-painting-image {
@@ -615,6 +616,18 @@
 
 .home-painting-card:hover .home-painting-image {
   transform: scale(1.04);
+}
+
+.home-painting-image-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.home-painting-card:hover .home-painting-image-button {
+  opacity: 1;
 }
 
 .home-exhibition-artist {
@@ -1634,6 +1647,7 @@
 .paintings-section {
   min-height: 100vh;
   background: #ffffff;
+  margin-bottom: 160px;
 }
 
 .filter-section {
