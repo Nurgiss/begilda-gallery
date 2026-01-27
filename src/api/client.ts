@@ -271,6 +271,9 @@ export async function uploadImage(file: File): Promise<UploadResponse> {
     body: fd,
     headers,
   });
+  if (res.status === 401 || res.status === 403) {
+    handleAuthError();
+  }
   if (!res.ok) throw new Error(`Upload failed ${res.status}`);
   return res.json() as Promise<UploadResponse>;
 }
