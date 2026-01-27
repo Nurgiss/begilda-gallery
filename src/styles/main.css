@@ -2865,7 +2865,7 @@
 }
 
 .slider-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.4);
   color: #ffffff;
   border: none;
   width: 50px;
@@ -2876,12 +2876,26 @@
   justify-content: center;
   font-size: 24px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   pointer-events: all;
+  animation: subtle-pulse 4s ease-in-out infinite;
 }
 
 .slider-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.6);
+  animation-play-state: paused;
+}
+
+@keyframes subtle-pulse {
+  0%, 85%, 100% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(1.08);
+  }
+  95% {
+    transform: scale(1);
+  }
 }
 
 .slider-dots {
