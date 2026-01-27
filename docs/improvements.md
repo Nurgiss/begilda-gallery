@@ -22,7 +22,7 @@ Move from JSON files to a proper database.
 + ✅ Server routes updated to async handlers
 
 **Details:**
-- Using Prisma 5.22.0 with SQLite (dev) and PostgreSQL (production) support
+- Using Prisma 7.0.0 with SQLite with future Postgres migration
 - 10 models: Artist, Painting, Exhibition, ExhibitionPainting, News, ShopItem, PickupPoint, Order, OrderItem
 - Seamless database switching via DATABASE_URL environment variable
 - Automatic JSON-to-database migration with ID conversion and relation handling

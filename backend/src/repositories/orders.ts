@@ -68,7 +68,7 @@ export async function create(data: CreateOrderInput): Promise<Order> {
       status: 'pending',
       items: {
         create: data.items.map((item) => ({
-          itemId: item.itemId,
+          itemId: String(item.itemId),
           itemType: item.itemType,
           title: item.title ?? null,
           price: item.price ?? null,

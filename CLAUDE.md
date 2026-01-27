@@ -30,8 +30,10 @@
 | **Admin HTML** | [admin.html](../admin.html) |
 | **Admin app** | [src/app/AdminApp.tsx](../src/app/AdminApp.tsx) |
 | **API client** | [src/api/client.ts](../src/api/client.ts) (monolithic, 246 lines) |
-| **Backend** | [backend/server.js](../backend/server.js) (all routes, 694 lines) |
-| **Type models** | [src/types/models/](../src/types/models/) (9 files) |
+| **Backend (main)** | [backend/src/server.ts](../backend/src/server.ts) (Express routes with Prisma ORM) |
+| **Backend (repos)** | [backend/src/repositories/](../backend/src/repositories/) (data access layer) |
+| **Email service** | [backend/src/services/email.ts](../backend/src/services/email.ts) (Nodemailer integration) |
+| **Type models** | [src/types/models/](../src/types/models/) (9 files) + [backend/src/types/](../backend/src/types/) |
 | **Data storage** | [backend/data/](../backend/data/) (paintings.json, exhibitions.json, etc.) |
 | **Build config** | [vite.config.ts](../vite.config.ts) (@tailwindcss/vite plugin) |
 
@@ -67,6 +69,18 @@
 - **Backend**: Multer middleware, stores in [backend/uploads/](../backend/uploads/)
 - **Limits**: 10MB max, JPEG/PNG/GIF/WebP only
 - **Future**: Consider S3/Cloudinary for scalability
+
+### Email Notifications
+- **Status**: IMPLEMENTED ✅
+- **Service**: Nodemailer with Gmail SMTP (Google Workspace)
+- **Trigger**: Automatically sends order confirmation email after successful order creation
+- **Components**:
+  - [backend/src/services/email.ts](../backend/src/services/email.ts) — Email service with nodemailer integration
+  - [backend/src/templates/orderConfirmation.ts](../backend/src/templates/orderConfirmation.ts) — HTML and plain text templates
+  - Integration in [backend/src/server.ts](../backend/src/server.ts) (POST /api/orders, lines ~422-426)
+- **Pattern**: Fire-and-forget async (uses `setImmediate` to prevent blocking order response)
+- **Configuration**: SMTP credentials in `.env` (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, etc.)
+- **Error Handling**: Emails fail gracefully without blocking order creation; errors logged for monitoring
 
 ### Authentication (NOT IMPLEMENTED — SECURITY GAP)
 - **Status**: PLANNED but not built (admin endpoints unprotected)
@@ -109,9 +123,10 @@
 
 ### Code Quality Issues (Planned Improvements)
 - [src/api/client.ts](../src/api/client.ts) uses `any` types (needs strict typing)
-- [backend/server.js](../backend/server.js) is monolithic (should split into routes + controllers)
+- [backend/src/server.ts](../backend/src/server.ts) is monolithic (should split into route handlers)
 - Admin app still uses old routing pattern (needs React Router v7 migration)
 - No authentication on admin endpoints (security risk)
+- Email notifications for order status changes (currently only sends on creation)
 
 ---
 
@@ -137,17 +152,48 @@ Before committing code:
 
 ## Environment Variables
 
-**Development (.env):**
+**Development (.env - Frontend):**
 ```bash
 VITE_API_BASE_URL=http://localhost:3001/api
 VITE_ADMIN_PATH_PREFIX=<your-secret-admin-prefix>
 ```
 
-**Production (.env.production):**
+**Development (.env - Backend):**
+```bash
+DATABASE_URL="file:./data/gallery.db"
+PORT=3001
+JWT_SECRET=begilda-gallery-local-dev-secret-key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=<bcrypt-hash>
+
+# Email (Gmail SMTP with Google Workspace)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-gmail@gmail.com
+SMTP_PASSWORD=<google-app-password-16-chars>
+SMTP_FROM_NAME=Begilda Gallery
+SMTP_FROM_EMAIL=your-gmail@gmail.com
+
+# Gallery contact info (for email footer)
+GALLERY_NAME=Begilda Gallery
+GALLERY_PHONE=+7 (XXX) XXX-XX-XX
+GALLERY_EMAIL=info@begilda.gallery
+GALLERY_ADDRESS=Gallery Address, City, Kazakhstan
+GALLERY_WEBSITE=https://begilda.gallery
+```
+
+**Production (.env.production - Frontend):**
 ```bash
 VITE_API_BASE_URL=/api
 VITE_ADMIN_PATH_PREFIX=<your-secret-admin-prefix>
 ```
+
+**Production (.env - Backend):**
+- Use PostgreSQL for DATABASE_URL (migrated from SQLite)
+- Use strong JWT_SECRET (generate: `openssl rand -hex 32`)
+- Use production Gmail/email credentials with App Passwords
+- Never commit .env to git
 
 ---
 

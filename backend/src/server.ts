@@ -20,6 +20,7 @@ import * as ordersRepo from './repositories/orders.js';
 import * as pickupPointsRepo from './repositories/pickupPoints.js';
 
 import { prisma } from './db/client.js';
+import { sendOrderConfirmationEmail } from './services/email.js';
 
 dotenv.config();
 
@@ -415,6 +416,15 @@ app.get('/api/orders/:id', async (req: Request, res: Response) => {
 app.post('/api/orders', async (req: Request, res: Response) => {
   try {
     const order = await ordersRepo.create(req.body);
+
+    // Send email asynchronously (fire-and-forget)
+    // Wrapped in setTimeout to ensure it doesn't block response
+    setImmediate(() => {
+      sendOrderConfirmationEmail(order).catch((error) => {
+        console.error('Failed to send order confirmation email:', error);
+      });
+    });
+
     res.status(201).json(order);
   } catch (error) {
     console.error('Create order error:', error);
