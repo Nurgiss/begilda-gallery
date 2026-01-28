@@ -61,7 +61,7 @@ export function Artists() {
                 <p className="artist-bio-meta">{artist.nationality}, b. {artist.born}</p>
                 <p className="artist-bio-specialty">{artist.specialty}</p>
                 <p className="artist-bio-description">{artist.bio}</p>
-                <Link to="/" className="btn artist-contact-btn">Contact Artist</Link>
+               
               </div>
             </div>
           </div>

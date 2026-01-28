@@ -67,7 +67,7 @@ export function Exhibitions() {
       {upcomingExhibitions.length > 0 && (
         <section className="exhibitions-upcoming-section">
           <div className="container-wide">
-            <h2 className="section-title-white">Upcoming</h2>
+            <h2 className="section-title-white">Upcoming Exhibitions </h2>
             <div className="exhibitions-grid-white">
               {upcomingExhibitions.map((exhibition) => (
                 <ExhibitionCard key={exhibition.id} exhibition={exhibition} />

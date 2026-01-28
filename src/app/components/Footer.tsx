@@ -42,7 +42,7 @@ export function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2026 Begilda Gallery. All rights reserved.</p>
+          <p>&copy; Begilda Gallery. Art exists to be seen, collected, and lived with.</p>
           <div className="footer-bottom-links">
             <a href="#privacy">Privacy Policy</a><span>•</span><a href="#terms">Terms of Service</a>
           </div>

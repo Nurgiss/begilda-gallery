@@ -54,7 +54,7 @@ export function NewsSection({ news }: NewsSectionProps) {
         {news.length > 3 && (
           <div className="home-section-cta">
             <Link to="/news" className="btn-white-outline">
-              View All News
+              Read All News
             </Link>
           </div>
         )}

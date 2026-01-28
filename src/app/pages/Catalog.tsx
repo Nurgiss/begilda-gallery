@@ -33,7 +33,7 @@ export function Catalog() {
   return (
     <div className="paintings-section">
       <div className="container-wide">
-        <h1 className="section-title">Catalog</h1>
+        <h1 className="section-title">Artworks</h1>
 
         <div className="filter-section">
           {Object.entries(categoryLabels).map(([key, label]) => (
