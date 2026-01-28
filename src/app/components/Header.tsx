@@ -2,6 +2,7 @@ import { ShoppingCart, DollarSign, ChevronDown } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
+import logo from '../../assets/images/logo.png';
 
 export function Header() {
   const location = useLocation();
@@ -34,7 +35,9 @@ export function Header() {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container">
         <div className="header-content">
-          <Link to="/" className="logo">BEGILDA GALLERY</Link>
+          <Link to="/" className="logo">
+            <img src={logo} alt="Begilda Gallery Logo" />
+          </Link>
           <nav className="nav">
             <Link to="/" className={`nav-link ${pathname === '/' ? 'active' : ''}`}>Home</Link>
             <Link to="/exhibitions" className={`nav-link ${isActive('/exhibitions') ? 'active' : ''}`}>Exhibitions</Link>

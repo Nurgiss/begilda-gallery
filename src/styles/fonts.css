@@ -1,1 +1,91 @@
-/* Custom fonts can be imported here */
+/* Franklin Gothic Font Family */
+
+/* Book = Light/Regular (300 and 400) */
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRABK.TTF') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRABKIT.TTF') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRABK.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRABKIT.TTF') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Medium = 500 */
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRAMD.TTF') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRAMDCN.TTF') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: condensed;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRAMDIT.TTF') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* Demi = SemiBold (600) */
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRADM.TTF') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRADMCN.TTF') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: condensed;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRADMIT.TTF') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Heavy = Bold (700) */
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRAHV.TTF') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Franklin Gothic';
+  src: url('/fonts/FRAHVIT.TTF') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
