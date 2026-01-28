@@ -235,6 +235,7 @@
    =========================================== */
 
 .header-dark {
+  position: fixed;
   top: 0;
   padding: 12px 0;
   left: 0;
@@ -2549,7 +2550,30 @@
    RESPONSIVE
    =========================================== */
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header,
+  .header-dark {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
 @media (max-width: 768px) {
+  .header,
+  .header-dark {
+    padding-left: 20px;
+  }
+
+  .logo,
+  .logo-dark {
+    height: 30px;
+  }
+
+  .logo img,
+  .logo-dark img {
+    max-width: 200px;
+  }
+
   .nav {
     display: none;
   }
