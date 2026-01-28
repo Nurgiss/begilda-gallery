@@ -21,9 +21,7 @@ export function FeaturedPaintings() {
     <section className="home-paintings-section">
       <div className="container-wide">
         <h2 className="home-section-title">Featured Works</h2>
-        <p className="home-section-subtitle">
-          Specially selected works that best represent the artistic vision and style
-        </p>
+        
 
         <div className="home-paintings-grid">
           {featuredPaintings.map((painting) => (
