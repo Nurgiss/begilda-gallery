@@ -7,6 +7,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  z-index: 100;
   background: rgba(0, 0, 0, 0.6);
   border: none;
   cursor: pointer;
@@ -28,13 +29,14 @@
 /* Modal Overlay */
 .image-viewer-overlay {
   background: rgba(0, 0, 0, 0.7) !important;
+  z-index: 1099 !important;
 }
 
 /* Modal Content */
 .image-viewer-content {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 999 !important;
+  z-index: 1100 !important;
   width: 100vw !important;
   height: 100vh !important;
   max-width: none !important;

@@ -634,8 +634,8 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  opacity: 1;
+ 
 }
 
 .home-painting-card:hover .home-painting-image-button {
@@ -2609,6 +2609,22 @@
   }
   .home-news-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .about-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-stats {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .checkout-grid {
