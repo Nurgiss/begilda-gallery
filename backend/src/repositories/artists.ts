@@ -10,7 +10,6 @@ function toApiFormat(row: PrismaArtist): Artist {
     image: row.image ?? undefined,
     nationality: row.nationality ?? undefined,
     born: row.born ?? undefined,
-    specialty: row.specialty ?? undefined,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt?.toISOString(),
   };
@@ -38,7 +37,6 @@ export async function create(data: CreateArtistInput): Promise<Artist> {
       image: data.image ?? null,
       nationality: data.nationality ?? null,
       born: data.born ?? null,
-      specialty: data.specialty ?? null,
     },
   });
   return toApiFormat(artist);
@@ -56,7 +54,6 @@ export async function update(id: string, data: UpdateArtistInput): Promise<Artis
       ...(data.image !== undefined && { image: data.image }),
       ...(data.nationality !== undefined && { nationality: data.nationality }),
       ...(data.born !== undefined && { born: data.born }),
-      ...(data.specialty !== undefined && { specialty: data.specialty }),
     },
   });
   return toApiFormat(artist);

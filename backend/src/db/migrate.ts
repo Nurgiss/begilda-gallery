@@ -16,7 +16,6 @@ interface JsonArtist {
   image?: string;
   nationality?: string;
   born?: string;
-  specialty?: string;
 }
 
 interface JsonPainting {
@@ -173,7 +172,6 @@ async function migrate(): Promise<void> {
           image: artist.image ?? null,
           nationality: artist.nationality ?? null,
           born: artist.born ?? null,
-          specialty: artist.specialty ?? null,
         },
       });
     }

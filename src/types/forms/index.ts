@@ -33,7 +33,6 @@ export interface ArtistFormData {
   image: string;
   nationality: string;
   born: string;
-  specialty: string;
 }
 
 export interface NewsFormData {

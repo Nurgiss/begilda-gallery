@@ -8,7 +8,6 @@ export interface ArtistRow {
   image: string | null;
   nationality: string | null;
   born: string | null;
-  specialty: string | null;
   created_at: string;
   updated_at: string | null;
 }
@@ -133,7 +132,6 @@ export interface Artist {
   image?: string | null;
   nationality?: string | null;
   born?: string | null;
-  specialty?: string | null;
   createdAt?: string;
   updatedAt?: string | null;
 }

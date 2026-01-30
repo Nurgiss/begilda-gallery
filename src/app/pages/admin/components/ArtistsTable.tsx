@@ -16,7 +16,6 @@ export function ArtistsTable({ artists, onEdit, onDelete }: ArtistsTableProps) {
             <th>Имя</th>
             <th>Национальность</th>
             <th>Год рождения</th>
-            <th>Специализация</th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -55,7 +54,6 @@ function ArtistRow({ artist, onEdit, onDelete }: ArtistRowProps) {
       <td>{artist.name}</td>
       <td>{artist.nationality}</td>
       <td>{artist.born}</td>
-      <td>{artist.specialty}</td>
       <td>
         <div className="admin-table-actions">
           <button className="admin-btn-edit" onClick={() => onEdit(artist)}>

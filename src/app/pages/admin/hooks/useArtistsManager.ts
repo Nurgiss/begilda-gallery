@@ -8,8 +8,7 @@ const EMPTY_FORM: ArtistFormData = {
   bio: '',
   image: '',
   nationality: '',
-  born: '',
-  specialty: ''
+  born: ''
 };
 
 export interface UseArtistsManagerReturn {
@@ -68,8 +67,7 @@ export function useArtistsManager(): UseArtistsManagerReturn {
       bio: artist.bio,
       image: artist.image,
       nationality: artist.nationality,
-      born: artist.born,
-      specialty: artist.specialty
+      born: artist.born
     });
   }, []);
 

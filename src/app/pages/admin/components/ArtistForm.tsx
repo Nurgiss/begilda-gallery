@@ -90,18 +90,6 @@ export function ArtistForm({
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Специализация *</label>
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Масляная живопись, абстракция"
-            value={formData.specialty}
-            onChange={(e) => handleFieldChange('specialty', e.target.value)}
-            required
-          />
-        </div>
-
         <div className="admin-form-actions">
           <button type="submit" className="btn">
             {isEditMode ? 'Сохранить' : 'Добавить'}

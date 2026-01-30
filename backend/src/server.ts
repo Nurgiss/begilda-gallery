@@ -22,10 +22,11 @@ import * as pickupPointsRepo from './repositories/pickupPoints.js';
 import { prisma } from './db/client.js';
 import { sendOrderConfirmationEmail } from './services/email.js';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from backend directory (works regardless of CWD)
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -87,6 +88,7 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
     if (err) {
+      console.error('JWT verify error:', err.message, '| JWT_SECRET set:', !!process.env.JWT_SECRET);
       res.status(403).json({ error: 'Invalid or expired token' });
       return;
     }

@@ -5,5 +5,4 @@ export interface Artist {
   image: string;
   nationality: string;
   born: string;
-  specialty: string;
 }
