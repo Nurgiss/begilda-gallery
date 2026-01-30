@@ -1,3 +1,5 @@
+import { useState, useRef } from 'react';
+import { uploadImage } from '../../../../api/client';
 import type { ArtistFormData } from '../../../../types/forms';
 
 interface ArtistFormProps {
@@ -15,9 +17,44 @@ export function ArtistForm({
   onSubmit,
   onCancel
 }: ArtistFormProps) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleFieldChange = (field: keyof ArtistFormData, value: string) => {
     onFormChange({ ...formData, [field]: value });
   };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Show local preview immediately
+    const previewUrl = URL.createObjectURL(file);
+    setLocalPreview(previewUrl);
+    setUploadError(null);
+
+    // Upload the file
+    try {
+      setUploading(true);
+      const result = await uploadImage(file);
+      const imageUrl = result.thumb || result.webp || result.original || result.url;
+      handleFieldChange('image', imageUrl);
+      setLocalPreview(null); // Clear local preview, use server URL
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Ошибка загрузки');
+      setLocalPreview(null);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const triggerFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const previewSrc = localPreview || formData.image;
 
   return (
     <div className="admin-form-container">
@@ -52,16 +89,35 @@ export function ArtistForm({
         </div>
 
         <div className="form-group">
-          <label className="form-label">URL изображения *</label>
+          <label className="form-label">Фото артиста *</label>
           <input
-            type="url"
-            className="form-input"
-            placeholder="https://example.com/image.jpg"
-            value={formData.image}
-            onChange={(e) => handleFieldChange('image', e.target.value)}
-            required
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            style={{ display: 'none' }}
           />
-          {formData.image && <ImagePreview src={formData.image} />}
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={triggerFileSelect}
+              disabled={uploading}
+            >
+              {uploading ? 'Загрузка...' : 'Выбрать фото'}
+            </button>
+            {formData.image && !uploading && (
+              <span style={{ color: '#28a745', fontSize: '0.9rem' }}>
+                ✓ Фото загружено
+              </span>
+            )}
+          </div>
+          {uploadError && (
+            <p style={{ color: '#dc3545', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+              {uploadError}
+            </p>
+          )}
+          {previewSrc && <ImagePreview src={previewSrc} uploading={uploading} />}
         </div>
 
         <div className="form-row">
@@ -91,7 +147,7 @@ export function ArtistForm({
         </div>
 
         <div className="admin-form-actions">
-          <button type="submit" className="btn">
+          <button type="submit" className="btn" disabled={uploading || !formData.image}>
             {isEditMode ? 'Сохранить' : 'Добавить'}
           </button>
           <button type="button" className="btn btn-secondary" onClick={onCancel}>
@@ -103,18 +159,19 @@ export function ArtistForm({
   );
 }
 
-function ImagePreview({ src }: { src: string }) {
+function ImagePreview({ src, uploading }: { src: string; uploading: boolean }) {
   return (
     <div
       style={{
         marginTop: '1rem',
         padding: '1rem',
         backgroundColor: '#f8f9fa',
-        borderRadius: '8px'
+        borderRadius: '8px',
+        position: 'relative'
       }}
     >
       <p style={{ marginBottom: '0.5rem', fontSize: '0.9rem', color: '#666' }}>
-        Предпросмотр:
+        {uploading ? 'Загрузка...' : 'Предпросмотр:'}
       </p>
       <img
         src={src}
@@ -123,8 +180,9 @@ function ImagePreview({ src }: { src: string }) {
           maxWidth: '200px',
           maxHeight: '200px',
           objectFit: 'cover',
-          borderRadius: '8px',
-          border: '1px solid #dee2e6'
+          borderRadius: '50%',
+          border: '1px solid #dee2e6',
+          opacity: uploading ? 0.5 : 1
         }}
       />
     </div>
