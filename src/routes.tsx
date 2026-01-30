@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 import { PublicLayout } from './app/layouts/PublicLayout';
 import { Home } from './app/pages/Home';
@@ -9,10 +10,12 @@ import { ShopDetail } from './app/pages/ShopDetail';
 import { Catalog } from './app/pages/Catalog';
 import { PaintingDetail } from './app/pages/PaintingDetail';
 import { CartPage } from './app/pages/CartPage';
-import { Checkout } from './app/pages/Checkout';
 import { NewsPage } from './app/pages/NewsPage';
 import { NewsDetailPage } from './app/pages/NewsDetailPage';
 import AdminApp from './app/AdminApp';
+
+// Lazy load Checkout to defer loading country-state-city data (~8MB)
+const Checkout = lazy(() => import('./app/pages/Checkout').then(m => ({ default: m.Checkout })));
 
 const adminPrefix = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'admin';
 
@@ -63,7 +66,11 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'checkout',
-        element: <Checkout />,
+        element: (
+          <Suspense fallback={<div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>Loading...</div>}>
+            <Checkout />
+          </Suspense>
+        ),
       },
       {
         path: 'news',

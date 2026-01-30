@@ -53,3 +53,30 @@ export interface ShopItemFormData {
   category: string;
   description: string;
 }
+
+// Checkout form types
+import type { DeliveryType } from '../common/DeliveryType';
+
+export interface CheckoutFormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  deliveryType: DeliveryType;
+  pickupPoint: string;
+  countryCode: string;
+  country: string;
+  postalCode: string;
+  city: string;
+  address: string;
+}
+
+export interface CheckoutFormErrors {
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  pickupPoint?: string;
+  country?: string;
+  postalCode?: string;
+  city?: string;
+  address?: string;
+}

@@ -2037,6 +2037,7 @@
 .checkout-page {
   min-height: 100vh;
   background: #ffffff;
+  margin-top: 80px;
 }
 
 .checkout-grid {

@@ -14,6 +14,8 @@ export * from './models/PickupPoint';
 // Common
 export * from './common/PageType';
 export * from './common/CurrencyType';
+export * from './common/DeliveryType';
+export * from './common/OrderStatus';
 
 // API types
 export * from './api';

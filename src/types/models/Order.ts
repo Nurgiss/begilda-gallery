@@ -1,22 +1,28 @@
+import type { DeliveryType } from '../common/DeliveryType';
+import type { OrderStatus } from '../common/OrderStatus';
+import type { CartItemType } from './Cart';
+
+export interface OrderItem {
+  itemId: number;
+  itemType: CartItemType;
+  title: string;
+  price: number;
+  quantity: number;
+}
+
 export interface Order {
   id: string | number;
   fullName?: string;
   email: string;
   phone?: string;
-  deliveryType?: 'pickup' | 'delivery';
+  deliveryType?: DeliveryType;
   pickupPoint?: string;
   country?: string;
   postalCode?: string;
   city?: string;
   address?: string;
-  items: Array<{
-    itemId: number;
-    itemType: 'painting' | 'shop';
-    title: string;
-    price: number;
-    quantity: number;
-  }>;
+  items: OrderItem[];
   totalAmount: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  status: OrderStatus;
   createdAt: string;
 }
