@@ -476,7 +476,6 @@ h1, h2, h3, h4, h5, h6,
 .home-section,
 .home-section-dark,
 .home-exhibitions-section,
-.about-section,
 .contact-section,
 .exhibitions-page-white,
 .paintings-section,
@@ -835,15 +834,16 @@ h1, h2, h3, h4, h5, h6,
 
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .about-image {
   width: 100%;
   height: auto;
-  max-width: 600px;
+  max-width: 900px;
 }
 
 .about-content {
@@ -3026,8 +3026,9 @@ h1, h2, h3, h4, h5, h6,
    =========================================== */
 
 .artist-detail-page {
+  background: #fff;
   padding-top: 8rem;
-  background: #ffffff;
+  padding-bottom: 8rem;
 }
 
 .artist-slider-section {

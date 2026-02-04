@@ -93,7 +93,7 @@ export function Artists() {
               <div className="artist-bio-image"><ImageWithFallback src={artist.image} alt={artist.name} className="artist-bio-photo" /></div>
               <div className="artist-bio-text">
                 <h2 className="artist-bio-name">{artist.name}</h2>
-                <p className="artist-bio-meta">{artist.nationality}, b. {artist.born}</p>
+                <p className="artist-bio-meta">{artist.nationality}, {artist.born}</p>
                 <p className="artist-bio-description">{artist.bio}</p>
                
               </div>

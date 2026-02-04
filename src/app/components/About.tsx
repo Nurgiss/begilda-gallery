@@ -1,3 +1,5 @@
+import galleryAbout from '../../assets/images/gallery-about.jpg';
+
 export function About() {
   return (
     <section className="about-section">
@@ -6,15 +8,15 @@ export function About() {
           <h2>About</h2>
         </div>
 
-        <div className="about-grid">
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img
-              src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200"
-              alt="Gallery Interior"
-              className="about-image"
-            />
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '60px' }}>
+          <img
+            src={galleryAbout}
+            alt="Gallery Interior"
+            className="about-image"
+          />
+        </div>
 
+        <div className="about-grid">
           <div className="about-content">
             <p className="about-text">
               Begilda Gallery is a contemporary art gallery based in Almaty, working at the intersection of local cultural context and the global art market. The gallery connects people with the art of their time and builds a professional bridge between Central Asia and the international art scene.
