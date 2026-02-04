@@ -17,7 +17,7 @@ export interface PaintingRow {
   title: string;
   artist_id: string | null;
   artist_name: string | null;
-  year: number | null;
+  year: string | null;
   price: number | null;
   price_usd: number | null;
   price_eur: number | null;
@@ -140,7 +140,7 @@ export interface Painting {
   id: string;
   title: string;
   artist?: string | null;
-  year?: number | null;
+  year?: string | null;
   price?: number | null;
   priceUSD?: number | null;
   priceEUR?: number | null;

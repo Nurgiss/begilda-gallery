@@ -190,7 +190,7 @@ async function migrate(): Promise<void> {
           title: p.title,
           artistName: p.artist ?? null,
           artistId: artistId,
-          year: p.year ?? null,
+          year: p.year != null ? String(p.year) : null,
           price: p.price ?? null,
           priceUsd: p.priceUSD ?? null,
           priceEur: p.priceEUR ?? null,

@@ -324,7 +324,7 @@ export function PaintingsManager() {
                       className="form-input"
                       placeholder="550"
                       min="0"
-                      step="10"
+                      step="1"
                       value={formData.priceUSD || ''}
                       onChange={(e) => setFormData({ ...formData, priceUSD: Number(e.target.value) })}
                       style={{ fontSize: '1.1rem', fontWeight: '600' }}

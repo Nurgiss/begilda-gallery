@@ -29,7 +29,7 @@ model Painting {
   title          String
   artistId       String?               @map("artist_id")
   artistName     String?               @map("artist_name")
-  year           Int?
+  year           String?
   price          Int?
   priceUsd       Float?                @map("price_usd")
   priceEur       Float?                @map("price_eur")

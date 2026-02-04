@@ -2,7 +2,7 @@ export interface Painting {
   id: string | number;
   title: string;
   artist?: string;
-  year: number;
+  year: string;
   price: number;
   priceUSD?: number;
   priceEUR?: number;

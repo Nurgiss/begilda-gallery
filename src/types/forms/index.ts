@@ -4,7 +4,7 @@
 export interface PaintingFormData {
   title: string;
   artist: string;
-  year: string | number;
+  year: string;
   priceUSD: number;
   dimensions: string;
   category: string;
