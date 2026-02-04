@@ -2,10 +2,10 @@ export function Contact() {
   return (
     <section id="contact" className="contact-section">
       <div className="container">
-        <h2 className="section-title">Contact</h2>
-        <p className="section-subtitle">
-         For sales, commissions, and general inquiries
-        </p>
+        <div className="section-title">
+          <h2>Contact</h2>
+          <p className="subtitle">For sales, commissions, and general inquiries</p>
+        </div>
 
         <div className="contact-info">
           <div className="contact-item">
@@ -22,6 +22,30 @@ export function Contact() {
             <a href="https://www.instagram.com/begilda_gallery/" target="_new" className="contact-link">
               @begilda_gallery
             </a>
+          </div>
+        </div>
+
+        {/* Address section with map */}
+        <div className="contact-address-block">
+          <div className="contact-address-text">
+            <h3 className="contact-address-title">Gallery Address</h3>
+            <p className="contact-address-details">
+              115 Nauryzbay batyr st.<br />
+              Almaty, 050022<br />
+              Kazakhstan
+            </p>
+          </div>
+          <div className="contact-address-map">
+            <iframe
+              src="https://maps.google.com/maps?q=115+Nauryzbay+batyr+st,+Almaty,+050022,+Kazakhstan&output=embed&hl=en"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Begilda Gallery Location"
+            ></iframe>
           </div>
         </div>
       </div>

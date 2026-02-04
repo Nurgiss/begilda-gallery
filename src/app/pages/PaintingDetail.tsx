@@ -142,18 +142,12 @@ export function PaintingDetail() {
                   <button className="btn" onClick={handleAddToCart}>
                     Add to Cart
                   </button>
-                  <Link to="/catalog" className="btn btn-secondary">
-                    Back to Catalog
-                  </Link>
                 </>
               ) : (
                 <>
                   <button className="btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>
                     Sold
                   </button>
-                  <Link to="/catalog" className="btn btn-secondary">
-                    Back to Catalog
-                  </Link>
                 </>
               )}
             </div>

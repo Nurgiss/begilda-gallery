@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from '../../assets/images/logo.png';
 
 export function Footer() {
   return (
@@ -6,7 +7,7 @@ export function Footer() {
       <div className="container-wide">
         <div className="footer-grid">
           <div className="footer-column">
-            <h3 className="footer-heading">Begilda Gallery</h3>
+            <img src={logo} alt="Begilda Gallery Logo" style={{ maxWidth: '120px', marginBottom: '1rem', filter: 'brightness(0) invert(1)' }} />
             <p className="footer-text">Modern art gallery presenting works by talented artists. We strive to make art accessible to everyone.</p>
           </div>
           <div className="footer-column">
@@ -35,10 +36,6 @@ export function Footer() {
               <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a></li>
               <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a></li>
             </ul>
-            <div style={{ marginTop: '1rem' }}>
-              <h4 className="footer-heading" style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>Working Hours</h4>
-              <p className="footer-text" style={{ fontSize: '0.85rem', margin: 0 }}>Mon-Fri: 10:00 - 19:00<br />Sat-Sun: 11:00 - 18:00</p>
-            </div>
           </div>
         </div>
         <div className="footer-bottom">

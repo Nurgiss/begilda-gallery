@@ -71,18 +71,16 @@ export function ArtistForm({
             placeholder="Введите имя"
             value={formData.name}
             onChange={(e) => handleFieldChange('name', e.target.value)}
-            required
           />
         </div>
 
         <div className="form-group">
-          <label className="form-label">Биография *</label>
+          <label className="form-label">Биография</label>
           <textarea
             className="form-textarea"
             placeholder="Расскажите об артисте..."
             value={formData.bio}
             onChange={(e) => handleFieldChange('bio', e.target.value)}
-            required
             rows={5}
             style={{ resize: 'vertical' }}
           />
@@ -129,19 +127,17 @@ export function ArtistForm({
               placeholder="Казахстан"
               value={formData.nationality}
               onChange={(e) => handleFieldChange('nationality', e.target.value)}
-              required
             />
           </div>
 
           <div className="form-group">
-            <label className="form-label">Год рождения *</label>
+            <label className="form-label">Год рождения</label>
             <input
               type="text"
               className="form-input"
               placeholder="1985"
               value={formData.born}
               onChange={(e) => handleFieldChange('born', e.target.value)}
-              required
             />
           </div>
         </div>

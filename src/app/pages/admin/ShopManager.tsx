@@ -142,17 +142,15 @@ export function ShopManager() {
                     placeholder="Введите название"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Категория *</label>
+                  <label className="form-label">Категория</label>
                   <select
                     className="form-select"
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    required
                   >
                     <option value="Prints">Принты</option>
                     <option value="Posters">Постеры</option>
@@ -163,7 +161,7 @@ export function ShopManager() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Цена ($) *</label>
+                  <label className="form-label">Цена ($)</label>
                   <input
                     type="number"
                     className="form-input"
@@ -172,7 +170,6 @@ export function ShopManager() {
                     step="0.01"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                    required
                   />
                 </div>
               </div>
@@ -226,7 +223,6 @@ export function ShopManager() {
                     placeholder="Опишите товар, его характеристики..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    required
                     rows={5}
                     style={{ resize: 'vertical' }}
                   />

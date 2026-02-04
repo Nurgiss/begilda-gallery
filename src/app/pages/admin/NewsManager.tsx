@@ -148,18 +148,16 @@ export function NewsManager() {
                     placeholder="Введите заголовок новости"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
                   />
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Категория *</label>
+                    <label className="form-label">Категория</label>
                     <select
                       className="form-select"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      required
                     >
                       <option value="Выставки">Выставки</option>
                       <option value="События">События</option>
@@ -169,25 +167,23 @@ export function NewsManager() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Дата *</label>
+                    <label className="form-label">Дата</label>
                     <input
                       type="date"
                       className="form-input"
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      required
                     />
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Краткое описание *</label>
+                  <label className="form-label">Краткое описание</label>
                   <textarea
                     className="form-textarea"
                     placeholder="Краткое описание новости (1-2 предложения)"
                     value={formData.excerpt}
                     onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                    required
                     rows={3}
                     style={{ resize: 'vertical' }}
                   />
@@ -237,13 +233,12 @@ export function NewsManager() {
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', color: '#333' }}>Полный текст</h3>
 
                 <div className="form-group">
-                  <label className="form-label">Содержание новости *</label>
+                  <label className="form-label">Содержание новости</label>
                   <textarea
                     className="form-textarea"
                     placeholder="Полный текст новости..."
                     value={formData.content}
                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    required
                     rows={10}
                     style={{ resize: 'vertical' }}
                   />

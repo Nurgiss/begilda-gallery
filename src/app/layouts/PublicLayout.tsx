@@ -10,6 +10,11 @@ export function PublicLayout() {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   const [currency, setCurrency] = useState<Currency>('USD');
   const [rates, setRates] = useState<CurrencyRates>({ EUR: 0.92, KZT: 480 });
   const [cart, setCart] = useState<CartItem[]>(() => {

@@ -20,7 +20,9 @@ export function FeaturedPaintings() {
   return (
     <section className="home-paintings-section">
       <div className="container-wide">
-        <h2 className="home-section-title">Featured Works</h2>
+        <div className="section-title">
+          <h2>Featured Works</h2>
+        </div>
         
 
         <div className="home-paintings-grid">

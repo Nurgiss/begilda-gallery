@@ -11,7 +11,7 @@ export function NewsList({ news }: NewsListProps) {
       <section className="news-list-section">
         <div className="container-wide">
           <h1 className="page-title-white">News</h1>
-          <p className="home-section-subtitle">Stay updated with the latest exhibitions, events and announcements</p>
+          <p className="subtitle">Stay updated with the latest exhibitions, events and announcements</p>
           <div className="news-list-grid">
             {news.map((item) => (
               <a key={item.id} className="home-news-card" href={item.instagramUrl || 'https://instagram.com'} target="_blank" rel="noopener noreferrer">

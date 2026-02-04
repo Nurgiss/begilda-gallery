@@ -110,59 +110,54 @@ export function PickupPointsManager() {
                 className="form-input"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                required
                 placeholder="e.g., Begilda Gallery"
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="city">Город *</label>
+              <label className="form-label" htmlFor="city">Город</label>
               <input
                 id="city"
                 type="text"
                 className="form-input"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                required
                 placeholder="Например, Алматы"
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="address">Адрес *</label>
+              <label className="form-label" htmlFor="address">Адрес</label>
               <input
                 id="address"
                 type="text"
                 className="form-input"
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                required
                 placeholder="Например, ул. Абая 123"
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="phone">Телефон *</label>
+              <label className="form-label" htmlFor="phone">Телефон</label>
               <input
                 id="phone"
                 type="tel"
                 className="form-input"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
                 placeholder="Например, +7 (777) 123-45-67"
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="workingHours">Часы работы *</label>
+              <label className="form-label" htmlFor="workingHours">Часы работы</label>
               <input
                 id="workingHours"
                 type="text"
                 className="form-input"
                 value={formData.workingHours}
                 onChange={(e) => setFormData({ ...formData, workingHours: e.target.value })}
-                required
                 placeholder="Например, Пн-Пт 9:00-18:00"
               />
             </div>

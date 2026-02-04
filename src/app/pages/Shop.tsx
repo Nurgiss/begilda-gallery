@@ -5,6 +5,15 @@ import { ShopItem } from '../../types';
 import { getShopItems } from '../../api/client';
 import { useAppContext } from '../context/AppContext';
 
+const categoryLabels: Record<string, string> = {
+  all: 'ALL',
+  Prints: 'PRINTS',
+  Posters: 'POSTERS',
+  Books: 'BOOKS',
+  Postcards: 'POSTCARDS',
+  Gifts: 'GIFTS',
+};
+
 export function Shop() {
   const { addToCart, currency, convertPrice } = useAppContext();
   const [items, setItems] = useState<ShopItem[]>([]);
@@ -14,7 +23,6 @@ export function Shop() {
     getShopItems().then(setItems).catch(console.error);
   }, []);
 
-  const categories = ['all', ...Array.from(new Set(items.map(item => item.category)))];
   const filteredItems = selectedCategory === 'all' ? items : items.filter(item => item.category === selectedCategory);
 
   return (
@@ -24,13 +32,13 @@ export function Shop() {
           <h1 className="page-title-white">Shop</h1>
 
           <div className="shop-filters-white">
-            {categories.map((category) => (
+            {Object.entries(categoryLabels).map(([key, label]) => (
               <button
-                key={category}
-                className={`filter-btn-white ${selectedCategory === category ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(category)}
+                key={key}
+                className={`filter-btn-white ${selectedCategory === key ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(key)}
               >
-                {category === 'all' ? 'All' : category}
+                {label}
               </button>
             ))}
           </div>

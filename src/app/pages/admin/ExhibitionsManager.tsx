@@ -163,32 +163,29 @@ export function ExhibitionsManager() {
                     placeholder="Введите название"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Локация *</label>
+                  <label className="form-label">Локация</label>
                   <input
                     type="text"
                     className="form-input"
                     placeholder="Begilda Gallery, Almaty"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    required
                   />
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Даты проведения *</label>
+                    <label className="form-label">Даты проведения</label>
                     <input
                       type="text"
                       className="form-input"
                       placeholder="15 марта - 30 апреля 2026"
                       value={formData.dates}
                       onChange={(e) => setFormData({ ...formData, dates: e.target.value })}
-                      required
                     />
                   </div>
 
@@ -198,7 +195,6 @@ export function ExhibitionsManager() {
                       className="form-select"
                       value={formData.status}
                       onChange={(e) => setFormData({ ...formData, status: e.target.value as 'upcoming' | 'current' | 'past' })}
-                      required
                     >
                       <option value="upcoming">Предстоящая</option>
                       <option value="current">Текущая</option>
@@ -257,7 +253,6 @@ export function ExhibitionsManager() {
                     placeholder="Опишите выставку, ее концепцию и особенности..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    required
                     rows={5}
                     style={{ resize: 'vertical' }}
                   />

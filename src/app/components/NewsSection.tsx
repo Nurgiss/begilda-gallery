@@ -12,10 +12,12 @@ export function NewsSection({ news }: NewsSectionProps) {
   return (
     <section className="home-news-section">
       <div className="container-wide">
-        <h2 className="home-section-title">Latest News</h2>
-        <p className="home-section-subtitle">
-          Stay updated with the latest exhibitions, events and new works
-        </p>
+        <div className="section-title">
+          <h2>Latest News</h2>
+          <p className="subtitle">
+            Stay updated with the latest exhibitions, events and new works
+          </p>
+        </div>
 
         <div className="home-news-grid">
           {latestNews.map((item) => (

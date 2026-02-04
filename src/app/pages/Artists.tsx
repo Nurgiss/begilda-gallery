@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { ImageViewer } from '../components/image_viewer/ImageViewer';
 import { getArtists, getPaintings } from '../../api/client';
 import { Artist, Painting } from '../../types';
+import { useAppContext } from '../context/AppContext';
 
 export function Artists() {
   const { id } = useParams<{ id: string }>();
+  const { currency, convertPrice } = useAppContext();
   const [artists, setArtists] = useState<Artist[]>([]);
   const [artworks, setArtworks] = useState<Painting[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,15 +43,47 @@ export function Artists() {
             Back to Artists
           </Link>
         </div>
-        <section className="artist-works-section">
+        <section className="artist-detail-works-section">
           <div className="container-wide">
-            <h2 className="section-title">All Works</h2>
+            <div className="section-title">
+              <h2>All Works</h2>
+            </div>
             <div className="artist-works-grid">
-              {artistArtworks.map((artwork) => (
-                <Link key={artwork.id} to={`/catalog/${artwork.id}`} className="artist-work-item">
-                  <ImageWithFallback src={artwork.image} alt={artwork.title} className="artist-work-image" />
-                </Link>
-              ))}
+              {artistArtworks.map((artwork) => {
+                const baseUSD = artwork.priceUSD ?? artwork.price ?? 0;
+                const converted = (convertPrice ? convertPrice(baseUSD) : baseUSD) ?? 0;
+                const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+                const size = artwork.dimensions || artwork.size;
+                
+                let imageUrl = artwork.image || artwork.imageUrl;
+                if (imageUrl && imageUrl.startsWith('/uploads/')) {
+                  imageUrl = `http://localhost:3001${imageUrl}`;
+                }
+                
+                return (
+                  <Link key={artwork.id} to={`/catalog/${artwork.id}`} className="home-painting-card">
+                    <div className="home-painting-image-wrapper">
+                      <ImageWithFallback src={imageUrl} alt={artwork.title} className="home-painting-image" />
+                      <div className="home-painting-image-button" onClick={(e) => e.preventDefault()}>
+                        <ImageViewer src={imageUrl ?? ''} alt={artwork.title} />
+                      </div>
+                    </div>
+                    <div className="home-painting-info">
+                      <h3 className="home-painting-title">{artwork.title}</h3>
+                      {artwork.artist && (
+                        <p className="home-painting-artist" style={{ fontSize: '0.9rem', color: '#888', marginBottom: '0.25rem', fontStyle: 'italic' }}>
+                          {artwork.artist}
+                        </p>
+                      )}
+                      <p className="home-painting-size">{size}</p>
+                      <p className="home-painting-price">
+                        {symbol}
+                        {converted.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>

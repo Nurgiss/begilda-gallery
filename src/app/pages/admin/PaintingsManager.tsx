@@ -16,7 +16,7 @@ export function PaintingsManager() {
   const [formData, setFormData] = useState<PaintingFormData>({
     title: '',
     artist: '',
-    year: new Date().getFullYear(),
+    year: 'unknown',
     priceUSD: 0,
     dimensions: '',
     category: 'abstract',
@@ -93,7 +93,7 @@ export function PaintingsManager() {
     setFormData({
       title: '',
       artist: '',
-      year: new Date().getFullYear(),
+      year: 'unknown',
       priceUSD: 0,
       dimensions: '',
       category: 'abstract',
@@ -212,14 +212,13 @@ export function PaintingsManager() {
                 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Название картины *</label>
+                    <label className="form-label">Название картины</label>
                     <input
                       type="text"
                       className="form-input"
                       placeholder="Введите название"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      required
                     />
                   </div>
                   
@@ -249,23 +248,20 @@ export function PaintingsManager() {
                   <div className="form-group">
                     <label className="form-label">Год создания</label>
                     <input
-                      type="number"
+                      type="text"
                       className="form-input"
-                      placeholder="2024"
-                      min="1900"
-                      max="2100"
+                      placeholder="unknown"
                       value={formData.year}
-                      onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                      onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Category *</label>
+                    <label className="form-label">Category</label>
                     <select
                       className="form-select"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      required
                     >
                       <option value="abstract">Abstract</option>
                       <option value="landscape">Landscape</option>
@@ -282,14 +278,13 @@ export function PaintingsManager() {
                 
                 <div className="form-row">
                   <div className="form-group">
-                    <label className="form-label">Размеры *</label>
+                    <label className="form-label">Размеры</label>
                     <input
                       type="text"
                       className="form-input"
                       placeholder="Например: 100x80 см или 120x90x3 см"
                       value={formData.dimensions}
                       onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
-                      required
                     />
                     <small style={{ color: '#999', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
                       💡 Укажите размеры в формате: ширина × высота (× глубина если есть) в см
@@ -323,7 +318,7 @@ export function PaintingsManager() {
                 
                 <div className="form-row" style={{ gridTemplateColumns: '1fr' }}>
                   <div className="form-group">
-                    <label className="form-label" style={{ fontWeight: '600' }}>Цена в долларах ($) *</label>
+                    <label className="form-label" style={{ fontWeight: '600' }}>Цена в долларах ($)</label>
                     <input
                       type="number"
                       className="form-input"
@@ -332,7 +327,6 @@ export function PaintingsManager() {
                       step="10"
                       value={formData.priceUSD || ''}
                       onChange={(e) => setFormData({ ...formData, priceUSD: Number(e.target.value) })}
-                      required
                       style={{ fontSize: '1.1rem', fontWeight: '600' }}
                     />
                     <small style={{ color: '#999', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
@@ -470,13 +464,12 @@ export function PaintingsManager() {
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', color: '#333' }}>📝 Описание</h3>
                 
                 <div className="form-group">
-                  <label className="form-label">Описание картины *</label>
+                  <label className="form-label">Описание картины</label>
                   <textarea
                     className="form-textarea"
                     placeholder="Расскажите о картине: что вдохновило, какие техники использовались, какое настроение передает произведение...&#10;&#10;Например:&#10;Эта картина создана в период творческого подъема автора. Яркие цвета и динамичные мазки передают энергию и движение. В основе композиции лежит контраст между теплыми и холодными оттенками."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    required
                     rows={6}
                     style={{ resize: 'vertical', fontSize: '0.95rem', lineHeight: '1.6' }}
                   />

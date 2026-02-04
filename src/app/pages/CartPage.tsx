@@ -12,8 +12,8 @@ export function CartPage() {
     }, 0);
 
   return (
-    <div className="container" style={{ padding: 'var(--spacing-xl) 0' }}>
-      <h1 className="page-title">Shopping Cart</h1>
+    <div className="container" style={{ marginTop: '120px', paddingBottom: '80px' }}>
+      <h1 className="page-title-white">Shopping Cart</h1>
       {cart.length === 0 ? (
         <div className="cart-empty">
           <p>Your cart is empty.</p>
@@ -77,11 +77,11 @@ export function CartPage() {
             <span>${cartTotal.toLocaleString('en-US')}</span>
           </div>
           <div className="cart-actions">
-            <Link to="/shop" className="btn btn-secondary">
-              Continue Shopping
-            </Link>
             <Link to="/checkout" className="btn">
               Proceed to Checkout
+            </Link>
+            <Link to="/shop" className="btn btn-secondary">
+              Continue Shopping
             </Link>
           </div>
         </>
