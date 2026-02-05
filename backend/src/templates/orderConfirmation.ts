@@ -182,7 +182,6 @@ We will contact you within 24 hours to confirm your order and provide payment in
 
 CONTACT US
 Email: ${process.env.GALLERY_EMAIL || 'info@begilda.gallery'}
-Phone: ${process.env.GALLERY_PHONE || '+7 (XXX) XXX-XX-XX'}
 Address: ${process.env.GALLERY_ADDRESS || 'Almaty, Kazakhstan'}
 
 Thank you for supporting ${process.env.GALLERY_NAME || 'Begilda Gallery'}
