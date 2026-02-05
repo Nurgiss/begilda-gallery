@@ -1,9 +1,16 @@
-import type { Order } from '../types/db.js';
+import type { Order, PickupPoint } from '../types/db.js';
 
-export function generateOrderConfirmationHTML(order: Order): string {
-  const deliveryInfo = order.deliveryType === 'pickup'
-    ? `Pickup at: ${order.pickupPoint || 'Gallery'}`
-    : `Delivery to: ${order.address || ''}, ${order.city || ''}, ${order.postalCode || ''}, ${order.country || ''}`;
+export function generateOrderConfirmationHTML(order: Order, pickupPointDetails?: PickupPoint | null): string {
+  let deliveryInfo: string;
+  if (order.deliveryType === 'pickup') {
+    if (pickupPointDetails) {
+      deliveryInfo = `Pickup at: ${pickupPointDetails.name}${pickupPointDetails.address ? `, ${pickupPointDetails.address}` : ''}${pickupPointDetails.city ? `, ${pickupPointDetails.city}` : ''}`;
+    } else {
+      deliveryInfo = 'Pickup at: Gallery';
+    }
+  } else {
+    deliveryInfo = `Delivery to: ${order.address || ''}, ${order.city || ''}, ${order.postalCode || ''}, ${order.country || ''}`;
+  }
 
   const itemsRows = order.items.map(item => {
     const subtotal = (item.price || 0) * item.quantity;
@@ -128,10 +135,17 @@ export function generateOrderConfirmationHTML(order: Order): string {
   `;
 }
 
-export function generateOrderConfirmationText(order: Order): string {
-  const deliveryInfo = order.deliveryType === 'pickup'
-    ? `Pickup at: ${order.pickupPoint || 'Gallery'}`
-    : `Delivery to: ${order.address || ''}, ${order.city || ''}, ${order.postalCode || ''}, ${order.country || ''}`;
+export function generateOrderConfirmationText(order: Order, pickupPointDetails?: PickupPoint | null): string {
+  let deliveryInfo: string;
+  if (order.deliveryType === 'pickup') {
+    if (pickupPointDetails) {
+      deliveryInfo = `Pickup at: ${pickupPointDetails.name}${pickupPointDetails.address ? `, ${pickupPointDetails.address}` : ''}${pickupPointDetails.city ? `, ${pickupPointDetails.city}` : ''}`;
+    } else {
+      deliveryInfo = 'Pickup at: Gallery';
+    }
+  } else {
+    deliveryInfo = `Delivery to: ${order.address || ''}, ${order.city || ''}, ${order.postalCode || ''}, ${order.country || ''}`;
+  }
 
   const itemsList = order.items.map(item => {
     const subtotal = (item.price || 0) * item.quantity;

@@ -20,7 +20,7 @@ import * as ordersRepo from './repositories/orders.js';
 import * as pickupPointsRepo from './repositories/pickupPoints.js';
 
 import { prisma } from './db/client.js';
-import { sendOrderConfirmationEmail } from './services/email.js';
+import { sendOrderConfirmationEmail, sendBusinessOrderNotification } from './services/email.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -418,11 +418,15 @@ app.post('/api/orders', async (req: Request, res: Response) => {
   try {
     const order = await ordersRepo.create(req.body);
 
-    // Send email asynchronously (fire-and-forget)
-    // Wrapped in setTimeout to ensure it doesn't block response
+    // Send emails asynchronously (fire-and-forget)
+    // Wrapped in setImmediate to ensure it doesn't block response
     setImmediate(() => {
       sendOrderConfirmationEmail(order).catch((error) => {
         console.error('Failed to send order confirmation email:', error);
+      });
+
+      sendBusinessOrderNotification(order).catch((error) => {
+        console.error('Failed to send business order notification:', error);
       });
     });
 
