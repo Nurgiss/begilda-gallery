@@ -114,12 +114,6 @@ export function ExhibitionDetail() {
                 <h3 className="detail-label">Location</h3>
                 <p className="detail-value">{exhibition.location}</p>
               </div>
-              <button className="share-btn">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M13 10.5c-.7 0-1.3.3-1.8.7l-4.7-2.7c.1-.2.1-.3.1-.5s0-.3-.1-.5l4.7-2.7c.5.5 1.1.7 1.8.7 1.4 0 2.5-1.1 2.5-2.5S14.4.5 13 .5s-2.5 1.1-2.5 2.5c0 .2 0 .3.1.5L6 6.2c-.5-.5-1.1-.7-1.8-.7C2.8 5.5 1.7 6.6 1.7 8s1.1 2.5 2.5 2.5c.7 0 1.3-.3 1.8-.7l4.7 2.7c-.1.2-.1.3-.1.5 0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5-1.1-2.5-2.6-2.5z" fill="currentColor"/>
-                </svg>
-                Share
-              </button>
             </div>
             <div className="exhibition-details-right">
               <p className="exhibition-description">{exhibition.description}</p>
