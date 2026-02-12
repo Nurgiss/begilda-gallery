@@ -26,7 +26,6 @@ export function Hero({ exhibitions }: HeroProps) {
           <span className="hero-exhibition-badge">Current Exhibition</span>
         </div>
         <h1 className="hero-title">{featuredExhibition.title}</h1>
-        <p className="hero-subtitle">{featuredExhibition.description}</p>
 
         <div className="hero-exhibition-info">
           <div className="hero-info-item">

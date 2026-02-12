@@ -25,16 +25,14 @@ export function Footer() {
             <h3 className="footer-heading">Contacts</h3>
             <ul className="footer-contact">
               <li><span className="footer-icon">📧</span><a href="mailto:info@begilda.gallery">info@begilda.gallery</a></li>
-              <li><span className="footer-icon">📞</span><a href="tel:+77000000000">+7 (700) 000-00-00</a></li>
+              <li><span className="footer-icon">📞</span><a href="tel:+77017192726">+7 (701) 719-27-26</a></li>
               <li><span className="footer-icon">📍</span><span>Almaty, Kazakhstan</span></li>
             </ul>
           </div>
           <div className="footer-column">
             <h3 className="footer-heading">Social Media</h3>
             <ul className="footer-social">
-              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-              <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a></li>
-              <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+              <li><a href="https://www.instagram.com/begilda_gallery?igsh=bDEycW81OHpvYjZi" target="_blank" rel="noopener noreferrer">Instagram</a></li>
             </ul>
           </div>
         </div>

@@ -19,7 +19,7 @@ export function Contact() {
 
           <div className="contact-item">
             <span className="contact-label">Instagram</span>
-            <a href="https://www.instagram.com/begilda_gallery/" target="_new" className="contact-link">
+            <a href="https://www.instagram.com/begilda_gallery?igsh=bDEycW81OHpvYjZi" target="_blank" rel="noopener noreferrer" className="contact-link">
               @begilda_gallery
             </a>
           </div>
