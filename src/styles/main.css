@@ -2787,6 +2787,15 @@ h1, h2, h3, h4, h5, h6,
 
   .checkout-summary {
     position: static;
+    padding: 24px 16px;
+  }
+
+  .checkout-page {
+    margin-top: 60px;
+  }
+
+  .checkout-page .container {
+    padding: var(--spacing-md) var(--spacing-md) !important;
   }
 
   .detail-grid {

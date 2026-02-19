@@ -25,8 +25,7 @@ export function Footer() {
             <h3 className="footer-heading">Contacts</h3>
             <ul className="footer-contact">
               <li><span className="footer-icon">📧</span><a href="mailto:info@begilda.gallery">info@begilda.gallery</a></li>
-              <li><span className="footer-icon">📞</span><a href="tel:+77017192726">+7 (701) 719-27-26</a></li>
-              <li><span className="footer-icon">📍</span><span>Almaty, Kazakhstan</span></li>
+              <li><span className="footer-icon"></span><span>Almaty, Kazakhstan</span></li>
             </ul>
           </div>
           <div className="footer-column">

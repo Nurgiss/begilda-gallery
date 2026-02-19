@@ -33,7 +33,7 @@ export function Checkout() {
 
   return (
     <div className="checkout-page">
-      <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-xl) 0' }}>
+      <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-lg) var(--spacing-md)' }}>
         <button
           className="btn btn-secondary"
           onClick={() => navigate('/cart')}
@@ -97,7 +97,9 @@ export function Checkout() {
               width: '100%',
               marginTop: 'var(--spacing-md)',
               opacity: computed.canSubmit ? 1 : 0.6,
-              cursor: computed.canSubmit ? 'pointer' : 'not-allowed'
+              cursor: computed.canSubmit ? 'pointer' : 'not-allowed',
+              padding: '14px 24px',
+              fontSize: '16px'
             }}
           >
             {state.loading
