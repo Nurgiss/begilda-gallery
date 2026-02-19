@@ -2124,7 +2124,8 @@ h1, h2, h3, h4, h5, h6,
 .checkout-page {
   min-height: 100vh;
   background: #ffffff;
-  margin-top: 80px;
+  margin-top: 100px;
+  padding-top: 40px;
 }
 
 .checkout-grid {

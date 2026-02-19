@@ -1,41 +1,55 @@
 export function CheckoutLoading() {
   return (
-    <div className="checkout-page">
-      <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-xl) 0' }}>
+    <div className="checkout-page" style={{ backgroundColor: '#fafafa' }}>
+      <div className="container" style={{ maxWidth: '900px', padding: 'var(--spacing-xl) var(--spacing-md)' }}>
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '60vh',
-          gap: '24px'
+          minHeight: '70vh',
+          gap: '32px',
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          padding: '60px 40px',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
         }}>
-          {/* Loader Spinner */}
+          {/* Loader Spinner - larger and more visible */}
           <div style={{
-            width: '60px',
-            height: '60px',
-            border: '4px solid #f0f0f0',
-            borderTop: '4px solid #333',
+            width: '80px',
+            height: '80px',
+            border: '5px solid #e8e8e8',
+            borderTop: '5px solid #333',
             borderRadius: '50%',
-            animation: 'spin 1s linear infinite'
+            animation: 'spin 0.8s linear infinite'
           }} />
           
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', maxWidth: '500px' }}>
             <h2 style={{ 
-              fontSize: '24px', 
-              fontWeight: '600',
-              margin: '0 0 12px 0',
-              color: '#333'
+              fontSize: '28px', 
+              fontWeight: '700',
+              margin: '0 0 16px 0',
+              color: '#1a1a1a',
+              letterSpacing: '-0.5px'
             }}>
               Processing Your Order
             </h2>
             <p style={{ 
               fontSize: '16px',
-              color: '#666',
-              margin: 0,
-              lineHeight: '1.5'
+              fontWeight: '500',
+              color: '#555',
+              margin: '0 0 12px 0',
+              lineHeight: '1.6'
             }}>
               Please wait while we process your payment and confirm your order...
+            </p>
+            <p style={{
+              fontSize: '14px',
+              color: '#999',
+              margin: 0,
+              fontStyle: 'italic'
+            }}>
+              This usually takes 30-60 seconds
             </p>
           </div>
         </div>
