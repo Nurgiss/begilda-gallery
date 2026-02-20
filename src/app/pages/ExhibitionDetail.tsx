@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { LoadingModal } from '../components/ui/LoadingModal';
 import { getPaintings, getExhibition } from '../../api/client';
 import { PaintingCard } from '../components/PaintingCard';
 import { useAppContext } from '../context/AppContext';
@@ -49,13 +50,7 @@ export function ExhibitionDetail() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="exhibition-detail-page">
-        <div className="container">
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingModal />;
   }
 
   if (!exhibition) {

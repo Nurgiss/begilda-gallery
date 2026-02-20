@@ -4,6 +4,7 @@ import { getPaintings } from '../../api/client';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ImageViewer } from '../components/image_viewer/ImageViewer';
 import { useAppContext } from '../context/AppContext';
+import { LoadingModal } from '../components/ui/LoadingModal';
 import { Painting } from '../../types';
 
 export function PaintingDetail() {
@@ -28,11 +29,7 @@ export function PaintingDetail() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>
-        <p>Loading...</p>
-      </div>
-    );
+    return <LoadingModal />;
   }
 
   if (!painting) {

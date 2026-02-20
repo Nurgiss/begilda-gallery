@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getNews } from '../../api/client';
 import { News } from '../../types';
 import { NewsDetail } from '../components/NewsDetail';
+import { LoadingModal } from '../components/ui/LoadingModal';
 
 export function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ export function NewsDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div className="container" style={{ padding: 'var(--spacing-xl) 0' }}><p>Loading...</p></div>;
+  if (loading) return <LoadingModal />;
 
   return <NewsDetail news={news} />;
 }

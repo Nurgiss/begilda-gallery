@@ -62,7 +62,7 @@ export function useCheckout(): UseCheckoutReturn {
   const [formData, setFormData] = useState<CheckoutFormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<CheckoutFormErrors>({});
   const [pickupPoints, setPickupPoints] = useState<PickupPoint[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Изначально true для показа loader
   const [processing, setProcessing] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -74,6 +74,8 @@ export function useCheckout(): UseCheckoutReturn {
         setPickupPoints(data.filter((p: PickupPoint) => p.isActive));
       } catch (error) {
         console.error('Error loading pickup points:', error);
+      } finally {
+        setLoading(false); // Убираем loading когда данные загрузились
       }
     }
     loadPickupPoints();

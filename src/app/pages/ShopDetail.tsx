@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { LoadingModal } from '../components/ui/LoadingModal';
 import { ShopItem } from '../../types';
 import { getShopItems } from '../../api/client';
 import { useAppContext } from '../context/AppContext';
@@ -18,7 +19,7 @@ export function ShopDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div className="container-wide" style={{ padding: 'var(--spacing-xl) 0' }}><p>Loading...</p></div>;
+  if (loading) return <LoadingModal />;
 
   if (!shopItem) {
     return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ImageViewer } from '../components/image_viewer/ImageViewer';
+import { LoadingModal } from '../components/ui/LoadingModal';
 import { getArtists, getPaintings } from '../../api/client';
 import { Artist, Painting } from '../../types';
 import { useAppContext } from '../context/AppContext';
@@ -20,7 +21,7 @@ export function Artists() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}><p>Loading...</p></div>;
+  if (loading) return <LoadingModal />;
 
   if (id) {
     const artist = artists.find(a => String(a.id) === id);
