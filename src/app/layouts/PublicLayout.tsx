@@ -4,6 +4,7 @@ import { Header } from '../components/Header';
 import { HeaderDark } from '../components/HeaderDark';
 import { Footer } from '../components/Footer';
 import { AppProvider } from '../context/AppContext';
+import { Snackbar } from '../components/ui/Snackbar';
 import { CartItem, Currency, CurrencyRates, Painting, ShopItem } from '../../types';
 
 export function PublicLayout() {
@@ -17,6 +18,8 @@ export function PublicLayout() {
 
   const [currency, setCurrency] = useState<Currency>('USD');
   const [rates, setRates] = useState<CurrencyRates>({ EUR: 0.92, KZT: 480 });
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const stored = localStorage.getItem('cart');
@@ -38,12 +41,19 @@ export function PublicLayout() {
 
   const convertPrice = (priceUSD: number) => currency === 'EUR' ? priceUSD * rates.EUR : currency === 'KZT' ? priceUSD * rates.KZT : priceUSD;
 
+  const showSnackbar = (message: string) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
+  };
+
   const addToCart = (item: Painting | ShopItem, type: 'painting' | 'shop') => {
     setCart(prev => {
       const existing = prev.find(c => c.item.id === item.id && c.type === type);
       if (existing) {
+        showSnackbar('Added to cart');
         return prev.map(c => c.item.id === item.id && c.type === type ? { ...c, quantity: c.quantity + 1 } : c);
       }
+      showSnackbar('Added to cart');
       const newItem: CartItem = type === 'painting'
         ? { item: item as Painting, type: 'painting', quantity: 1 }
         : { item: item as ShopItem, type: 'shop', quantity: 1 };
@@ -60,11 +70,16 @@ export function PublicLayout() {
   const clearCart = () => setCart([]);
 
   return (
-    <AppProvider value={{ cart, currency, rates, setCurrency, convertPrice, addToCart, updateQuantity, removeFromCart, clearCart }}>
+    <AppProvider value={{ cart, currency, rates, setCurrency, convertPrice, addToCart, updateQuantity, removeFromCart, clearCart, showSnackbar }}>
       <div className="app-wrapper">
         {isHome ? <Header /> : <HeaderDark />}
         <main className="main-content"><Outlet /></main>
         <Footer />
+        <Snackbar 
+          message={snackbarMessage}
+          isVisible={snackbarVisible}
+          onClose={() => setSnackbarVisible(false)}
+        />
       </div>
     </AppProvider>
   );

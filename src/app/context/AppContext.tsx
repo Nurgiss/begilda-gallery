@@ -14,6 +14,9 @@ interface AppContextType {
   rates: CurrencyRates;
   setCurrency: (currency: Currency) => void;
   convertPrice: (priceUSD: number) => number;
+  
+  // Snackbar
+  showSnackbar: (message: string) => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);

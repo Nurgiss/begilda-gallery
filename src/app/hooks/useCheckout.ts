@@ -131,7 +131,7 @@ export function useCheckout(): UseCheckoutReturn {
       return;
     }
 
-    setLoading(true);
+    setProcessing(true);
 
     try {
       // Минимальное время показа loading экрана (3 секунды)
@@ -166,18 +166,13 @@ export function useCheckout(): UseCheckoutReturn {
       await minLoadingTime;
       
       setOrderId(created?.id ? String(created.id) : null);
-      setLoading(false);
-      setProcessing(true);
-
-      setTimeout(() => {
-        setProcessing(false);
-        setSubmitted(true);
-        clearCart();
-      }, 2000);
+      setProcessing(false);
+      setSubmitted(true);
+      clearCart();
     } catch (error) {
       console.error('Error creating order:', error);
       alert('Error placing order. Please try again.');
-      setLoading(false);
+      setProcessing(false);
     }
   }, [formData, cart, totalAmount, isDelivery, hasShopItems, clearCart]);
 

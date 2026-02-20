@@ -1,18 +1,33 @@
 export function CheckoutLoading() {
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 9999,
-      backdropFilter: 'blur(4px)'
-    }}>
+    <>
+      {/* Фоновый контейнер для поддержания высоты страницы */}
+      <div style={{
+        minHeight: 'calc(100vh - 80px)', // 80px - высота хедера
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px 20px'
+      }}>
+        <div style={{ textAlign: 'center', color: '#999' }}>
+          Processing...
+        </div>
+      </div>
+      
+      {/* Модальный оверлей */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        backdropFilter: 'blur(4px)'
+      }}>
       <div style={{
         backgroundColor: '#ffffff',
         borderRadius: '16px',
@@ -66,6 +81,7 @@ export function CheckoutLoading() {
           </p>
         </div>
       </div>
+      </div>
       
       <style>{`
         @keyframes fadeIn {
@@ -79,6 +95,6 @@ export function CheckoutLoading() {
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
