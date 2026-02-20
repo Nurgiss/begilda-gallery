@@ -21,8 +21,8 @@ export function OrdersManager() {
       const data = await getOrders();
       // Сортируем заказы по дате создания, новые первые
       const sortedData = data.sort((a, b) => {
-        const dateA = new Date(a.createdAt || a.id).getTime();
-        const dateB = new Date(b.createdAt || b.id).getTime();
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
         return dateB - dateA; // От новых к старым
       });
       setOrders(sortedData);
