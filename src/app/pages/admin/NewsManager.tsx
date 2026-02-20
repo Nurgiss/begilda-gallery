@@ -154,16 +154,13 @@ export function NewsManager() {
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">Категория</label>
-                    <select
-                      className="form-select"
+                    <input
+                      type="text"
+                      className="form-input"
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    >
-                      <option value="Выставки">Выставки</option>
-                      <option value="События">События</option>
-                      <option value="Новые работы">Новые работы</option>
-                      <option value="Анонсы">Анонсы</option>
-                    </select>
+                      placeholder="Например: Выставки, События, Новые работы"
+                    />
                   </div>
 
                   <div className="form-group">
