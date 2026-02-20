@@ -3563,3 +3563,79 @@ input[type="number"].form-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* ===========================================
+   404 PAGE
+   =========================================== */
+
+.not-found-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--section-padding-vertical) var(--site-gutter);
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.not-found-title {
+  font-size: 180px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  color: #1a1a1a;
+  letter-spacing: -4px;
+  opacity: 0.1;
+  user-select: none;
+}
+
+.not-found-subtitle {
+  font-size: 32px;
+  font-weight: 600;
+  margin: -60px 0 20px;
+  color: #1a1a1a;
+  letter-spacing: 2px;
+}
+
+.not-found-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0 0 40px;
+  text-transform: none;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .not-found-title {
+    font-size: 120px;
+  }
+
+  .not-found-subtitle {
+    font-size: 24px;
+    margin-top: -40px;
+  }
+
+  .not-found-text {
+    font-size: 14px;
+  }
+
+  .not-found-actions {
+    flex-direction: column;
+  }
+
+  .not-found-actions .btn {
+    width: 100%;
+  }
+}

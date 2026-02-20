@@ -12,6 +12,7 @@ import { PaintingDetail } from './app/pages/PaintingDetail';
 import { CartPage } from './app/pages/CartPage';
 import { NewsPage } from './app/pages/NewsPage';
 import { NewsDetailPage } from './app/pages/NewsDetailPage';
+import { NotFound } from './app/pages/NotFound';
 import AdminApp from './app/AdminApp';
 
 // Lazy load Checkout to defer loading country-state-city data (~8MB)
@@ -76,10 +77,18 @@ export const routes: RouteObject[] = [
         path: 'news/:id',
         element: <NewsDetailPage />,
       },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
   },
   {
     path: adminPrefix,
     element: <AdminApp />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ];
