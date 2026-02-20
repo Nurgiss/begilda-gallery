@@ -221,7 +221,7 @@ export function OrdersManager() {
                       onClick={() => setSelectedOrder(order)}
                       style={{ cursor: 'pointer' }}
                     >
-                      <td>#{index + 1}</td>
+                      <td>#{order.id}</td>
                       <td style={{ fontFamily: 'monospace', fontSize: '0.9rem', color: '#666' }}>{order.id}</td>
                       <td>{formatDate(order.createdAt)}</td>
                       <td>
@@ -276,7 +276,7 @@ export function OrdersManager() {
               border: '1px solid #dee2e6'
             }}>
               <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: '#333' }}>
-                Детали заказа #{orders.findIndex(o => o.id === selectedOrder.id) + 1}
+                Детали заказа #{selectedOrder.id}
                 <div style={{ fontSize: '0.9rem', color: '#666', fontWeight: 'normal', marginTop: '0.5rem', fontFamily: 'monospace' }}>
                   Order Number: {selectedOrder.id}
                 </div>

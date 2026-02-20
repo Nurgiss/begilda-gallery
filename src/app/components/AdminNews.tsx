@@ -153,17 +153,14 @@ export function AdminNews({ news, onAddNews, onEditNews, onDeleteNews }: AdminNe
 
                 <div className="form-group">
                   <label className="form-label">Категория</label>
-                  <select
-                    className="form-select"
+                  <input
+                    type="text"
+                    className="form-input"
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    placeholder="Например: Выставка, Событие, Мастер-класс"
                     required
-                  >
-                    <option value="Выставка">Выставка</option>
-                    <option value="Событие">Событие</option>
-                    <option value="Мастер-класс">Мастер-класс</option>
-                    <option value="Анонс">Анонс</option>
-                  </select>
+                  />
                 </div>
 
                 <div className="form-group">
