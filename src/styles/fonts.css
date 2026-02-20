@@ -6,6 +6,7 @@
   src: url('/fonts/FRABK.TTF') format('truetype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -13,6 +14,7 @@
   src: url('/fonts/FRABKIT.TTF') format('truetype');
   font-weight: 300;
   font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
@@ -20,6 +22,7 @@
   src: url('/fonts/FRABK.TTF') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -27,6 +30,7 @@
   src: url('/fonts/FRABKIT.TTF') format('truetype');
   font-weight: 400;
   font-style: italic;
+  font-display: swap;
 }
 
 /* Medium = 500 */
@@ -35,6 +39,7 @@
   src: url('/fonts/FRAMD.TTF') format('truetype');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -43,6 +48,7 @@
   font-weight: 500;
   font-style: normal;
   font-stretch: condensed;
+  font-display: swap;
 }
 
 @font-face {
@@ -50,6 +56,7 @@
   src: url('/fonts/FRAMDIT.TTF') format('truetype');
   font-weight: 500;
   font-style: italic;
+  font-display: swap;
 }
 
 /* Demi = SemiBold (600) */
@@ -58,6 +65,7 @@
   src: url('/fonts/FRADM.TTF') format('truetype');
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -66,6 +74,7 @@
   font-weight: 600;
   font-style: normal;
   font-stretch: condensed;
+  font-display: swap;
 }
 
 @font-face {
@@ -73,6 +82,7 @@
   src: url('/fonts/FRADMIT.TTF') format('truetype');
   font-weight: 600;
   font-style: italic;
+  font-display: swap;
 }
 
 /* Heavy = Bold (700) */
@@ -81,6 +91,7 @@
   src: url('/fonts/FRAHV.TTF') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -88,4 +99,5 @@
   src: url('/fonts/FRAHVIT.TTF') format('truetype');
   font-weight: 700;
   font-style: italic;
+  font-display: swap;
 }
