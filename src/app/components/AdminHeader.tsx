@@ -67,8 +67,8 @@ export function AdminHeader({ currentPage, onNavigate, onLogout }: AdminHeaderPr
               💱 Currency
             </a>
             <a 
+              href="/"
               className="nav-link"
-              onClick={() => onNavigate('home')}
             >
               ← Back to Site
             </a>

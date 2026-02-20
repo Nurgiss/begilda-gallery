@@ -80,9 +80,9 @@ export function AdminHeaderRouter({ onLogout }: AdminHeaderRouterProps) {
           >
             Currency
           </NavLink>
-          <Link to="/" className="nav-link">
+          <a href="/" className="nav-link">
             ← Back to Site
-          </Link>
+          </a>
           <button
             className="nav-link"
             style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}

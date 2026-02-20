@@ -6,6 +6,11 @@ export function OrdersManager() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    orderId: string;
+    newStatus: Order['status'];
+  } | null>(null);
   
   useEffect(() => {
     loadOrders();
@@ -14,7 +19,13 @@ export function OrdersManager() {
   const loadOrders = async () => {
     try {
       const data = await getOrders();
-      setOrders(data);
+      // Сортируем заказы по дате создания, новые первые
+      const sortedData = data.sort((a, b) => {
+        const dateA = new Date(a.createdAt || a.id).getTime();
+        const dateB = new Date(b.createdAt || b.id).getTime();
+        return dateB - dateA; // От новых к старым
+      });
+      setOrders(sortedData);
     } catch (error) {
       console.error('Error loading orders:', error);
     } finally {
@@ -23,16 +34,30 @@ export function OrdersManager() {
   };
   
   const handleStatusChange = async (orderId: string, newStatus: Order['status']) => {
+    setPendingStatusChange({ orderId, newStatus });
+    setShowStatusModal(true);
+  };
+  
+  const confirmStatusChange = async () => {
+    if (!pendingStatusChange) return;
+    
     try {
-      const order = orders.find(o => o.id === orderId);
+      const order = orders.find(o => o.id === pendingStatusChange.orderId);
       if (!order) return;
       
-      await updateOrder(orderId, { ...order, status: newStatus });
+      await updateOrder(pendingStatusChange.orderId, { ...order, status: pendingStatusChange.newStatus });
       await loadOrders();
+      setShowStatusModal(false);
+      setPendingStatusChange(null);
     } catch (error) {
       console.error('Error updating order:', error);
       alert('Ошибка при обновлении заказа');
     }
+  };
+  
+  const cancelStatusChange = () => {
+    setShowStatusModal(false);
+    setPendingStatusChange(null);
   };
   
   const handleDelete = async (orderId: string) => {
@@ -177,13 +202,14 @@ export function OrdersManager() {
                   <th>Товаров</th>
                   <th>Сумма</th>
                   <th>Статус</th>
-                  <th>Действия</th>
+                  <th>Изменить статус</th>
+                  <th style={{ textAlign: 'right' }}>Удалить</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.length === 0 ? (
                   <tr>
-                    <td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
+                    <td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
                       Заказов пока нет
                     </td>
                   </tr>
@@ -217,13 +243,15 @@ export function OrdersManager() {
                           className="form-select"
                           value={order.status}
                           onChange={(e) => handleStatusChange(String(order.id), e.target.value as Order['status'])}
-                          style={{ marginRight: '0.5rem', padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+                          style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem', width: '100%' }}
                         >
                           <option value="pending">Ожидает</option>
                           <option value="processing">В обработке</option>
                           <option value="completed">Завершён</option>
                           <option value="cancelled">Отменён</option>
                         </select>
+                      </td>
+                      <td onClick={(e) => e.stopPropagation()} style={{ textAlign: 'right' }}>
                         <button
                           onClick={() => handleDelete(String(order.id))}
                           className="admin-btn-delete"
@@ -379,6 +407,50 @@ export function OrdersManager() {
             </div>
           )}
         </div>
+        
+        {/* Modal подтверждения изменения статуса */}
+        {showStatusModal && pendingStatusChange && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '2rem',
+              borderRadius: '12px',
+              maxWidth: '500px',
+              width: '90%',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
+            }}>
+              <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>Подтвердите изменение</h3>
+              <p style={{ marginBottom: '1.5rem', color: '#666' }}>
+                Вы действительно хотите изменить статус заказа на <strong>"{getStatusLabel(pendingStatusChange.newStatus)}"</strong>?
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={cancelStatusChange}
+                >
+                  Отмена
+                </button>
+                <button
+                  className="btn"
+                  onClick={confirmStatusChange}
+                >
+                  Подтвердить
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
