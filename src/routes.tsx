@@ -66,11 +66,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: 'checkout',
-        element: (
-          <Suspense fallback={<div className="container" style={{ padding: 'var(--spacing-xl) 0', textAlign: 'center' }}>Loading...</div>}>
-            <Checkout />
-          </Suspense>
-        ),
+        element: <Checkout />,
       },
       {
         path: 'news',

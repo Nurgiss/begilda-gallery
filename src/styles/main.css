@@ -1509,6 +1509,7 @@ h1, h2, h3, h4, h5, h6,
 .shop-page-white {
   min-height: 100vh;
   background: #ffffff;
+  padding-bottom: 80px;
 }
 
 
@@ -2124,8 +2125,7 @@ h1, h2, h3, h4, h5, h6,
 .checkout-page {
   min-height: 100vh;
   background: #ffffff;
-  margin-top: 100px;
-  padding-top: 40px;
+  padding-top: 140px;
 }
 
 .checkout-grid {
@@ -2152,6 +2152,22 @@ h1, h2, h3, h4, h5, h6,
   width: 100%;
   height: auto;
   margin-bottom: 24px;
+}
+
+/* Checkout Loading Spinner */
+.checkout-loader {
+  width: 80px;
+  height: 80px;
+  border: 5px solid #e8e8e8;
+  border-top: 5px solid #333;
+  border-radius: 50%;
+  animation: spin-loader 0.8s linear infinite;
+}
+
+@keyframes spin-loader {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .summary-title {

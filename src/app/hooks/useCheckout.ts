@@ -132,6 +132,9 @@ export function useCheckout(): UseCheckoutReturn {
     setLoading(true);
 
     try {
+      // Минимальное время показа loading экрана (3 секунды)
+      const minLoadingTime = new Promise(resolve => setTimeout(resolve, 3000));
+
       const items: OrderItem[] = cart.map(({ item, type, quantity }) => ({
         itemId: typeof item.id === 'number' ? item.id : parseInt(String(item.id), 10),
         itemType: type,
@@ -156,6 +159,10 @@ export function useCheckout(): UseCheckoutReturn {
       };
 
       const created = await createOrder(orderData);
+      
+      // Ждем минимального времени показа loading
+      await minLoadingTime;
+      
       setOrderId(created?.id ? String(created.id) : null);
       setLoading(false);
       setProcessing(true);

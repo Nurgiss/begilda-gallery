@@ -102,11 +102,9 @@ export function Checkout() {
               fontSize: '16px'
             }}
           >
-            {state.loading
-              ? 'Processing order...'
-              : !computed.meetsMinimum
-                ? `Minimum $${MIN_SHOP_DELIVERY_AMOUNT_USD} for delivery`
-                : 'Place Order'}
+            {!computed.meetsMinimum
+              ? `Minimum $${MIN_SHOP_DELIVERY_AMOUNT_USD} for delivery`
+              : 'Place Order'}
           </button>
         </form>
       </div>
