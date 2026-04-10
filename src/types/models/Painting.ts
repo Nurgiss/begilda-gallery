@@ -16,6 +16,7 @@ export interface Painting {
   availability: boolean;
   featured?: boolean;
   exhibitionOnly?: boolean;
+  hidden?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

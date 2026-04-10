@@ -20,7 +20,13 @@ export function Shop() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   useEffect(() => {
-    getShopItems().then(setItems).catch(console.error);
+    getShopItems()
+      .then(data => {
+        // Filter out sold items
+        const availableItems = data.filter(item => item.availability !== false);
+        setItems(availableItems);
+      })
+      .catch(console.error);
   }, []);
 
   const filteredItems = selectedCategory === 'all' ? items : items.filter(item => item.category === selectedCategory);

@@ -13,7 +13,9 @@ export function Catalog() {
     const loadPaintings = async () => {
       try {
         const data = await getPaintings();
-        setPaintings(data);
+        // Filter out hidden paintings and exhibition-only paintings
+        const visiblePaintings = data.filter(p => !p.hidden && !p.exhibitionOnly);
+        setPaintings(visiblePaintings);
       } catch (error) {
         console.error('Error loading paintings:', error);
       } finally {
@@ -23,7 +25,7 @@ export function Catalog() {
     loadPaintings();
   }, []);
 
-  const filteredPaintings = paintings.filter((p) => !p.exhibitionOnly);
+  const filteredPaintings = paintings;
 
   return (
     <div className="paintings-section">

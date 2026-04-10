@@ -14,6 +14,7 @@ export interface PaintingFormData {
   availability: boolean;
   featured: boolean;
   exhibitionOnly: boolean;
+  hidden: boolean;
 }
 
 export interface ExhibitionFormData {
@@ -51,6 +52,7 @@ export interface ShopItemFormData {
   image: string;
   category: string;
   description: string;
+  availability: boolean;
 }
 
 // Checkout form types

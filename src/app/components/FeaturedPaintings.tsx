@@ -15,7 +15,7 @@ export function FeaturedPaintings() {
       .catch(console.error);
   }, []);
 
-  const featuredPaintings = paintings.filter((p) => p.featured && !p.exhibitionOnly);
+  const featuredPaintings = paintings.filter((p) => p.featured && !p.exhibitionOnly && !p.hidden);
 
   return (
     <section className="home-paintings-section">

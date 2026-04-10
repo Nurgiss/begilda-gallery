@@ -25,7 +25,8 @@ export function PaintingsManager() {
     medium: '',
     availability: true,
     featured: false,
-    exhibitionOnly: false
+    exhibitionOnly: false,
+    hidden: false
   });
   
   const [calculatedPrices, setCalculatedPrices] = useState({
@@ -102,7 +103,8 @@ export function PaintingsManager() {
       medium: '',
       availability: true,
       featured: false,
-      exhibitionOnly: false
+      exhibitionOnly: false,
+      hidden: false
     });
     setCalculatedPrices({ kzt: 0, eur: 0 });
   };
@@ -122,7 +124,8 @@ export function PaintingsManager() {
       medium: painting.medium,
       availability: painting.availability,
       featured: painting.featured || false,
-      exhibitionOnly: painting.exhibitionOnly || false
+      exhibitionOnly: painting.exhibitionOnly || false,
+      hidden: painting.hidden || false
     });
   };
   
@@ -524,6 +527,21 @@ export function PaintingsManager() {
                     </label>
                   </div>
                 </div>
+                
+                <div className="form-row">
+                  <div className="form-group" style={{ display: 'flex', alignItems: 'center' }}>
+                    <label className="form-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={formData.hidden}
+                        onChange={(e) => setFormData({ ...formData, hidden: e.target.checked })}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                      />
+                      <span style={{ fontSize: '0.95rem' }}>🚫 Скрыть (не удаляя, просто скрыть от пользователей)</span>
+                    </label>
+                  </div>
+                </div>
               </div>
               
               <div className="admin-form-actions">
@@ -550,6 +568,7 @@ export function PaintingsManager() {
                   <th>Статус</th>
                   <th>Избранное</th>
                   <th>Только для выставки</th>
+                  <th>Скрыто</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -583,6 +602,9 @@ export function PaintingsManager() {
                     </td>
                     <td>
                       {painting.exhibitionOnly ? '🎨 Да' : '—'}
+                    </td>
+                    <td>
+                      {painting.hidden ? '🚫 Да' : '—'}
                     </td>
                     <td>
                       <div className="admin-table-actions">

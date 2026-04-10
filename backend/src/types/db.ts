@@ -31,6 +31,7 @@ export interface PaintingRow {
   availability: number; // SQLite boolean (0/1)
   featured: number;
   exhibition_only: number;
+  hidden: number; // SQLite boolean (0/1)
   created_at: string;
   updated_at: string | null;
 }
@@ -79,6 +80,7 @@ export interface ShopItemRow {
   image_url: string | null;
   category: string | null;
   description: string | null;
+  availability: number; // SQLite boolean (0/1)
   created_at: string;
   updated_at: string | null;
 }
@@ -154,6 +156,7 @@ export interface Painting {
   availability?: boolean;
   featured?: boolean;
   exhibitionOnly?: boolean;
+  hidden?: boolean;
   createdAt?: string;
   updatedAt?: string | null;
 }
@@ -197,6 +200,7 @@ export interface ShopItem {
   imageUrl?: string | null;
   category?: string | null;
   description?: string | null;
+  availability?: boolean;
   createdAt?: string;
   updatedAt?: string | null;
 }

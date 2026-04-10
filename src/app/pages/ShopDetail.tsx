@@ -52,9 +52,25 @@ export function ShopDetail() {
             <div className="detail-category">{shopItem.category}</div>
             <h1 className="detail-title">{shopItem.title}</h1>
             <p className="detail-price">{symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</p>
+            {shopItem.availability === false && (
+              <div style={{ 
+                padding: '12px 16px', 
+                backgroundColor: '#fee', 
+                border: '1px solid #fcc', 
+                borderRadius: '8px', 
+                marginBottom: '1rem',
+                color: '#c33'
+              }}>
+                ⚠️ This item is currently sold out
+              </div>
+            )}
             <p className="detail-description">{shopItem.description}</p>
             <div className="detail-actions">
-              <button className="btn" onClick={() => addToCart(shopItem, 'shop')}>Add to Cart</button>
+              {shopItem.availability !== false ? (
+                <button className="btn" onClick={() => addToCart(shopItem, 'shop')}>Add to Cart</button>
+              ) : (
+                <button className="btn" disabled style={{ opacity: 0.5, cursor: 'not-allowed' }}>Sold Out</button>
+              )}
               <Link to="/shop" className="btn btn-secondary">Back to Shop</Link>
             </div>
           </div>

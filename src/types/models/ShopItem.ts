@@ -9,4 +9,5 @@ export interface ShopItem {
   imageUrl?: string;
   category: string;
   description: string;
+  availability?: boolean;
 }

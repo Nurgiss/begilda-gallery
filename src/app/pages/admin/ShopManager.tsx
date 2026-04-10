@@ -15,7 +15,8 @@ export function ShopManager() {
     price: 0,
     image: '',
     category: 'Prints',
-    description: ''
+    description: '',
+    availability: true
   });
 
   useEffect(() => {
@@ -41,7 +42,8 @@ export function ShopManager() {
       price: 0,
       image: '',
       category: 'Prints',
-      description: ''
+      description: '',
+      availability: true
     });
   };
 
@@ -53,7 +55,8 @@ export function ShopManager() {
       price: item.price,
       image: item.image,
       category: item.category,
-      description: item.description
+      description: item.description,
+      availability: item.availability !== false
     });
   };
 
@@ -229,6 +232,23 @@ export function ShopManager() {
                 </div>
               </div>
 
+              {/* Статус */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem', color: '#333' }}>Статус</h3>
+
+                <div className="form-group">
+                  <label className="form-label">Доступность</label>
+                  <select
+                    className="form-select"
+                    value={formData.availability ? 'available' : 'sold'}
+                    onChange={(e) => setFormData({ ...formData, availability: e.target.value === 'available' })}
+                  >
+                    <option value="available">✓ В наличии</option>
+                    <option value="sold">✗ Продано</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="admin-form-actions">
                 <button type="submit" className="btn">
                   {editingItem ? 'Сохранить' : 'Добавить'}
@@ -248,6 +268,7 @@ export function ShopManager() {
                   <th>Название</th>
                   <th>Категория</th>
                   <th>Цена</th>
+                  <th>Статус</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -268,6 +289,11 @@ export function ShopManager() {
                       </span>
                     </td>
                     <td>${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td>
+                      <span className={`admin-status ${item.availability !== false ? 'admin-status-available' : 'admin-status-sold'}`}>
+                        {item.availability !== false ? 'В наличии' : 'Продано'}
+                      </span>
+                    </td>
                     <td>
                       <div className="admin-table-actions">
                         <button

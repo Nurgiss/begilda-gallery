@@ -24,6 +24,7 @@ function toApiFormat(row: PrismaPainting): Painting {
     availability: row.availability,
     featured: row.featured,
     exhibitionOnly: row.exhibitionOnly,
+    hidden: row.hidden,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt?.toISOString(),
   };
@@ -72,6 +73,7 @@ export async function create(data: CreatePaintingInput): Promise<Painting> {
       availability: data.availability !== false,
       featured: data.featured ?? false,
       exhibitionOnly: data.exhibitionOnly ?? false,
+      hidden: data.hidden ?? false,
     },
   });
 
@@ -115,6 +117,7 @@ export async function update(id: string, data: UpdatePaintingInput): Promise<Pai
       ...(data.availability !== undefined && { availability: data.availability }),
       ...(data.featured !== undefined && { featured: data.featured }),
       ...(data.exhibitionOnly !== undefined && { exhibitionOnly: data.exhibitionOnly }),
+      ...(data.hidden !== undefined && { hidden: data.hidden }),
     },
   });
 

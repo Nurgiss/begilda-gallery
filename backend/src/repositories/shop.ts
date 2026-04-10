@@ -15,6 +15,7 @@ function toApiFormat(row: PrismaShopItem | null): ShopItem | null {
     imageUrl: row.imageUrl ?? undefined,
     category: row.category ?? undefined,
     description: row.description ?? undefined,
+    availability: row.availability,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt?.toISOString(),
   };
@@ -46,6 +47,7 @@ export async function create(data: CreateShopItemInput): Promise<ShopItem> {
       imageUrl: data.imageUrl ?? null,
       category: data.category ?? null,
       description: data.description ?? null,
+      availability: data.availability !== false,
     },
   });
 
@@ -67,6 +69,7 @@ export async function update(id: string, data: UpdateShopItemInput): Promise<Sho
   if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl ?? null;
   if (data.category !== undefined) updateData.category = data.category ?? null;
   if (data.description !== undefined) updateData.description = data.description ?? null;
+  if (data.availability !== undefined) updateData.availability = data.availability;
 
   if (Object.keys(updateData).length === 0) {
     return existing;
