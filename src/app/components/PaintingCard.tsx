@@ -13,6 +13,7 @@ export function PaintingCard({ painting, currency = 'USD', convertPrice }: Paint
   const baseUSD = painting.priceUSD ?? painting.price ?? 0;
   const converted = (convertPrice ? convertPrice(baseUSD) : baseUSD) ?? 0;
   const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+  const isSold = painting.availability === false;
 
   let imageUrl = painting.image || painting.imageUrl;
   if (imageUrl && imageUrl.startsWith('/uploads/')) {
@@ -21,8 +22,9 @@ export function PaintingCard({ painting, currency = 'USD', convertPrice }: Paint
   const size = painting.dimensions || painting.size;
 
   return (
-    <Link to={`/catalog/${painting.id}`} className="home-painting-card">
+    <Link to={`/catalog/${painting.id}`} className="home-painting-card" style={{ opacity: isSold ? 0.78 : 1 }}>
       <div className="home-painting-image-wrapper">
+        {isSold && <div className="home-painting-sold-badge">SOLD OUT</div>}
         <ImageWithFallback
           src={imageUrl}
           alt={painting.title}

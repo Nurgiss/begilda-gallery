@@ -55,6 +55,7 @@ export function Artists() {
                 const converted = (convertPrice ? convertPrice(baseUSD) : baseUSD) ?? 0;
                 const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
                 const size = artwork.dimensions || artwork.size;
+                const isSold = artwork.availability === false;
                 
                 let imageUrl = artwork.image || artwork.imageUrl;
                 if (imageUrl && imageUrl.startsWith('/uploads/')) {
@@ -62,8 +63,9 @@ export function Artists() {
                 }
                 
                 return (
-                  <Link key={artwork.id} to={`/catalog/${artwork.id}`} className="home-painting-card">
+                  <Link key={artwork.id} to={`/catalog/${artwork.id}`} className="home-painting-card" style={{ opacity: isSold ? 0.78 : 1 }}>
                     <div className="home-painting-image-wrapper">
+                      {isSold && <div className="home-painting-sold-badge">SOLD OUT</div>}
                       <ImageWithFallback src={imageUrl} alt={artwork.title} className="home-painting-image" />
                       <div className="home-painting-image-button" onClick={(e) => e.preventDefault()}>
                         <ImageViewer src={imageUrl ?? ''} alt={artwork.title} />
