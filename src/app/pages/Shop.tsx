@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ShopItem } from '../../types';
 import { getShopItems } from '../../api/client';
@@ -21,10 +22,7 @@ export function Shop() {
 
   useEffect(() => {
     getShopItems()
-      .then(data => {
-        const availableItems = data.filter(item => item.availability !== false);
-        setItems(availableItems);
-      })
+      .then(data => setItems(data))
       .catch(console.error);
   }, []);
 
@@ -32,6 +30,14 @@ export function Shop() {
 
   return (
     <div className="shop-page-white">
+      <Helmet>
+        <title>Shop — Begilda Gallery</title>
+        <meta name="description" content="Shop art prints, posters, books and gifts at Begilda Gallery. Original artworks and art products from Almaty." />
+        <meta property="og:title" content="Shop — Begilda Gallery" />
+        <meta property="og:description" content="Shop art prints, posters, books and gifts at Begilda Gallery." />
+        <meta property="og:url" content="https://begildagallery.com/shop" />
+        <link rel="canonical" href="https://begildagallery.com/shop" />
+      </Helmet>
       <section className="shop-section-white">
         <div className="container-wide">
           <h1 className="page-title-white">Shop</h1>
@@ -52,21 +58,49 @@ export function Shop() {
             {filteredItems.map((item) => {
               const value = convertPrice ? convertPrice(item.price || 0) : item.price || 0;
               const symbol = currency === 'EUR' ? '€' : currency === 'KZT' ? '₸' : '$';
+              const isSold = item.availability === false;
               return (
-                <Link key={item.id} to={`/shop/${item.id}`} className="shop-card-white">
+                <Link key={item.id} to={`/shop/${item.id}`} className="shop-card-white" style={{ position: 'relative', opacity: isSold ? 0.75 : 1 }}>
+                  {isSold && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      backgroundColor: '#c33',
+                      color: '#fff',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      letterSpacing: '0.08em',
+                      padding: '4px 10px',
+                      borderRadius: '4px',
+                      zIndex: 2,
+                      textTransform: 'uppercase',
+                    }}>SOLD</div>
+                  )}
                   <div className="shop-image-wrapper-white">
                     <ImageWithFallback src={item.image} alt={item.title} className="shop-image-white" />
                   </div>
                   <div className="shop-info-white">
                     <h3 className="shop-title-white">{item.title}</h3>
                     <p className="shop-price-white">{symbol}{value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</p>
-                    <button
-                      className="btn"
-                      onClick={(e) => { e.preventDefault(); addToCart(item, 'shop'); }}
-                      style={{ marginTop: '10px', fontSize: '12px', padding: '8px 16px' }}
-                    >
-                      Add to Cart
-                    </button>
+                    {isSold ? (
+                      <button
+                        className="btn"
+                        disabled
+                        onClick={(e) => e.preventDefault()}
+                        style={{ marginTop: '10px', fontSize: '12px', padding: '8px 16px', opacity: 0.5, cursor: 'not-allowed' }}
+                      >
+                        Sold Out
+                      </button>
+                    ) : (
+                      <button
+                        className="btn"
+                        onClick={(e) => { e.preventDefault(); addToCart(item, 'shop'); }}
+                        style={{ marginTop: '10px', fontSize: '12px', padding: '8px 16px' }}
+                      >
+                        Add to Cart
+                      </button>
+                    )}
                   </div>
                 </Link>
               );

@@ -185,6 +185,17 @@ export function NewsManager() {
                     style={{ resize: 'vertical' }}
                   />
                 </div>
+
+                <div className="form-group">
+                  <label className="form-label">Ссылка на Instagram пост</label>
+                  <input
+                    type="url"
+                    className="form-input"
+                    placeholder="https://www.instagram.com/p/..."
+                    value={formData.instagramUrl}
+                    onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                  />
+                </div>
               </div>
 
               {/* Изображение */}
@@ -261,6 +272,7 @@ export function NewsManager() {
                   <th>Заголовок</th>
                   <th>Категория</th>
                   <th>Дата</th>
+                  <th>Instagram</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -281,6 +293,15 @@ export function NewsManager() {
                       </span>
                     </td>
                     <td>{new Date(newsItem.date).toLocaleDateString('ru-RU')}</td>
+                    <td>
+                      {newsItem.instagramUrl ? (
+                        <a href={newsItem.instagramUrl} target="_blank" rel="noopener noreferrer">
+                          Open post
+                        </a>
+                      ) : (
+                        <span style={{ color: '#999' }}>—</span>
+                      )}
+                    </td>
                     <td>
                       <div className="admin-table-actions">
                         <button

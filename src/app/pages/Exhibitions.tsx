@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getExhibitions } from '../../api/client';
 import { Exhibition } from '../../types';
@@ -51,6 +52,14 @@ export function Exhibitions() {
 
   return (
     <div className="exhibitions-page-white">
+      <Helmet>
+        <title>Exhibitions — Begilda Gallery</title>
+        <meta name="description" content="Current, upcoming and past art exhibitions at Begilda Gallery in Almaty. Discover contemporary art shows and events." />
+        <meta property="og:title" content="Exhibitions — Begilda Gallery" />
+        <meta property="og:description" content="Current, upcoming and past art exhibitions at Begilda Gallery in Almaty." />
+        <meta property="og:url" content="https://begildagallery.com/exhibitions" />
+        <link rel="canonical" href="https://begildagallery.com/exhibitions" />
+      </Helmet>
       {currentExhibitions.length > 0 && (
         <section className="exhibitions-section-white">
           <div className="container-wide">

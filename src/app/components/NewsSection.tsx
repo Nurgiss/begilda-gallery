@@ -21,12 +21,10 @@ export function NewsSection({ news }: NewsSectionProps) {
 
         <div className="home-news-grid">
           {latestNews.map((item) => (
-            <a
+            <Link
               key={item.id}
               className="home-news-card"
-              href={item.instagramUrl || 'https://instagram.com'}
-              target="_blank"
-              rel="noopener noreferrer"
+              to={`/news/${item.id}`}
             >
               <div className="home-news-image-wrapper">
                 <ImageWithFallback
@@ -49,7 +47,7 @@ export function NewsSection({ news }: NewsSectionProps) {
                 <h3 className="home-news-title">{item.title}</h3>
                 <p className="home-news-excerpt">{item.excerpt}</p>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 

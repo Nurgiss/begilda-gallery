@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { News } from '../../types';
 
@@ -14,7 +15,7 @@ export function NewsList({ news }: NewsListProps) {
           <p className="subtitle">Stay updated with the latest exhibitions, events and announcements</p>
           <div className="news-list-grid">
             {news.map((item) => (
-              <a key={item.id} className="home-news-card" href={item.instagramUrl || 'https://instagram.com'} target="_blank" rel="noopener noreferrer">
+              <Link key={item.id} className="home-news-card" to={`/news/${item.id}`}>
                 <div className="home-news-image-wrapper">
                   <ImageWithFallback src={item.image} alt={item.title} className="home-news-image" />
                 </div>
@@ -26,7 +27,7 @@ export function NewsList({ news }: NewsListProps) {
                   <h3 className="home-news-title">{item.title}</h3>
                   <p className="home-news-excerpt">{item.excerpt}</p>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         </div>

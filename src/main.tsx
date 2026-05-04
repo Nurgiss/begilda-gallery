@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { routes } from './routes';
 import './styles/index.css';
 
@@ -9,9 +10,11 @@ function App() {
 
 function Root() {
   return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

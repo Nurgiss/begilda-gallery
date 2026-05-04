@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getPaintings } from '../../api/client';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ImageViewer } from '../components/image_viewer/ImageViewer';
@@ -57,8 +58,19 @@ export function PaintingDetail() {
     addToCart(painting, 'painting');
   };
 
+  const paintingImage = imageUrl?.startsWith('/uploads/') ? `https://begildagallery.com${imageUrl}` : imageUrl;
+
   return (
     <div className="detail-page">
+      <Helmet>
+        <title>{painting.title} — Begilda Gallery</title>
+        <meta name="description" content={`${painting.title}${painting.artist ? ` by ${painting.artist}` : ''}. Original artwork at Begilda Gallery, Almaty.`} />
+        <meta property="og:title" content={`${painting.title} — Begilda Gallery`} />
+        <meta property="og:description" content={`${painting.title}${painting.artist ? ` by ${painting.artist}` : ''}. Original artwork at Begilda Gallery.`} />
+        {paintingImage && <meta property="og:image" content={paintingImage} />}
+        <meta property="og:type" content="article" />
+        <link rel="canonical" href={`https://begildagallery.com/catalog/${painting.id}`} />
+      </Helmet>
       <div className="container-wide">
         <div style={{ marginBottom: '2rem' }}>
           <Link

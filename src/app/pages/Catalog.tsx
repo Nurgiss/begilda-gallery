@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { PaintingCard } from '../components/PaintingCard';
 import { getPaintings } from '../../api/client';
 import { useAppContext } from '../context/AppContext';
@@ -29,6 +30,14 @@ export function Catalog() {
 
   return (
     <div className="paintings-section">
+      <Helmet>
+        <title>Artworks — Begilda Gallery</title>
+        <meta name="description" content="Browse original paintings and artworks at Begilda Gallery. Buy original art by Kazakh and international contemporary artists." />
+        <meta property="og:title" content="Artworks — Begilda Gallery" />
+        <meta property="og:description" content="Browse original paintings and artworks at Begilda Gallery." />
+        <meta property="og:url" content="https://begildagallery.com/catalog" />
+        <link rel="canonical" href="https://begildagallery.com/catalog" />
+      </Helmet>
       <div className="container-wide">
         <h1 className="page-title-white">Artworks</h1>
 
