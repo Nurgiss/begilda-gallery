@@ -1,6 +1,6 @@
 import { NavLink, Link } from 'react-router-dom';
 
-const ADMIN_PREFIX = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'admin';
+const ADMIN_PREFIX = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'gallery-admin';
 
 interface AdminHeaderRouterProps {
   onLogout: () => void;

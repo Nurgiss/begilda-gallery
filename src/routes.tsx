@@ -18,7 +18,7 @@ import AdminApp from './app/AdminApp';
 // Lazy load Checkout to defer loading country-state-city data (~8MB)
 const Checkout = lazy(() => import('./app/pages/Checkout').then(m => ({ default: m.Checkout })));
 
-const adminPrefix = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'admin';
+const adminPrefix = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'gallery-admin';
 
 export const routes: RouteObject[] = [
   {

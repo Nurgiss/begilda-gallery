@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AdminHeaderRouter } from '../components/AdminHeaderRouter';
 
-const ADMIN_PREFIX = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'admin';
+const ADMIN_PREFIX = import.meta.env.VITE_ADMIN_PATH_PREFIX || 'gallery-admin';
 
 export function AdminLayout() {
   const navigate = useNavigate();
