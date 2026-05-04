@@ -24,7 +24,7 @@ export function PaintingCard({ painting, currency = 'USD', convertPrice }: Paint
   return (
     <Link to={`/catalog/${painting.id}`} className="home-painting-card" style={{ opacity: isSold ? 0.78 : 1 }}>
       <div className="home-painting-image-wrapper">
-        {isSold && <div className="home-painting-sold-badge">SOLD OUT</div>}
+        {isSold && <div className="home-painting-sold-badge">SOLD</div>}
         <ImageWithFallback
           src={imageUrl}
           alt={painting.title}

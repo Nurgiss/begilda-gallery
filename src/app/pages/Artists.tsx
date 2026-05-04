@@ -65,7 +65,7 @@ export function Artists() {
                 return (
                   <Link key={artwork.id} to={`/catalog/${artwork.id}`} className="home-painting-card" style={{ opacity: isSold ? 0.78 : 1 }}>
                     <div className="home-painting-image-wrapper">
-                      {isSold && <div className="home-painting-sold-badge">SOLD OUT</div>}
+                      {isSold && <div className="home-painting-sold-badge">SOLD</div>}
                       <ImageWithFallback src={imageUrl} alt={artwork.title} className="home-painting-image" />
                       <div className="home-painting-image-button" onClick={(e) => e.preventDefault()}>
                         <ImageViewer src={imageUrl ?? ''} alt={artwork.title} />

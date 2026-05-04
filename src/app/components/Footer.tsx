@@ -24,7 +24,7 @@ export function Footer() {
           <div className="footer-column">
             <h3 className="footer-heading">Contacts</h3>
             <ul className="footer-contact">
-              <li><span className="footer-icon">📧</span><a href="mailto:info@begilda.gallery">info@begilda.gallery</a></li>
+              <li><span className="footer-icon">📧</span><a href="mailto:info@begildagallery.com">info@begildagallery.com</a></li>
               <li><span className="footer-icon"></span><span>Almaty, Kazakhstan</span></li>
             </ul>
           </div>
